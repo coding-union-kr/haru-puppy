@@ -83,14 +83,13 @@ time,
 mark,
 audio,
 video {
-  margin: 0;
-  padding: 0;
-  border: 0;
-  font-size: 100%;
-  font: inherit;
-  vertical-align: baseline;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
 }
-
 /* HTML5 display-role reset for older browsers */
 article,
 aside,
@@ -103,69 +102,67 @@ hgroup,
 menu,
 nav,
 section {
-  display: block;
+	display: block;
 }
-
 body {
-  line-height: 1;
+	line-height: 1;
 }
-
 ol,
 ul {
-  list-style: none;
+	list-style: none;
 }
-
 blockquote,
 q {
-  quotes: none;
+	quotes: none;
 }
-
 blockquote:before,
 blockquote:after,
 q:before,
 q:after {
-  content: "";
-  content: none;
+	content: "";
+	content: none;
 }
-
 table {
-  border-collapse: collapse;
-  border-spacing: 0;
+	border-collapse: collapse;
+	border-spacing: 0;
 }
 
-​ input:focus {
-  outline: none;
+input:focus {
+	outline: none;
 }
 
-​ a {
-  text-decoration: none;
+a {
+	text-decoration: none;
 }
 
-​ input {
-  border: none;
+input {
+	border: none;
 }
 
-​ .ir {
-  position: absolute;
-  clip: rect(0 0 0 0);
-  width: 1px;
-  height: 1px;
-  margin: -1px;
-  overflow: hidden;
+.ir {
+	position: absolute;
+	clip: rect(0 0 0 0);
+	width: 1px;
+	height: 1px;
+	margin: -1px;
+	overflow: hidden;
 }
 
-​button {
-  border: none;
-  cursor: pointer;
-  background-color: transparent;
+button {
+	border: none;
+	cursor: pointer;
+	background-color: transparent;
+    font-family: 'Pretendard';
 }
 
-​textarea {
-  border: none;
-  resize: none;
-  overflow: hidden;
+textarea {
+	border: none;
+	resize: none;
+	overflow: hidden;
 }
 
-​textarea:focus {
-  outline: none;
+textarea:focus {
+	outline: none;
 }
+
+  
