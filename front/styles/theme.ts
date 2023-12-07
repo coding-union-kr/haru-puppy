@@ -15,8 +15,8 @@ export const theme = {
     },
 
     typo: {
-        regular: 'regular',
-        medium: 'medium',
-        semibold: 'semibold',
+        regular: 400,
+        medium: 500,
+        semibold: 600,
     }
 }

@@ -4,6 +4,7 @@ import { theme } from '@/styles/theme'
 import './globals.css'
 import { ThemeProvider } from 'styled-components'
 import StyledComponentsRegistry from './registry'
+import { Pretendard } from '@/public/fonts/fonts'
 
 
 
@@ -15,7 +16,7 @@ export default function RootLayout({
   return (
     <StyledComponentsRegistry>
       <html lang="en">
-        <body>
+        <body className={Pretendard.className}>
           <ThemeProvider theme={theme}>
             {children}
           </ThemeProvider>
