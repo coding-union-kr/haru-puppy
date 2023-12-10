@@ -34,14 +34,16 @@ public class Schedule extends DateEntity {
   @Column(name = "end_date")
   private LocalDateTime scheduleEndTime;
 
-  @NotNull private RepeatType repeatType = RepeatType.NONE;
+  private RepeatType repeatType = RepeatType.NONE;
 
-  @NotNull private NotificationType notificationType = NotificationType.NONE;
+  private AlertType notificationType = AlertType.NONE;
 
   @Column(columnDefinition = "TEXT")
   private String memo;
 
-  private Boolean is_deleted = Boolean.FALSE;
+  @Column(name = "is_deleted")
+  private Boolean isDeleted = Boolean.FALSE;
+
   private Boolean active = Boolean.TRUE;
 
   @Builder
@@ -50,9 +52,9 @@ public class Schedule extends DateEntity {
       LocalDateTime scheduleStartTime,
       LocalDateTime scheduleEndTime,
       RepeatType repeatType,
-      NotificationType notificationType,
+      AlertType notificationType,
       String memo,
-      Boolean is_deleted,
+      Boolean isDeleted,
       Boolean active) {
     this.scheduleType = scheduleType;
     this.scheduleStartTime = scheduleStartTime;
@@ -60,7 +62,7 @@ public class Schedule extends DateEntity {
     this.repeatType = repeatType;
     this.notificationType = notificationType;
     this.memo = memo;
-    this.is_deleted = is_deleted;
+    this.isDeleted = isDeleted;
     this.active = active;
   }
 }

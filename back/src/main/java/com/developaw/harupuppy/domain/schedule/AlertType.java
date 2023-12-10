@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Getter
-public enum NotificationType {
+public enum AlertType {
   NONE("없음"),
   ON_TIME("정각"),
   FIVE_MINUTES("5분전"),
