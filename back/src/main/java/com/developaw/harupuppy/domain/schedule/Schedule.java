@@ -3,17 +3,17 @@ package com.developaw.harupuppy.domain.schedule;
 import com.developaw.harupuppy.global.common.DateEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Where;
 
 @Entity
 @Table(name = "SCHEDULES")
@@ -25,27 +25,28 @@ public class Schedule extends DateEntity {
   @Column(name = "schedule_id")
   private Long id;
 
-  @NotNull private ScheduleType scheduleType;
+  @Enumerated(EnumType.STRING)
+  private ScheduleType scheduleType;
 
-  @NotNull
   @Column(name = "start_date")
   private LocalDateTime scheduleStartTime;
 
-  @NotNull
   @Column(name = "end_date")
   private LocalDateTime scheduleEndTime;
 
+  @Enumerated(EnumType.STRING)
   private RepeatType repeatType = RepeatType.NONE;
 
-  private AlertType notificationType = AlertType.NONE;
+  @Enumerated(EnumType.STRING)
+  private AlertType alertType = AlertType.NONE;
 
   @Column(columnDefinition = "TEXT")
   private String memo;
 
   @Column(name = "is_deleted")
-  private Boolean isDeleted = Boolean.FALSE;
+  private boolean isDeleted = false;
 
-  private Boolean active = Boolean.TRUE;
+  private boolean active = true;
 
   @Builder
   public Schedule(
@@ -53,7 +54,7 @@ public class Schedule extends DateEntity {
       LocalDateTime scheduleStartTime,
       LocalDateTime scheduleEndTime,
       RepeatType repeatType,
-      AlertType notificationType,
+      AlertType alertType,
       String memo,
       Boolean isDeleted,
       Boolean active) {
@@ -61,15 +62,17 @@ public class Schedule extends DateEntity {
     this.scheduleStartTime = scheduleStartTime;
     this.scheduleEndTime = scheduleEndTime;
     this.repeatType = repeatType;
-    this.notificationType = notificationType;
+    this.alertType = alertType;
     this.memo = memo;
     this.isDeleted = isDeleted;
     this.active = active;
   }
-  public void done(){
-    active = Boolean.FALSE;
+
+  public void done() {
+    active = false;
   }
-  public void delete(){
-    isDeleted = Boolean.TRUE;
+
+  public void delete() {
+    isDeleted = true;
   }
 }

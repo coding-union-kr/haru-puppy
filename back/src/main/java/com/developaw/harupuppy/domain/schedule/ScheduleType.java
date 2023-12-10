@@ -1,8 +1,10 @@
 package com.developaw.harupuppy.domain.schedule;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
+@Getter
 public enum ScheduleType {
   WALK("산책"),
   WASH("목욕"),
