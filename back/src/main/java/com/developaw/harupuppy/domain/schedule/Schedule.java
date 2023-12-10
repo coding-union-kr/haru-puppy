@@ -13,6 +13,7 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Where;
 
 @Entity
 @Table(name = "SCHEDULES")
@@ -64,5 +65,11 @@ public class Schedule extends DateEntity {
     this.memo = memo;
     this.isDeleted = isDeleted;
     this.active = active;
+  }
+  public void done(){
+    active = Boolean.FALSE;
+  }
+  public void delete(){
+    isDeleted = Boolean.TRUE;
   }
 }
