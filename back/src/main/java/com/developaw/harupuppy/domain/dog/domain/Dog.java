@@ -1,51 +1,65 @@
 package com.developaw.harupuppy.domain.dog.domain;
 
 import com.developaw.harupuppy.domain.home.domain.Home;
+import com.developaw.harupuppy.domain.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
-@Table(name = "dog")
+@Table(name = "DOG")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-//@Where(clause = "is_deleted = false")
-//@NotNull - 더 생각 해봐야
 public class Dog {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "dog_id")
-    private Long dogId;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "dog_id", nullable = false, updatable = false)
+  private Long dogId;
 
-    @Column(name = "name")
-    private String name;
+  @Column(name = "name", nullable = false)
+  private String name;
 
-    @Column(name = "img")
-    private String profilePicture;
+  @Column(name = "img")
+  private String profilePicture;
 
-    @Column(name = "gender")//미완 (enum적용?)
-    private String gender;
+  @Enumerated(EnumType.STRING)
+  @Column(name = "gender")
+  private String gender;
 
-    @Column(name = "birthday")
-    private LocalDateTime birthday;
+  @Column(name = "birthday")
+  private LocalDateTime birthday;
 
-    @Column(name = "weight")
-    private double weight;
+  @Column(name = "weight")
+  private double weight;
 
-    @CreatedDate
-    @Column(name = "created_date", updatable = false)
-    private LocalDateTime createdDate;
+  @CreatedDate
+  @Column(name = "created_date", updatable = false)
+  private LocalDateTime createdDate;
 
-    @LastModifiedDate
-    @Column(name = "modified_date")
-    private LocalDateTime modifiedDate;
+  @LastModifiedDate
+  @Column(name = "modified_date")
+  private LocalDateTime modifiedDate;
 
-    @OneToOne(mappedBy = "dog_id")
-    private Home home;
+  @OneToOne(mappedBy = "dog")
+  private Home home;
 
+  @OneToMany(mappedBy = "dog")
+  private List<User> users = new ArrayList<User>();
+
+  @Builder
+  public Dog (String name, String profilePicture, String gender, LocalDateTime birthday, double weight){
+    this.name = name;
+    this.profilePicture = profilePicture;
+    this.gender = gender;
+    this.birthday = birthday;
+    this.weight = weight;
+  }
 }
