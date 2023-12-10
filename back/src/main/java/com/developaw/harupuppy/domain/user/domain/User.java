@@ -2,78 +2,63 @@ package com.developaw.harupuppy.domain.user.domain;
 
 import com.developaw.harupuppy.domain.dog.domain.Dog;
 import com.developaw.harupuppy.domain.home.domain.Home;
-import jakarta.persistence.*;
+
 import java.time.LocalDateTime;
 
-import jakarta.validation.constraints.NotNull;
+import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 @Entity
 @Getter
-@Table(name = "user")
+@Table(name = "USERS")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-//@Where(clause = "is_deleted = false")
-//@NotNull - 더 생각 해봐야
 public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id", updatable = false)
-    private Long userId;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "user_id", updatable = false, nullable = false)
+  private Long userId;
 
-    @Column(name = "email", unique = true)
-    private String email;
+  @Column(name = "email", unique = true, nullable = false)
+  private String email;
 
-    @Column(name = "user_img", nullable = false)
-    private String userImg;
+  @Column(name = "user_img", nullable = false)
+  private String userImg;
 
-    @Column(name = "nickname", nullable = false)
-    private String nickname;
+  @Column(name = "nickname", nullable = false)
+  private String nickname;
 
-    @Enumerated(EnumType.STRING) //미완
-    @Column(name = "user_role")
-    private String userRole;
+  @Enumerated(EnumType.STRING)
+  @Column(name = "user_role", nullable = false)
+  private UserRole userRole;
 
-    //@Convert
-    @Column(name = "is_deleted", columnDefinition = "TINYINT(1)")
-    private boolean isDeleted;
+  @Column(name = "is_deleted", nullable = false, columnDefinition = "TINYINT(1)")
+  private boolean isDeleted;
 
-    @Column(name = "allow_otification", columnDefinition = "TINYINT(1)")
-    private boolean allowNotification;
+  @Column(name = "allow_notification", nullable = false, columnDefinition = "TINYINT(1)")
+  private boolean allowNotification;
 
-    @CreatedDate
-    @Column(name = "created_date", updatable = false)
-    private LocalDateTime createdDate;
+  @CreatedDate
+  @Column(name = "created_date", updatable = false)
+  private LocalDateTime createdDate;
 
-    @LastModifiedDate
-    @Column(name = "modified_date")
-    private LocalDateTime modifiedDate;
+  @LastModifiedDate
+  @Column(name = "modified_date")
+  private LocalDateTime modifiedDate;
 
-    @Column(name = "home_id")
-    private Long homeId;
+  @ManyToOne
+  @JoinColumn(name = "dog_id")
+  private Dog dog;
 
-    @ManyToOne
-    @JoinColumn(name = "dog_id")
-    private Dog dog;
+  @ManyToOne
+  @JoinColumn(name = "home_id")
+  private Home home;
 
-    @ManyToOne
-    @JoinColumn(name = "home_id")
-    private Home home;
-
-
-    @Builder
-    public User(String email, String userImg, String nickname, String userRole, Boolean isDeleted,
-                Boolean allowNotification, LocalDateTime createdDate, LocalDateTime modifiedDate, Home home, Dog dog) {
-        this.email = email;
-        this.userImg = userImg;
-        this.nickname = nickname;
-        this.userRole = userRole;
-        this.isDeleted = isDeleted;
-        this.allowNotification = allowNotification;
-        this.createdDate = createdDate;
-        this.modifiedDate = modifiedDate;
-        this.home = home;
-        this.dog = dog;
-    }
+  @Builder
+  public User(String userImg, String nickname, UserRole userRole) {
+    this.userImg = userImg;
+    this.nickname = nickname;
+    this.userRole = userRole;
+  }
 }
