@@ -1,9 +1,10 @@
+import Image from 'next/image';
 import React from 'react';
 import styled from 'styled-components';
 
 interface IUser {
-  username: string;
-  profileImg: string;
+  username?: string;
+  profileImg?: string;
   walkCount: number;
 }
 
@@ -17,7 +18,8 @@ const WalkRank = ({ users }: IWalkRank) => {
       {users?.map((user, index) => (
         <BoxWrapper key={index}>
           <UserContainer>
-            <UserProfileImage src={user.profileImg} alt={`${user.username}의 프로필 사진`} />
+            {user.profileImg ? <UserProfileImage><Image src={user.profileImg} alt='프로필 이미지' /></UserProfileImage>
+              : <UserProfileImage />}
             <Nickname>{user.username}</Nickname>
             <WalkCount>{user.walkCount}회</WalkCount>
           </UserContainer>
@@ -27,9 +29,6 @@ const WalkRank = ({ users }: IWalkRank) => {
     </Wrapper>
   );
 };
-
-export default WalkRank;
-
 
 
 const Wrapper = styled.div`
@@ -59,7 +58,7 @@ const Bar = styled.div<{ walkCount: number }>`
   width: 80px;
   height: ${({ walkCount }) => walkCount * 20}px;
   background-color: ${({ theme, walkCount }) => {
-    const maxWalkCount = 18;
+    const maxWalkCount = 13;
     const intensity = walkCount / maxWalkCount;
     const grayShade = Math.round(255 - intensity * 255);
     return `rgb(${grayShade}, ${grayShade}, ${grayShade})`;
@@ -69,21 +68,26 @@ const Bar = styled.div<{ walkCount: number }>`
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
-`;
+`
 
 const WalkCount = styled.span`
   font-weight: bold;
-  margin-top: 5px;
+  margin-top: 10px;
   font-weight: ${({ theme }) => theme.typo.medium};
-`;
+`
 
 const Nickname = styled.span`
-  margin-top: 5px;
-`;
+  margin-top: 10px;
+`
 
-const UserProfileImage = styled.img`
+const UserProfileImage = styled.div`
   width: 65px;
   height: 65px;
   border-radius: 50%;
-  margin-top: 10px;
+  margin-top: 10px ;
+  background-color:#CEDBEA;
 `;
+
+export default WalkRank;
+
+
