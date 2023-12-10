@@ -8,17 +8,17 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Table(name = "home")
+@Table(name = "HOME")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Home {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "home_id", updatable = false, nullable = false)
-    private Long homeId;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "home_id", updatable = false, nullable = false)
+  private Long homeId;
 
-    @Column(name = "home_name", nullable = false)
-    private String homeName;
+  @Column(name = "home_name", nullable = false)
+  private String homeName;
 
-    @OneToOne(mappedBy = "home_id")
-    private Dog dog;
+  @OneToOne(mappedBy = "home")
+  private Dog dog;
 }
