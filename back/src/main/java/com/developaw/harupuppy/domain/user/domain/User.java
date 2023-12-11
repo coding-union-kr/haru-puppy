@@ -2,14 +2,10 @@ package com.developaw.harupuppy.domain.user.domain;
 
 import com.developaw.harupuppy.domain.dog.domain.Dog;
 import com.developaw.harupuppy.domain.home.domain.Home;
-
-import java.time.LocalDateTime;
-
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
+
 
 @Entity
 @Getter
