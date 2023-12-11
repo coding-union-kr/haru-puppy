@@ -32,7 +32,7 @@ public class Dog {
 
   @Enumerated(EnumType.STRING)
   @Column(name = "gender")
-  private String gender;
+  private DogGender gender;
 
   @Column(name = "birthday")
   private LocalDateTime birthday;
@@ -48,14 +48,15 @@ public class Dog {
   @Column(name = "modified_date")
   private LocalDateTime modifiedDate;
 
-  @OneToOne(mappedBy = "dog")
+  @OneToOne
+  @JoinColumn(name = "home_id")
   private Home home;
 
-  @OneToMany(mappedBy = "dog")
-  private List<User> users = new ArrayList<User>();
+//  @OneToMany(mappedBy = "dog")
+//  private List<User> users = new ArrayList<User>();
 
   @Builder
-  public Dog (String name, String profilePicture, String gender, LocalDateTime birthday, double weight){
+  public Dog (String name, String profilePicture, DogGender gender, LocalDateTime birthday, double weight){
     this.name = name;
     this.profilePicture = profilePicture;
     this.gender = gender;
