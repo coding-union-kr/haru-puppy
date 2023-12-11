@@ -6,6 +6,7 @@ import com.developaw.harupuppy.domain.home.domain.Home;
 import java.time.LocalDateTime;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -14,38 +15,31 @@ import org.springframework.data.annotation.LastModifiedDate;
 @Getter
 @Table(name = "USERS")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NonNull
 public class User {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "user_id", updatable = false, nullable = false)
+  @Column(name = "user_id")
   private Long userId;
 
-  @Column(name = "email", unique = true, nullable = false)
+  @Email
+  @Column(unique = true)
   private String email;
 
-  @Column(name = "user_img", nullable = false)
+  @Column(name = "user_img")
   private String userImg;
 
-  @Column(name = "nickname", nullable = false)
   private String nickname;
 
   @Enumerated(EnumType.STRING)
-  @Column(name = "user_role", nullable = false)
+  @Column(name = "user_role")
   private UserRole userRole;
 
-  @Column(name = "is_deleted", nullable = false, columnDefinition = "TINYINT(1)")
+  @Column(name = "is_deleted", columnDefinition = "TINYINT(1)")
   private boolean isDeleted;
 
-  @Column(name = "allow_notification", nullable = false, columnDefinition = "TINYINT(1)")
+  @Column(name = "allow_notification", columnDefinition = "TINYINT(1)")
   private boolean allowNotification;
-
-  @CreatedDate
-  @Column(name = "created_date", updatable = false)
-  private LocalDateTime createdDate;
-
-  @LastModifiedDate
-  @Column(name = "modified_date")
-  private LocalDateTime modifiedDate;
 
   @ManyToOne
   @JoinColumn(name = "dog_id")
@@ -56,9 +50,17 @@ public class User {
   private Home home;
 
   @Builder
-  public User(String userImg, String nickname, UserRole userRole) {
+  public User(String email, String userImg, String nickname, UserRole userRole) {
+    this.email = email;
     this.userImg = userImg;
     this.nickname = nickname;
     this.userRole = userRole;
+    this.isDeleted = false;
+    this.allowNotification = true;
   }
+
+  public void delete () {
+    this.isDeleted = true;
+  }
+
 }
