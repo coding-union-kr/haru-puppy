@@ -1,10 +1,14 @@
 package com.developaw.harupuppy.domain.home.domain;
 
 import com.developaw.harupuppy.domain.dog.domain.Dog;
+import com.developaw.harupuppy.domain.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -21,4 +25,7 @@ public class Home {
 
   @OneToOne(mappedBy = "home")
   private Dog dog;
+
+  @OneToMany(mappedBy = "home")
+  private List<User> users = new ArrayList<User>();
 }
