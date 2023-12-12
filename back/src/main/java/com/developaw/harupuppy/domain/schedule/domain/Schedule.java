@@ -9,6 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -25,9 +26,11 @@ public class Schedule extends DateEntity {
   @Column(name = "schedule_id")
   private Long id;
 
+  @NotNull
   @Enumerated(EnumType.STRING)
   private ScheduleType scheduleType;
 
+  @NotNull
   @Column(name = "reserved_date")
   private LocalDateTime reservedDate;
 
