@@ -15,11 +15,12 @@ on:
       - .github/**
 
 permissions:
-  contents: write-all
+  contents: read
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions: write-all
 
     defaults:
       run:
