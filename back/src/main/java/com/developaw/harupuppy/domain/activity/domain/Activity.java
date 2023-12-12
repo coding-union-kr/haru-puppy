@@ -1,13 +1,18 @@
-package com.developaw.harupuppy.domain.activity;
+package com.developaw.harupuppy.domain.activity.domain;
 
-import com.developaw.harupuppy.domain.schedule.ScheduleType;
+import com.developaw.harupuppy.domain.home.domain.Home;
+import com.developaw.harupuppy.domain.schedule.domain.ScheduleType;
+import com.developaw.harupuppy.domain.user.domain.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
@@ -28,16 +33,22 @@ public class Activity {
   @Enumerated(EnumType.STRING)
   private ScheduleType scheduleType;
 
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "home_id")
+  private Home home;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "user_id")
+  private User user;
+
   @Column(name = "created_date")
   @CreatedDate
   private LocalDateTime createdDate;
 
-  // TODO :: 스케줄 담당 유저 필드 추가
-  // TODO :: 홈 필드 추가
-
   @Builder
-  public Activity(ScheduleType scheduleType, LocalDateTime createdDate) {
+  public Activity(ScheduleType scheduleType, Home home, User user) {
     this.scheduleType = scheduleType;
-    this.createdDate = createdDate;
+    this.home = home;
+    this.user = user;
   }
 }
