@@ -1,4 +1,4 @@
-package com.developaw.harupuppy.domain.schedule;
+package com.developaw.harupuppy.domain.schedule.domain;
 
 import com.developaw.harupuppy.global.common.DateEntity;
 import jakarta.persistence.Column;
@@ -28,11 +28,8 @@ public class Schedule extends DateEntity {
   @Enumerated(EnumType.STRING)
   private ScheduleType scheduleType;
 
-  @Column(name = "start_date")
-  private LocalDateTime scheduleStartTime;
-
-  @Column(name = "end_date")
-  private LocalDateTime scheduleEndTime;
+  @Column(name = "reserved_date")
+  private LocalDateTime reservedDate;
 
   @Enumerated(EnumType.STRING)
   private RepeatType repeatType = RepeatType.NONE;
@@ -51,16 +48,14 @@ public class Schedule extends DateEntity {
   @Builder
   public Schedule(
       ScheduleType scheduleType,
-      LocalDateTime scheduleStartTime,
-      LocalDateTime scheduleEndTime,
+      LocalDateTime reservedDate,
       RepeatType repeatType,
       AlertType alertType,
       String memo,
-      Boolean isDeleted,
-      Boolean active) {
+      boolean isDeleted,
+      boolean active) {
     this.scheduleType = scheduleType;
-    this.scheduleStartTime = scheduleStartTime;
-    this.scheduleEndTime = scheduleEndTime;
+    this.reservedDate = reservedDate;
     this.repeatType = repeatType;
     this.alertType = alertType;
     this.memo = memo;
