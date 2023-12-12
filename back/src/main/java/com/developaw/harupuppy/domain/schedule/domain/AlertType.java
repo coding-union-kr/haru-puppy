@@ -1,4 +1,4 @@
-package com.developaw.harupuppy.domain.schedule;
+package com.developaw.harupuppy.domain.schedule.domain;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

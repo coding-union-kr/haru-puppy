@@ -1,4 +1,4 @@
-package com.developaw.harupuppy.domain.notification;
+package com.developaw.harupuppy.domain.notification.domain;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
