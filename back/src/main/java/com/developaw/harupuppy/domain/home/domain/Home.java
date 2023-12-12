@@ -7,7 +7,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-
 @Entity
 @Getter
 @Table(name = "HOME")
@@ -24,9 +23,8 @@ public class Home {
   @OneToOne(mappedBy = "home")
   private Dog dog;
 
-
   @Builder
-  public Home (String homeName){
+  public Home(String homeName) {
     this.homeName = homeName;
   }
 }

@@ -30,14 +30,13 @@ public class Dog {
 
   private double weight;
 
-
   @OneToOne
   @JoinColumn(name = "home_id")
   private Home home;
 
-
   @Builder
-  public Dog (String name, String profilePicture, DogGender gender, LocalDate birthday, double weight){
+  public Dog(
+      String name, String profilePicture, DogGender gender, LocalDate birthday, double weight) {
     this.name = name;
     this.profilePicture = profilePicture;
     this.gender = gender;

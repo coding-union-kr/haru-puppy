@@ -6,8 +6,8 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum DogGender {
-    MALE("남아"),
-    FEMALE("여아");
+  MALE("남아"),
+  FEMALE("여아");
 
-    private final String desc;
+  private final String desc;
 }
