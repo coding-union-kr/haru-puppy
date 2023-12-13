@@ -6,7 +6,6 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.*;
 
-
 @Entity
 @Getter
 @Table(name = "USERS")
@@ -55,8 +54,7 @@ public class User {
     this.allowNotification = true;
   }
 
-  public void delete () {
+  public void delete() {
     this.isDeleted = true;
   }
-
 }

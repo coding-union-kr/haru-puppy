@@ -3,8 +3,8 @@ package com.developaw.harupuppy.domain.dog.domain;
 import com.developaw.harupuppy.domain.home.domain.Home;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
-import lombok.*;
 import java.time.LocalDate;
+import lombok.*;
 
 @Entity
 @Getter
@@ -30,14 +30,13 @@ public class Dog {
 
   private double weight;
 
-
   @OneToOne
   @JoinColumn(name = "home_id")
   private Home home;
 
-
   @Builder
-  public Dog (String name, String profilePicture, DogGender gender, LocalDate birthday, double weight){
+  public Dog(
+      String name, String profilePicture, DogGender gender, LocalDate birthday, double weight) {
     this.name = name;
     this.profilePicture = profilePicture;
     this.gender = gender;
