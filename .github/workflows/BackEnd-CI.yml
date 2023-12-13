@@ -44,8 +44,6 @@ jobs:
           java-version: '17'
           distribution: 'corretto'
 
-      - name: init with Gradle
-        run: gradle init
       - name: Build with Gradle
         uses: gradle/gradle-build-action@v2
         with:
