@@ -3,8 +3,8 @@ package com.developaw.harupuppy.domain.dog.domain;
 import com.developaw.harupuppy.domain.home.domain.Home;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
-import lombok.*;
 import java.time.LocalDate;
+import lombok.*;
 
 @Entity
 @Getter
