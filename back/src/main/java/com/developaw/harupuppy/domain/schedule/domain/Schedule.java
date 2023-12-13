@@ -46,7 +46,7 @@ public class Schedule extends DateEntity {
   @Column(name = "is_deleted")
   private boolean isDeleted = false;
 
-  private boolean active = true;
+  private boolean isActive = true;
 
   @Builder
   public Schedule(
@@ -56,18 +56,18 @@ public class Schedule extends DateEntity {
       AlertType alertType,
       String memo,
       boolean isDeleted,
-      boolean active) {
+      boolean isActive) {
     this.scheduleType = scheduleType;
     this.reservedDate = reservedDate;
     this.repeatType = repeatType;
     this.alertType = alertType;
     this.memo = memo;
     this.isDeleted = isDeleted;
-    this.active = active;
+    this.isActive = isActive;
   }
 
   public void done() {
-    active = false;
+    isActive = false;
   }
 
   public void delete() {
