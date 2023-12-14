@@ -7,6 +7,9 @@ import com.developaw.harupuppy.domain.schedule.domain.ScheduleType;
 import com.developaw.harupuppy.domain.user.dto.ScheduleUserDto;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
 
@@ -27,6 +30,7 @@ public record ScheduleCreateDto(
     }
 
     public static Schedule fromDto(ScheduleCreateDto dto) {
+        validateDateTime(dto.scheduleDate, dto.scheduleTime);
         return Schedule.builder()
                 .scheduleDateTime(Schedule.parseDateTime(dto.scheduleDate(), dto.scheduleTime()))
                 .scheduleType(dto.scheduleType())
@@ -34,5 +38,16 @@ public record ScheduleCreateDto(
                 .repeatType(dto.repeatType())
                 .memo(dto.memo())
                 .build();
+    }
+    private static void validateDateTime(String date, String time) {
+        if (date == null || time == null) {
+            throw new IllegalArgumentException("Date and time must not be null");
+        }
+        try {
+            LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            LocalTime.parse(time, DateTimeFormatter.ofPattern("HH:mm"));
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Invalid date or time format", e);
+        }
     }
 }
