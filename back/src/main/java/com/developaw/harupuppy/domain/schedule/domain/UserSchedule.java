@@ -13,5 +13,6 @@ import lombok.NoArgsConstructor;
 @Table(name = "USER_SCHEDULES")
 public class UserSchedule {
 
-  @EmbeddedId private UserSchedulePK userSchedulePK;
+    @EmbeddedId
+    private UserSchedulePK userSchedulePK;
 }
