@@ -24,6 +24,7 @@ public class ScheduleService {
     private final UserScheduleRepository userScheduleRepository;
     private final UserRepository userRepository;
 
+    @Transactional
     public void create(ScheduleCreateDto dto) {
         List<User> mates = validateMates(dto.mates());
 
