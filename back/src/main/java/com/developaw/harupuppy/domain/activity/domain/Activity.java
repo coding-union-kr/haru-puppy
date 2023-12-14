@@ -27,30 +27,30 @@ import org.springframework.data.annotation.CreatedDate;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class Activity {
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-  @NotNull
-  @Enumerated(EnumType.STRING)
-  private ScheduleType scheduleType;
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private ScheduleType scheduleType;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "home_id")
-  private Home home;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "home_id")
+    private Home home;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "user_id")
-  private User user;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
-  @Column(name = "created_date")
-  @CreatedDate
-  private LocalDateTime createdDate;
+    @Column(name = "created_date")
+    @CreatedDate
+    private LocalDateTime createdDate;
 
-  @Builder
-  public Activity(ScheduleType scheduleType, Home home, User user) {
-    this.scheduleType = scheduleType;
-    this.home = home;
-    this.user = user;
-  }
+    @Builder
+    public Activity(ScheduleType scheduleType, Home home, User user) {
+        this.scheduleType = scheduleType;
+        this.home = home;
+        this.user = user;
+    }
 }
