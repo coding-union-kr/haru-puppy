@@ -1,5 +1,6 @@
 package com.developaw.harupuppy.domain.schedule.application;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatNoException;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -55,8 +56,7 @@ class ScheduleServiceTest {
         when(scheduleRepository.save(any())).thenReturn(schedule);
         when(userScheduleRepository.saveAll(any())).thenReturn(userSchedules);
 
-        scheduleService.create(createDto);
-    }
+        assertThatNoException().isThrownBy(() -> scheduleService.create(createDto));}
     @Test
     @DisplayName("스케줄 정보의 날짜, 시간 타입이 유효하지 않아 스케줄을 생성할 수 없다")
     void createWithInvalidDateType(){
