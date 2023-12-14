@@ -32,11 +32,6 @@ jobs:
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.ref }}
 
-      - name: Formatting with google java
-        uses: axel-op/googlejavaformat-action@v3
-        with:
-          version: 1.18.1
-
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
