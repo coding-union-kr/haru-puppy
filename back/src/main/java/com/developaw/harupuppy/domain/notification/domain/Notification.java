@@ -26,29 +26,30 @@ import org.springframework.data.annotation.CreatedDate;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Notification {
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "notification_id")
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "notification_id")
+    private Long id;
 
-  @NotNull
-  @Enumerated(EnumType.STRING)
-  private NotificationType notificationType;
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private NotificationType notificationType;
 
-  @NotBlank private String message;
+    @NotBlank
+    private String message;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "user_id")
-  private User receiver;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User receiver;
 
-  @Column(name = "send_date")
-  @CreatedDate
-  private LocalDateTime sendDate;
+    @Column(name = "send_date")
+    @CreatedDate
+    private LocalDateTime sendDate;
 
-  @Builder
-  public Notification(NotificationType notificationType, String message, User receiver) {
-    this.notificationType = notificationType;
-    this.message = message;
-    this.receiver = receiver;
-  }
+    @Builder
+    public Notification(NotificationType notificationType, String message, User receiver) {
+        this.notificationType = notificationType;
+        this.message = message;
+        this.receiver = receiver;
+    }
 }
