@@ -2,7 +2,6 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.2.0'
     id 'io.spring.dependency-management' version '1.1.4'
-    id 'jacoco'
 }
 
 group = 'com.developaw'
@@ -25,26 +24,12 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'com.mysql:mysql-connector-j'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-}
-
-test {
-    finalizedBy jacocoTestReport
-}
-
-jacoco {
-    toolVersion = '0.8.8'
-}
-
-jacocoTestReport {
-    reports {
-        xml.required = true
-        html.required = true
-    }
 }
 
 tasks.named('test') {

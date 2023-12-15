@@ -1,44 +1,40 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { ScheduleItem } from '../schedule/calendar';
+import Image from 'next/image';
 
 interface ITodoCardProps {
-  todoList: {
-    id: number;
-    task: string;
-    mates: {
-      name: string;
-      profileImg: string;
-    }[];
-    createdAt: string;
-    completed: boolean;
-  }[];
+  todoList: ScheduleItem[];
 }
-
 
 const TodoCard = ({ todoList }: ITodoCardProps) => {
   const [todos, setTodos] = useState(todoList);
 
-  const handleCheckboxChange = (id: number) => {
+  const handleCheckboxChange = (scheduleId: number) => {
     const updatedTodos = todos.map((todo) =>
-      todo.id === id ? { ...todo, completed: !todo.completed } : todo
+      todo.scheduleId === scheduleId ? { ...todo, active: !todo.active } : todo
     );
     setTodos(updatedTodos);
   };
 
-  const uncompletedTodos = todos.filter((todo) => !todo.completed);
-  const completedTodos = todos.filter((todo) => todo.completed);
+  const activeTodos = todos.filter((todo) => todo.active);
+  const inactiveTodos = todos.filter((todo) => !todo.active);
 
   return (
     <Wrapper>
       <TodoListWrapper>
         <CardTitle>오늘</CardTitle>
-        {uncompletedTodos.map((todo, index) => (
+        {inactiveTodos.map((todo, index) => (
           <TodoItem key={index}>
-            <Checkbox type='checkbox' onChange={() => handleCheckboxChange(todo.id)} />
-            <TodoText completed={todo.completed}>{todo.task}</TodoText>
+            <Checkbox
+              type='checkbox'
+              checked={!todo.active}
+              onChange={() => handleCheckboxChange(todo.scheduleId)}
+            />
+            <TodoText active={!todo.active}>{todo.scheduleType}</TodoText>
             <MateImgWrapper>
               {todo.mates.map((mate, mateIndex) => (
-                <MateImg key={mateIndex} index={mateIndex} />
+                <MateImg alt='메이트 이미지' key={mateIndex} index={mateIndex} src={mate.user_img} />
               ))}
             </MateImgWrapper>
           </TodoItem>
@@ -47,13 +43,17 @@ const TodoCard = ({ todoList }: ITodoCardProps) => {
 
       <TodoListWrapper>
         <CardTitle>완료</CardTitle>
-        {completedTodos.map((todo, index) => (
+        {activeTodos.map((todo, index) => (
           <TodoItem key={index}>
-            <Checkbox type='checkbox' checked onChange={() => handleCheckboxChange(todo.id)} />
-            <TodoText completed={todo.completed}>{todo.task}</TodoText>
+            <Checkbox
+              type='checkbox'
+              checked
+              onChange={() => handleCheckboxChange(todo.scheduleId)}
+            />
+            <TodoText active={!todo.active}>{todo.scheduleType}</TodoText>
             <MateImgWrapper>
               {todo.mates.map((mate, mateIndex) => (
-                <MateImg key={mateIndex} index={mateIndex} />
+                <MateImg alt='메이트 이미지' key={mateIndex} index={mateIndex} src={mate.user_img} />
               ))}
             </MateImgWrapper>
           </TodoItem>
@@ -89,8 +89,15 @@ const TodoListWrapper = styled.div`
 
 const TodoItem = styled.div`
   display: flex;
+  width: 340px;
+  height: 50px;
+  border-radius: 15px;
   align-items: center;
   margin-bottom: 10px;
+  transition: background-color 0.3s ease; 
+  &:hover {
+    background-color: #f0f0f0; 
+  }
 `;
 
 const CardTitle = styled.div`
@@ -104,7 +111,7 @@ const CardTitle = styled.div`
 const Checkbox = styled.input.attrs<{ checked?: boolean }>(({ checked }) => ({
   checked: checked || false,
 }))`
-  margin-right: 10px;
+  margin: 10px;
   border: none;
   border-radius: 50%;
   width: 25px;
@@ -121,15 +128,14 @@ const Checkbox = styled.input.attrs<{ checked?: boolean }>(({ checked }) => ({
     background-position: 50%;
     background-repeat: no-repeat;
     background-color: #06ACF4;
-  }
-  `
+  }`
 
 
-const TodoText = styled.p<{ completed: boolean }>`
+const TodoText = styled.p<{ active: boolean }>`
   font-weight: ${({ theme }) => theme.typo.regular};
   flex: 1;
   color: ${({ theme }) => theme.colors.black90};
-  text-decoration: ${({ completed }) => (completed ? 'line-through' : 'none')};
+  text-decoration: ${({ active }) => (active ? 'line-through' : 'none')};
 `;
 
 const MateImgWrapper = styled.div`
@@ -140,7 +146,7 @@ const MateImgWrapper = styled.div`
   position: relative;
 `;
 
-const MateImg = styled.div<{ index: number }>`
+const MateImg = styled(Image) <{ index: number }>`
   width: 25px;
   height: 25px;
   border-radius: 50%;
