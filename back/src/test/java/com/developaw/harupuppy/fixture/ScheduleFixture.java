@@ -23,6 +23,40 @@ public class ScheduleFixture {
                 ""
         );
     }
+    public static ScheduleCreateDto getWeeklyRepeatedDto() {
+        return new ScheduleCreateDto(
+                ScheduleType.POO,
+                List.of(new UserScheduleDto(1L), new UserScheduleDto(2L)),
+                "2023-12-25",
+                "12:35",
+                RepeatType.WEEK,
+                AlertType.NONE,
+                ""
+        );
+    }
+    public static ScheduleCreateDto getMonthlyRepeatedDto() {
+        return new ScheduleCreateDto(
+                ScheduleType.POO,
+                List.of(new UserScheduleDto(1L), new UserScheduleDto(2L)),
+                "2023-12-25",
+                "12:35",
+                RepeatType.MONTH,
+                AlertType.NONE,
+                ""
+        );
+    }
+
+    public static ScheduleCreateDto getDailyRepeatedDto() {
+        return new ScheduleCreateDto(
+                ScheduleType.POO,
+                List.of(new UserScheduleDto(1L), new UserScheduleDto(2L)),
+                "2023-12-25",
+                "12:35",
+                RepeatType.DAY,
+                AlertType.NONE,
+                ""
+        );
+    }
 
     public static ScheduleCreateDto getCreateDtoWithInvalidDateType() {
         return new ScheduleCreateDto(
@@ -50,6 +84,10 @@ public class ScheduleFixture {
 
     public static List<UserSchedule> getUserSchedules(List<User> mates, Schedule schedule) {
         return UserSchedule.of(mates, schedule);
+    }
+
+    public static List<UserSchedule> getRepeatedUserSchedules(List<User> mates, List<Schedule> schedules) {
+        return UserSchedule.of(mates, schedules);
     }
 
     public static List<User> getMates() {
