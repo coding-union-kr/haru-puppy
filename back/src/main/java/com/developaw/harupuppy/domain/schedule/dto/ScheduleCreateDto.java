@@ -23,6 +23,18 @@ public record ScheduleCreateDto(
         String memo
 ) {
 
+    public static Schedule fromDto(ScheduleCreateDto dto, String repeatId) {
+        validateDateTime(dto.scheduleDate, dto.scheduleTime);
+        return Schedule.builder()
+                .scheduleDateTime(Schedule.parseDateTime(dto.scheduleDate(), dto.scheduleTime()))
+                .scheduleType(dto.scheduleType())
+                .mates(new ArrayList<>())
+                .alertType(dto.alertType())
+                .repeatId(repeatId)
+                .repeatType(dto.repeatType())
+                .memo(dto.memo())
+                .build();
+    }
     public static Schedule fromDto(ScheduleCreateDto dto) {
         validateDateTime(dto.scheduleDate, dto.scheduleTime);
         return Schedule.builder()
@@ -30,6 +42,7 @@ public record ScheduleCreateDto(
                 .scheduleType(dto.scheduleType())
                 .mates(new ArrayList<>())
                 .alertType(dto.alertType())
+                .repeatId(null)
                 .repeatType(dto.repeatType())
                 .memo(dto.memo())
                 .build();

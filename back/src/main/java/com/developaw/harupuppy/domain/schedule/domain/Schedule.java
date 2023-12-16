@@ -19,6 +19,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -48,6 +49,8 @@ public class Schedule extends DateEntity {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private List<UserSchedule> mates = new ArrayList<>();
 
+    private String repeatId;
+
     @Enumerated(EnumType.STRING)
     private RepeatType repeatType = RepeatType.NONE;
 
@@ -67,15 +70,35 @@ public class Schedule extends DateEntity {
             ScheduleType scheduleType,
             LocalDateTime scheduleDateTime,
             List<UserSchedule> mates,
+            String repeatId,
             RepeatType repeatType,
             AlertType alertType,
             String memo) {
         this.scheduleType = scheduleType;
         this.scheduleDateTime = scheduleDateTime;
         this.mates = mates;
+        this.repeatId = repeatId;
         this.repeatType = repeatType;
         this.alertType = alertType;
         this.memo = memo;
+    }
+
+    public static Schedule of(Schedule schedule, String repeatId, LocalDateTime repeatDateTime){
+        return Schedule.builder()
+                .scheduleType(schedule.scheduleType)
+                .scheduleDateTime(repeatDateTime)
+                .mates(schedule.mates)
+                .repeatId(repeatId)
+                .repeatType(schedule.repeatType)
+                .alertType(schedule.alertType)
+                .memo(schedule.memo)
+                .build();
+    }
+    public static List<Schedule> of(List<LocalDateTime> dateTimesUntilNextYear, Schedule schedule, String repeatId){
+        return dateTimesUntilNextYear.stream()
+                .map(datetime -> {
+                    return Schedule.of(schedule, repeatId, datetime);
+                }).collect(Collectors.toList());
     }
 
     public void done() {
@@ -84,6 +107,12 @@ public class Schedule extends DateEntity {
 
     public void delete() {
         isDeleted = true;
+    }
+    public void setScheduleDateTime(LocalDateTime dateTime){
+        this.scheduleDateTime = dateTime;
+    }
+    public void setRepeatId(String repeatId){
+        this.repeatId = repeatId;
     }
 
     public void addMate(UserSchedule mate) {
