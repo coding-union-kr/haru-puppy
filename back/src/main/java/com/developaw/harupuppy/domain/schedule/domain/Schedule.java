@@ -1,5 +1,6 @@
 package com.developaw.harupuppy.domain.schedule.domain;
 
+import com.developaw.harupuppy.domain.schedule.dto.ScheduleModifyDto;
 import com.developaw.harupuppy.global.common.DateEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -43,7 +44,7 @@ public class Schedule extends DateEntity {
     private ScheduleType scheduleType;
 
     @NotNull
-    @Column(name = "reserved_date")
+    @Column(name = "schedule_datetime")
     private LocalDateTime scheduleDateTime;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
@@ -83,7 +84,7 @@ public class Schedule extends DateEntity {
         this.memo = memo;
     }
 
-    public static Schedule of(Schedule schedule, String repeatId, LocalDateTime repeatDateTime){
+    public static Schedule of(Schedule schedule, String repeatId, LocalDateTime repeatDateTime) {
         return Schedule.builder()
                 .scheduleType(schedule.scheduleType)
                 .scheduleDateTime(repeatDateTime)
@@ -94,11 +95,21 @@ public class Schedule extends DateEntity {
                 .memo(schedule.memo)
                 .build();
     }
-    public static List<Schedule> of(List<LocalDateTime> dateTimesUntilNextYear, Schedule schedule, String repeatId){
+
+    public static List<Schedule> of(List<LocalDateTime> dateTimesUntilNextYear, Schedule schedule, String repeatId) {
         return dateTimesUntilNextYear.stream()
                 .map(datetime -> {
                     return Schedule.of(schedule, repeatId, datetime);
                 }).collect(Collectors.toList());
+    }
+
+    public void update(ScheduleModifyDto dto, List<UserSchedule> mates) {
+        this.scheduleType = dto.scheduleType();
+        this.scheduleDateTime = parseDateTime(dto.scheduleDate(), dto.scheduleTime());
+        this.mates = mates;
+        this.repeatType = dto.repeatType();
+        this.alertType = dto.alertType();
+        this.memo = dto.memo();
     }
 
     public void done() {
@@ -108,10 +119,12 @@ public class Schedule extends DateEntity {
     public void delete() {
         isDeleted = true;
     }
-    public void setScheduleDateTime(LocalDateTime dateTime){
+
+    public void setScheduleDateTime(LocalDateTime dateTime) {
         this.scheduleDateTime = dateTime;
     }
-    public void setRepeatId(String repeatId){
+
+    public void setRepeatId(String repeatId) {
         this.repeatId = repeatId;
     }
 

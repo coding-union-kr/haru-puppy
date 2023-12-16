@@ -2,11 +2,13 @@ package com.developaw.harupuppy.domain.schedule.api;
 
 import com.developaw.harupuppy.domain.schedule.application.ScheduleService;
 import com.developaw.harupuppy.domain.schedule.dto.ScheduleCreateDto;
+import com.developaw.harupuppy.domain.schedule.dto.ScheduleModifyDto;
 import com.developaw.harupuppy.global.common.response.ApiResponse;
 import com.developaw.harupuppy.global.common.response.Response.Status;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,4 +25,12 @@ public class ScheduleController {
         scheduleService.create(dto);
         return ApiResponse.ok(Status.CREATE, null);
     }
+
+    @PutMapping
+    public ApiResponse<Void> update(@RequestBody @Validated ScheduleModifyDto dto) {
+        scheduleService.update(dto);
+        return ApiResponse.ok(Status.UPDATE, null);
+    }
+
+
 }
