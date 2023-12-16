@@ -6,12 +6,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.developaw.harupuppy.domain.schedule.application.ScheduleService;
-import com.developaw.harupuppy.domain.schedule.dto.ScheduleCreateDto;
+import com.developaw.harupuppy.domain.schedule.dto.ScheduleCreateRequest;
 import com.developaw.harupuppy.fixture.ScheduleFixture;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +31,7 @@ public class ScheduleControllerTest {
     @Test
     @DisplayName("스케줄 생성")
     void create() throws Exception {
-        ScheduleCreateDto validDto = ScheduleFixture.getCreateDto();
+        ScheduleCreateRequest validDto = ScheduleFixture.getCreateDto();
         mvc.perform(
                         post("/api/schedules")
                                 .content(objectMapper.writeValueAsString(validDto))
@@ -45,7 +43,7 @@ public class ScheduleControllerTest {
     @Test
     @DisplayName("스케줄 생성 시 필수값이 없어 유효성 검증에서 실패한다")
     void createWithInvalidDto() throws Exception {
-        ScheduleCreateDto invalidDto = ScheduleFixture.getCreateDtoWithNullType();
+        ScheduleCreateRequest invalidDto = ScheduleFixture.getCreateDtoWithNullType();
         MvcResult result = mvc.perform(
                 post("/api/schedules")
                         .content(objectMapper.writeValueAsString(invalidDto))

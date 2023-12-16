@@ -8,7 +8,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.util.List;
 
-public record ScheduleModifyDto(
+public record ScheduleUpdateRequest(
         @NotNull(message = "스케줄 아이디가 필요합니다") Long scheduleId,
         @NotNull(message = "스케줄 타입 지정이 필요합니다") ScheduleType scheduleType,
         @NotNull(message = "메이트 지정이 필요합니다") List<UserScheduleDto> mates,

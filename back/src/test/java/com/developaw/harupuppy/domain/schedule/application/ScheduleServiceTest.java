@@ -5,16 +5,14 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatNoException
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.developaw.harupuppy.domain.schedule.dao.ScheduleRepository;
 import com.developaw.harupuppy.domain.schedule.dao.UserScheduleRepository;
-import com.developaw.harupuppy.domain.schedule.domain.RepeatType;
 import com.developaw.harupuppy.domain.schedule.domain.Schedule;
 import com.developaw.harupuppy.domain.schedule.domain.UserSchedule;
-import com.developaw.harupuppy.domain.schedule.dto.ScheduleCreateDto;
+import com.developaw.harupuppy.domain.schedule.dto.ScheduleCreateRequest;
 import com.developaw.harupuppy.domain.user.domain.User;
 import com.developaw.harupuppy.domain.user.repository.UserRepository;
 import com.developaw.harupuppy.fixture.ScheduleFixture;
@@ -36,12 +34,11 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.util.ReflectionTestUtils;
 
 @ExtendWith(MockitoExtension.class)
 @Slf4j
 class ScheduleServiceTest {
-    static ScheduleCreateDto createDto, repeatedDto, invalidDto;
+    static ScheduleCreateRequest createDto, repeatedDto, invalidDto;
     static List<User> mates;
     @InjectMocks
     private ScheduleService scheduleService;
@@ -63,7 +60,7 @@ class ScheduleServiceTest {
     @Test
     @DisplayName("스케줄 정보를 받아 단일 스케줄을 생성한다")
     void create() {
-        Schedule schedule = ScheduleCreateDto.fromDto(createDto, null);
+        Schedule schedule = ScheduleCreateRequest.fromDto(createDto, null);
         List<UserSchedule> userSchedules = ScheduleFixture.getUserSchedules(mates, schedule);
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(mates.get(0)));
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(mates.get(1)));
@@ -76,9 +73,9 @@ class ScheduleServiceTest {
     @ParameterizedTest
     @MethodSource("repeatedScheduleDate")
     @DisplayName("스케줄 정보를 받아 반복되는 스케줄을 생성한다")
-    void createRepeatedSchedule(ScheduleCreateDto repeatedDto, int expectedSchedulesCnt, int expectedUserSchedulesCnt) {
+    void createRepeatedSchedule(ScheduleCreateRequest repeatedDto, int expectedSchedulesCnt, int expectedUserSchedulesCnt) {
         String repeatId = "repeatId";
-        Schedule schedule = ScheduleCreateDto.fromDto(repeatedDto, repeatId);
+        Schedule schedule = ScheduleCreateRequest.fromDto(repeatedDto, repeatId);
         LocalDateTime startDate = schedule.getScheduleDateTime();
         LocalDateTime endDate = startDate.plusYears(1).withMonth(12).withDayOfMonth(31);
 

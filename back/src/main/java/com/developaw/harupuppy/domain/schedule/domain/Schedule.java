@@ -1,6 +1,6 @@
 package com.developaw.harupuppy.domain.schedule.domain;
 
-import com.developaw.harupuppy.domain.schedule.dto.ScheduleModifyDto;
+import com.developaw.harupuppy.domain.schedule.dto.ScheduleUpdateRequest;
 import com.developaw.harupuppy.global.common.DateEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -47,7 +47,7 @@ public class Schedule extends DateEntity {
     @Column(name = "schedule_datetime")
     private LocalDateTime scheduleDateTime;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserSchedule> mates = new ArrayList<>();
 
     private String repeatId;
@@ -103,7 +103,7 @@ public class Schedule extends DateEntity {
                 }).collect(Collectors.toList());
     }
 
-    public void update(ScheduleModifyDto dto, List<UserSchedule> mates) {
+    public void update(ScheduleUpdateRequest dto, List<UserSchedule> mates) {
         this.scheduleType = dto.scheduleType();
         this.scheduleDateTime = parseDateTime(dto.scheduleDate(), dto.scheduleTime());
         this.mates = mates;
@@ -113,6 +113,10 @@ public class Schedule extends DateEntity {
     }
 
     public void done() {
+        isActive = true;
+    }
+
+    public void planned() {
         isActive = false;
     }
 

@@ -13,7 +13,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-public record ScheduleCreateDto(
+public record ScheduleCreateRequest(
         @NotNull(message = "스케줄 타입 지정이 필요합니다") ScheduleType scheduleType,
         @NotNull(message = "메이트 지정이 필요합니다") List<UserScheduleDto> mates,
         @NotBlank(message = "스케줄 날짜 지정이 필요합니다") String scheduleDate,
@@ -23,7 +23,7 @@ public record ScheduleCreateDto(
         String memo
 ) {
 
-    public static Schedule fromDto(ScheduleCreateDto dto, String repeatId) {
+    public static Schedule fromDto(ScheduleCreateRequest dto, String repeatId) {
         validateDateTime(dto.scheduleDate, dto.scheduleTime);
         return Schedule.builder()
                 .scheduleDateTime(Schedule.parseDateTime(dto.scheduleDate(), dto.scheduleTime()))
@@ -35,7 +35,7 @@ public record ScheduleCreateDto(
                 .memo(dto.memo())
                 .build();
     }
-    public static Schedule fromDto(ScheduleCreateDto dto) {
+    public static Schedule fromDto(ScheduleCreateRequest dto) {
         validateDateTime(dto.scheduleDate, dto.scheduleTime);
         return Schedule.builder()
                 .scheduleDateTime(Schedule.parseDateTime(dto.scheduleDate(), dto.scheduleTime()))

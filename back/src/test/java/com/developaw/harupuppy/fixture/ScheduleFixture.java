@@ -5,15 +5,15 @@ import com.developaw.harupuppy.domain.schedule.domain.RepeatType;
 import com.developaw.harupuppy.domain.schedule.domain.Schedule;
 import com.developaw.harupuppy.domain.schedule.domain.ScheduleType;
 import com.developaw.harupuppy.domain.schedule.domain.UserSchedule;
-import com.developaw.harupuppy.domain.schedule.dto.ScheduleCreateDto;
+import com.developaw.harupuppy.domain.schedule.dto.ScheduleCreateRequest;
 import com.developaw.harupuppy.domain.user.domain.User;
 import com.developaw.harupuppy.domain.user.domain.UserRole;
 import com.developaw.harupuppy.domain.user.dto.UserScheduleDto;
 import java.util.List;
 
 public class ScheduleFixture {
-    public static ScheduleCreateDto getCreateDto() {
-        return new ScheduleCreateDto(
+    public static ScheduleCreateRequest getCreateDto() {
+        return new ScheduleCreateRequest(
                 ScheduleType.POO,
                 List.of(new UserScheduleDto(1L), new UserScheduleDto(2L)),
                 "2023-12-25",
@@ -23,8 +23,8 @@ public class ScheduleFixture {
                 ""
         );
     }
-    public static ScheduleCreateDto getWeeklyRepeatedDto() {
-        return new ScheduleCreateDto(
+    public static ScheduleCreateRequest getWeeklyRepeatedDto() {
+        return new ScheduleCreateRequest(
                 ScheduleType.POO,
                 List.of(new UserScheduleDto(1L), new UserScheduleDto(2L)),
                 "2023-12-25",
@@ -34,8 +34,8 @@ public class ScheduleFixture {
                 ""
         );
     }
-    public static ScheduleCreateDto getMonthlyRepeatedDto() {
-        return new ScheduleCreateDto(
+    public static ScheduleCreateRequest getMonthlyRepeatedDto() {
+        return new ScheduleCreateRequest(
                 ScheduleType.POO,
                 List.of(new UserScheduleDto(1L), new UserScheduleDto(2L)),
                 "2023-12-25",
@@ -46,8 +46,8 @@ public class ScheduleFixture {
         );
     }
 
-    public static ScheduleCreateDto getDailyRepeatedDto() {
-        return new ScheduleCreateDto(
+    public static ScheduleCreateRequest getDailyRepeatedDto() {
+        return new ScheduleCreateRequest(
                 ScheduleType.POO,
                 List.of(new UserScheduleDto(1L), new UserScheduleDto(2L)),
                 "2023-12-25",
@@ -58,8 +58,8 @@ public class ScheduleFixture {
         );
     }
 
-    public static ScheduleCreateDto getCreateDtoWithInvalidDateType() {
-        return new ScheduleCreateDto(
+    public static ScheduleCreateRequest getCreateDtoWithInvalidDateType() {
+        return new ScheduleCreateRequest(
                 ScheduleType.POO,
                 List.of(new UserScheduleDto(1L), new UserScheduleDto(2L)),
                 "0000-00-00",
@@ -70,8 +70,8 @@ public class ScheduleFixture {
         );
     }
 
-    public static ScheduleCreateDto getCreateDtoWithNullType() {
-        return new ScheduleCreateDto(
+    public static ScheduleCreateRequest getCreateDtoWithNullType() {
+        return new ScheduleCreateRequest(
                 ScheduleType.POO,
                 null,
                 "2023-12-25",
