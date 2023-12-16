@@ -5,9 +5,9 @@ import com.developaw.harupuppy.domain.schedule.dao.UserScheduleRepository;
 import com.developaw.harupuppy.domain.schedule.domain.RepeatType;
 import com.developaw.harupuppy.domain.schedule.domain.Schedule;
 import com.developaw.harupuppy.domain.schedule.domain.UserSchedule;
-import com.developaw.harupuppy.domain.schedule.dto.ScheduleCreateDto;
+import com.developaw.harupuppy.domain.schedule.dto.ScheduleCreateRequest;
 import com.developaw.harupuppy.domain.schedule.dto.ScheduleDeleteRequest;
-import com.developaw.harupuppy.domain.schedule.dto.ScheduleModifyDto;
+import com.developaw.harupuppy.domain.schedule.dto.ScheduleUpdateRequest;
 import com.developaw.harupuppy.domain.user.domain.User;
 import com.developaw.harupuppy.domain.user.dto.UserScheduleDto;
 import com.developaw.harupuppy.domain.user.repository.UserRepository;
@@ -34,10 +34,10 @@ public class ScheduleService {
     private final UserRepository userRepository;
 
     @Transactional
-    public void create(ScheduleCreateDto dto) {
+    public void create(ScheduleCreateRequest dto) {
         List<User> mates = validateMates(dto.mates());
 
-        Schedule schedule = ScheduleCreateDto.fromDto(dto);
+        Schedule schedule = ScheduleCreateRequest.fromDto(dto);
         scheduleRepository.save(schedule);
 
         List<UserSchedule> userSchedules = UserSchedule.of(mates, schedule);
@@ -73,33 +73,44 @@ public class ScheduleService {
     }
 
     @Transactional
-    public void update(ScheduleModifyDto dto){
+    public void update(ScheduleUpdateRequest dto) {
         Schedule schedule = scheduleRepository.findById(dto.scheduleId())
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_SCHEDULE));
         List<UserSchedule> newMates = UserSchedule.of(validateMates(dto.mates()), schedule);
 
-        if(dto.modifyRepeatedSchedules()){
+        if (dto.modifyRepeatedSchedules()) {
             String repeatId = Objects.requireNonNull(dto.repeatId());
             List<Schedule> repeatedSchedules = scheduleRepository.findAllByRepeatIdAndScheduleDateTimeAfter(repeatId)
                     .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_SCHEDULE));
             repeatedSchedules.forEach(repeatSchedule -> repeatSchedule.update(dto, newMates));
-        }else{
+        } else {
             schedule.update(dto, newMates);
         }
     }
 
     @Transactional
-    public void delete(ScheduleDeleteRequest dto){
+    public void delete(ScheduleDeleteRequest dto) {
         Schedule schedule = scheduleRepository.findById(dto.scheduleId())
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_SCHEDULE));
 
-        if(dto.deleteAllSchedules()){
+        if (dto.deleteAllSchedules()) {
             String repeatId = Objects.requireNonNull(dto.repeatId());
             List<Schedule> repeatedSchedules = scheduleRepository.findAllByRepeatIdAndScheduleDateTimeAfter(repeatId)
                     .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_SCHEDULE));
             scheduleRepository.deleteAll(repeatedSchedules);
-        }else{
+        } else {
             scheduleRepository.delete(schedule);
+        }
+    }
+
+    @Transactional
+    public void updateStatus(Long scheduleId, boolean status) {
+        Schedule schedule = scheduleRepository.findById(scheduleId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_SCHEDULE));
+        if (status) {
+            schedule.done();
+        } else {
+            schedule.planned();
         }
     }
 
