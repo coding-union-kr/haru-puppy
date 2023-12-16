@@ -6,6 +6,7 @@ import com.developaw.harupuppy.domain.schedule.domain.RepeatType;
 import com.developaw.harupuppy.domain.schedule.domain.Schedule;
 import com.developaw.harupuppy.domain.schedule.domain.UserSchedule;
 import com.developaw.harupuppy.domain.schedule.dto.ScheduleCreateDto;
+import com.developaw.harupuppy.domain.schedule.dto.ScheduleDeleteRequest;
 import com.developaw.harupuppy.domain.schedule.dto.ScheduleModifyDto;
 import com.developaw.harupuppy.domain.user.domain.User;
 import com.developaw.harupuppy.domain.user.dto.UserScheduleDto;
@@ -79,11 +80,26 @@ public class ScheduleService {
 
         if(dto.modifyRepeatedSchedules()){
             String repeatId = Objects.requireNonNull(dto.repeatId());
-            List<Schedule> repeatedSchedules = scheduleRepository.findAllByRepeatId(repeatId)
+            List<Schedule> repeatedSchedules = scheduleRepository.findAllByRepeatIdAndScheduleDateTimeAfter(repeatId)
                     .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_SCHEDULE));
             repeatedSchedules.forEach(repeatSchedule -> repeatSchedule.update(dto, newMates));
         }else{
             schedule.update(dto, newMates);
+        }
+    }
+
+    @Transactional
+    public void delete(ScheduleDeleteRequest dto){
+        Schedule schedule = scheduleRepository.findById(dto.scheduleId())
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_SCHEDULE));
+
+        if(dto.deleteAllSchedules()){
+            String repeatId = Objects.requireNonNull(dto.repeatId());
+            List<Schedule> repeatedSchedules = scheduleRepository.findAllByRepeatIdAndScheduleDateTimeAfter(repeatId)
+                    .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_SCHEDULE));
+            scheduleRepository.deleteAll(repeatedSchedules);
+        }else{
+            scheduleRepository.delete(schedule);
         }
     }
 
