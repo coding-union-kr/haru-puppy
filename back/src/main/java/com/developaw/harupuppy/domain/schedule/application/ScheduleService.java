@@ -47,6 +47,7 @@ public class ScheduleService {
         if (dto.repeatType() != null && !RepeatType.NONE.equals(dto.repeatType())) {
             createRepeatSchedule(schedule, mates);
         }
+
         return ScheduleResponse.of(schedule);
     }
 
@@ -78,14 +79,13 @@ public class ScheduleService {
         Schedule schedule = scheduleRepository.findById(scheduleId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_SCHEDULE));
         List<UserSchedule> newMates = UserSchedule.of(validateMates(dto.mates()), schedule);
-
+        schedule.update(dto, newMates);
         if (dto.repeatId() != null && all) {
             String repeatId = Objects.requireNonNull(dto.repeatId());
-            List<Schedule> repeatedSchedules = scheduleRepository.findAllByRepeatIdAndScheduleDateTimeAfter(repeatId)
+            List<Schedule> repeatedSchedules = scheduleRepository.findAllByRepeatIdAndScheduleDateTimeAfter(repeatId,
+                            schedule.getScheduleDateTime())
                     .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_SCHEDULE));
             repeatedSchedules.forEach(repeatSchedule -> repeatSchedule.update(dto, newMates));
-        } else {
-            schedule.update(dto, newMates);
         }
         return ScheduleResponse.of(schedule);
     }
@@ -97,7 +97,8 @@ public class ScheduleService {
 
         if (schedule.getRepeatId() != null && all) {
             List<Schedule> repeatedSchedules = scheduleRepository.findAllByRepeatIdAndScheduleDateTimeAfter(
-                    schedule.getRepeatId()).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_SCHEDULE));
+                            schedule.getRepeatId(), schedule.getScheduleDateTime())
+                    .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_SCHEDULE));
             scheduleRepository.deleteAll(repeatedSchedules);
         } else {
             scheduleRepository.delete(schedule);
