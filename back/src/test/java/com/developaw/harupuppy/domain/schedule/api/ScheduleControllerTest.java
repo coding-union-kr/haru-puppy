@@ -1,6 +1,5 @@
 package com.developaw.harupuppy.domain.schedule.api;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -45,13 +44,12 @@ public class ScheduleControllerTest {
     void createWithInvalidDto() throws Exception {
         ScheduleCreateRequest invalidDto = ScheduleFixture.getCreateDtoWithNullType();
         MvcResult result = mvc.perform(
-                post("/api/schedules")
-                        .content(objectMapper.writeValueAsString(invalidDto))
-                        .contentType(MediaType.APPLICATION_JSON))
+                        post("/api/schedules")
+                                .content(objectMapper.writeValueAsString(invalidDto))
+                                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest())
                 .andReturn();
 
         Assertions.assertThat(result.getResolvedException().getMessage().contains("메이트 지정이 필요합니다"));
     }
-
 }
