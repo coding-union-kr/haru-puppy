@@ -6,6 +6,7 @@ import com.developaw.harupuppy.domain.schedule.dto.request.ScheduleUpdateRequest
 import com.developaw.harupuppy.domain.schedule.dto.response.ScheduleResponse;
 import com.developaw.harupuppy.global.common.response.ApiResponse;
 import com.developaw.harupuppy.global.common.response.Response.Status;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
@@ -27,27 +28,27 @@ public class ScheduleController {
 
     //TODO :: SpringContextHolder에 저장된 UserDto를 컨트롤러로 가져와 service로 보내기
     @PostMapping
-    public ApiResponse<ScheduleResponse> create(@RequestBody ScheduleCreateRequest dto) {
+    public ApiResponse<ScheduleResponse> create(@RequestBody @Valid ScheduleCreateRequest dto) {
         return ApiResponse.ok(Status.CREATE, scheduleService.create(dto));
     }
 
     @PutMapping("/{scheduleId}")
-    public ApiResponse<ScheduleResponse> update(@NotNull @PathVariable Long scheduleId,
-                                                @NotNull @RequestBody ScheduleUpdateRequest dto,
-                                                @NotNull @RequestParam Boolean all) {
+    public ApiResponse<ScheduleResponse> update(@NotNull(message = "스케줄 아이디는 필수입니다") @PathVariable Long scheduleId,
+                                                @NotNull @RequestBody @Valid ScheduleUpdateRequest dto,
+                                                @NotNull(message = "반복 스케줄 수정여부는 필수입니다") @RequestParam(defaultValue = "false") Boolean all) {
         return ApiResponse.ok(Status.UPDATE, scheduleService.update(scheduleId, dto, all));
     }
 
     @DeleteMapping("/{scheduleId}")
-    public ApiResponse<Void> delete(@NotNull @RequestBody Long scheduleId,
-                                    @NotNull @RequestParam Boolean all) {
+    public ApiResponse<Void> delete(@NotNull(message = "스케줄 아이디는 필수입니다") @PathVariable Long scheduleId,
+                                    @NotNull @RequestParam(defaultValue = "false") Boolean all) {
         scheduleService.delete(scheduleId, all);
         return ApiResponse.ok(Status.DELETE);
     }
 
     @PutMapping("/{scheduleId}/status")
-    public ApiResponse<ScheduleResponse> updateStatus(@NotNull @RequestParam Boolean active,
-                                                      @NotNull @PathVariable Long scheduleId) {
+    public ApiResponse<ScheduleResponse> updateStatus(@NotNull(message = "스케줄 상태는 필수입니다") @RequestParam Boolean active,
+                                                      @NotNull(message = "스케줄 아이디는 필수입니다") @PathVariable Long scheduleId) {
         return ApiResponse.ok(Status.UPDATE, scheduleService.updateStatus(scheduleId, active));
     }
 }
