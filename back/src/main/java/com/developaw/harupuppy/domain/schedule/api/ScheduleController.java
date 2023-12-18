@@ -1,9 +1,9 @@
 package com.developaw.harupuppy.domain.schedule.api;
 
 import com.developaw.harupuppy.domain.schedule.application.ScheduleService;
-import com.developaw.harupuppy.domain.schedule.dto.ScheduleCreateRequest;
-import com.developaw.harupuppy.domain.schedule.dto.ScheduleDeleteRequest;
-import com.developaw.harupuppy.domain.schedule.dto.ScheduleUpdateRequest;
+import com.developaw.harupuppy.domain.schedule.dto.request.ScheduleCreateRequest;
+import com.developaw.harupuppy.domain.schedule.dto.request.ScheduleUpdateRequest;
+import com.developaw.harupuppy.domain.schedule.dto.response.ScheduleResponse;
 import com.developaw.harupuppy.global.common.response.ApiResponse;
 import com.developaw.harupuppy.global.common.response.Response.Status;
 import jakarta.validation.constraints.NotNull;
@@ -27,27 +27,27 @@ public class ScheduleController {
 
     //TODO :: SpringContextHolder에 저장된 UserDto를 컨트롤러로 가져와 service로 보내기
     @PostMapping
-    public ApiResponse<Void> create(@RequestBody @Validated ScheduleCreateRequest dto) {
-        scheduleService.create(dto);
-        return ApiResponse.ok(Status.CREATE, null);
+    public ApiResponse<ScheduleResponse> create(@RequestBody ScheduleCreateRequest dto) {
+        return ApiResponse.ok(Status.CREATE, scheduleService.create(dto));
     }
 
-    @PutMapping
-    public ApiResponse<Void> update(@RequestBody @Validated ScheduleUpdateRequest dto) {
-        scheduleService.update(dto);
-        return ApiResponse.ok(Status.UPDATE, null);
+    @PutMapping("/{scheduleId}")
+    public ApiResponse<ScheduleResponse> update(@NotNull @PathVariable Long scheduleId,
+                                                @NotNull @RequestBody ScheduleUpdateRequest dto,
+                                                @NotNull @RequestParam Boolean all) {
+        return ApiResponse.ok(Status.UPDATE, scheduleService.update(scheduleId, dto, all));
     }
 
-    @DeleteMapping
-    public ApiResponse<Void> delete(@RequestBody @Validated ScheduleDeleteRequest dto){
-        scheduleService.delete(dto);
-        return ApiResponse.ok(Status.DELETE, null);
+    @DeleteMapping("/{scheduleId}")
+    public ApiResponse<Void> delete(@NotNull @RequestBody Long scheduleId,
+                                    @NotNull @RequestParam Boolean all) {
+        scheduleService.delete(scheduleId, all);
+        return ApiResponse.ok(Status.DELETE);
     }
 
     @PutMapping("/{scheduleId}/status")
-    public ApiResponse<Void> updateStatus(@NotNull @RequestParam Boolean active,
-                                    @NotNull @PathVariable Long scheduleId){
-        scheduleService.updateStatus(scheduleId, active);
-        return ApiResponse.ok(Status.UPDATE, null);
+    public ApiResponse<ScheduleResponse> updateStatus(@NotNull @RequestParam Boolean active,
+                                                      @NotNull @PathVariable Long scheduleId) {
+        return ApiResponse.ok(Status.UPDATE, scheduleService.updateStatus(scheduleId, active));
     }
 }

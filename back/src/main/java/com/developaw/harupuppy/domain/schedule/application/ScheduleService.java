@@ -5,9 +5,9 @@ import com.developaw.harupuppy.domain.schedule.dao.UserScheduleRepository;
 import com.developaw.harupuppy.domain.schedule.domain.RepeatType;
 import com.developaw.harupuppy.domain.schedule.domain.Schedule;
 import com.developaw.harupuppy.domain.schedule.domain.UserSchedule;
-import com.developaw.harupuppy.domain.schedule.dto.ScheduleCreateRequest;
-import com.developaw.harupuppy.domain.schedule.dto.ScheduleDeleteRequest;
-import com.developaw.harupuppy.domain.schedule.dto.ScheduleUpdateRequest;
+import com.developaw.harupuppy.domain.schedule.dto.request.ScheduleCreateRequest;
+import com.developaw.harupuppy.domain.schedule.dto.request.ScheduleUpdateRequest;
+import com.developaw.harupuppy.domain.schedule.dto.response.ScheduleResponse;
 import com.developaw.harupuppy.domain.user.domain.User;
 import com.developaw.harupuppy.domain.user.dto.UserScheduleDto;
 import com.developaw.harupuppy.domain.user.repository.UserRepository;
@@ -34,7 +34,7 @@ public class ScheduleService {
     private final UserRepository userRepository;
 
     @Transactional
-    public void create(ScheduleCreateRequest dto) {
+    public ScheduleResponse create(ScheduleCreateRequest dto) {
         List<User> mates = validateMates(dto.mates());
 
         Schedule schedule = ScheduleCreateRequest.fromDto(dto);
@@ -47,6 +47,7 @@ public class ScheduleService {
         if (dto.repeatType() != null && !RepeatType.NONE.equals(dto.repeatType())) {
             createRepeatSchedule(schedule, mates);
         }
+        return ScheduleResponse.of(schedule);
     }
 
     @Transactional
@@ -73,12 +74,12 @@ public class ScheduleService {
     }
 
     @Transactional
-    public void update(ScheduleUpdateRequest dto) {
-        Schedule schedule = scheduleRepository.findById(dto.scheduleId())
+    public ScheduleResponse update(Long scheduleId, ScheduleUpdateRequest dto, boolean all) {
+        Schedule schedule = scheduleRepository.findById(scheduleId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_SCHEDULE));
         List<UserSchedule> newMates = UserSchedule.of(validateMates(dto.mates()), schedule);
 
-        if (dto.modifyRepeatedSchedules()) {
+        if (dto.repeatId() != null && all) {
             String repeatId = Objects.requireNonNull(dto.repeatId());
             List<Schedule> repeatedSchedules = scheduleRepository.findAllByRepeatIdAndScheduleDateTimeAfter(repeatId)
                     .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_SCHEDULE));
@@ -86,17 +87,17 @@ public class ScheduleService {
         } else {
             schedule.update(dto, newMates);
         }
+        return ScheduleResponse.of(schedule);
     }
 
     @Transactional
-    public void delete(ScheduleDeleteRequest dto) {
-        Schedule schedule = scheduleRepository.findById(dto.scheduleId())
+    public void delete(Long scheduleId, boolean all) {
+        Schedule schedule = scheduleRepository.findById(scheduleId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_SCHEDULE));
 
-        if (dto.deleteAllSchedules()) {
-            String repeatId = Objects.requireNonNull(dto.repeatId());
-            List<Schedule> repeatedSchedules = scheduleRepository.findAllByRepeatIdAndScheduleDateTimeAfter(repeatId)
-                    .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_SCHEDULE));
+        if (schedule.getRepeatId() != null && all) {
+            List<Schedule> repeatedSchedules = scheduleRepository.findAllByRepeatIdAndScheduleDateTimeAfter(
+                    schedule.getRepeatId()).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_SCHEDULE));
             scheduleRepository.deleteAll(repeatedSchedules);
         } else {
             scheduleRepository.delete(schedule);
@@ -104,7 +105,7 @@ public class ScheduleService {
     }
 
     @Transactional
-    public void updateStatus(Long scheduleId, boolean status) {
+    public ScheduleResponse updateStatus(Long scheduleId, boolean status) {
         Schedule schedule = scheduleRepository.findById(scheduleId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_SCHEDULE));
         if (status) {
@@ -112,6 +113,7 @@ public class ScheduleService {
         } else {
             schedule.planned();
         }
+        return ScheduleResponse.of(schedule);
     }
 
     public static List<LocalDateTime> getDateTimesUntilNextYear(RepeatType type, LocalDateTime startDate,
