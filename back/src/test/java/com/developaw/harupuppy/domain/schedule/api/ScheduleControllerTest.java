@@ -6,7 +6,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.developaw.harupuppy.domain.schedule.application.ScheduleService;
-import com.developaw.harupuppy.domain.schedule.dto.ScheduleCreateRequest;
+import com.developaw.harupuppy.domain.schedule.dto.request.ScheduleCreateRequest;
 import com.developaw.harupuppy.fixture.ScheduleFixture;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.assertj.core.api.Assertions;

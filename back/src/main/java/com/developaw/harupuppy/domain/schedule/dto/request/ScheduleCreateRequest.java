@@ -1,4 +1,4 @@
-package com.developaw.harupuppy.domain.schedule.dto;
+package com.developaw.harupuppy.domain.schedule.dto.request;
 
 import com.developaw.harupuppy.domain.schedule.domain.AlertType;
 import com.developaw.harupuppy.domain.schedule.domain.RepeatType;
@@ -35,6 +35,7 @@ public record ScheduleCreateRequest(
                 .memo(dto.memo())
                 .build();
     }
+
     public static Schedule fromDto(ScheduleCreateRequest dto) {
         validateDateTime(dto.scheduleDate, dto.scheduleTime);
         return Schedule.builder()

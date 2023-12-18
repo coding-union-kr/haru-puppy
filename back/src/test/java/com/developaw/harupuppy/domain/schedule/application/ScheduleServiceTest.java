@@ -12,7 +12,7 @@ import com.developaw.harupuppy.domain.schedule.dao.ScheduleRepository;
 import com.developaw.harupuppy.domain.schedule.dao.UserScheduleRepository;
 import com.developaw.harupuppy.domain.schedule.domain.Schedule;
 import com.developaw.harupuppy.domain.schedule.domain.UserSchedule;
-import com.developaw.harupuppy.domain.schedule.dto.ScheduleCreateRequest;
+import com.developaw.harupuppy.domain.schedule.dto.request.ScheduleCreateRequest;
 import com.developaw.harupuppy.domain.user.domain.User;
 import com.developaw.harupuppy.domain.user.repository.UserRepository;
 import com.developaw.harupuppy.fixture.ScheduleFixture;

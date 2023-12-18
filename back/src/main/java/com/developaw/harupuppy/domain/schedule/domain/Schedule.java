@@ -1,6 +1,6 @@
 package com.developaw.harupuppy.domain.schedule.domain;
 
-import com.developaw.harupuppy.domain.schedule.dto.ScheduleUpdateRequest;
+import com.developaw.harupuppy.domain.schedule.dto.request.ScheduleUpdateRequest;
 import com.developaw.harupuppy.global.common.DateEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;

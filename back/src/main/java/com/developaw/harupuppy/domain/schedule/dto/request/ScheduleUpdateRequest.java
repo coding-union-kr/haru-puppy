@@ -1,4 +1,4 @@
-package com.developaw.harupuppy.domain.schedule.dto;
+package com.developaw.harupuppy.domain.schedule.dto.request;
 
 import com.developaw.harupuppy.domain.schedule.domain.AlertType;
 import com.developaw.harupuppy.domain.schedule.domain.RepeatType;
@@ -9,7 +9,6 @@ import jakarta.validation.constraints.NotNull;
 import java.util.List;
 
 public record ScheduleUpdateRequest(
-        @NotNull(message = "스케줄 아이디가 필요합니다") Long scheduleId,
         @NotNull(message = "스케줄 타입 지정이 필요합니다") ScheduleType scheduleType,
         @NotNull(message = "메이트 지정이 필요합니다") List<UserScheduleDto> mates,
         @NotBlank(message = "스케줄 날짜 지정이 필요합니다") String scheduleDate,
@@ -17,7 +16,6 @@ public record ScheduleUpdateRequest(
         String repeatId,
         RepeatType repeatType,
         AlertType alertType,
-        String memo,
-        Boolean modifyRepeatedSchedules
+        String memo
 ) {
 }
