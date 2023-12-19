@@ -1,32 +1,31 @@
-import React, { useState } from 'react';
+import { Imates } from '@/app/(route)/schedule/components/ScheduleAdd';
+import React from 'react';
 import styled from 'styled-components';
+import Image from 'next/image';
 
-interface MateProfileProps {
-    clickable?: boolean;
+interface IMateProfileProps {
+  isClicked: boolean;
+  onClick: (userId: string) => void;
+  mate: Imates
 }
 
-const MateProfile = ({ clickable = true }: MateProfileProps) => {
-    const [isProfileClicked, setProfileClicked] = useState(false);
-
-    const onProfileClick = () => {
-        if (clickable) {
-            console.log('메이트 프로필 클릭');
-            setProfileClicked(!isProfileClicked);
+const MateProfile = ({ isClicked, onClick, mate }: IMateProfileProps) => {
+  return (
+    <Wrapper>
+      <ProfileContainer>
+        <Profile isClicked={isClicked} onClick={() => onClick(mate.user_id)} />
+        {isClicked &&
+          <Image src='/svgs/mate_check.svg' alt='mate-check' width={20} height={20} />
         }
-    };
-
-    return (
-        <Wrapper>
-            <ProfileContainer>
-                <Profile onClick={onProfileClick} isClicked={isProfileClicked} clickable={clickable} />
-            </ProfileContainer>
-            <Info>
-                <NickName>닉네임</NickName>
-                <Name>엄마</Name>
-            </Info>
-        </Wrapper>
-    );
+      </ProfileContainer>
+      <Info>
+        <NickName>{mate.nickname}</NickName>
+        <Name>{mate.role}</Name>
+      </Info>
+    </Wrapper>
+  );
 };
+
 
 const Wrapper = styled.div`
   width: 80px;
@@ -38,18 +37,26 @@ const Wrapper = styled.div`
 `;
 
 const ProfileContainer = styled.div`
+position: relative;
   height: 40px;
+  & > img {
+    position: absolute;
+    top: 20%;
+    left: 85%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+  }
 `;
 
-const Profile = styled.div<{ isClicked: boolean; clickable: boolean }>`
+const Profile = styled.div<{ isClicked: boolean }>`
   width: 40px;
   height: 40px;
   border-radius: 50%;
   background-color: ${({ theme }) => theme.colors.light};
   position: relative;
-  cursor: ${({ clickable }) => (clickable ? 'pointer' : 'default')};
   box-sizing: border-box;
   border: ${({ isClicked }) => (isClicked ? '2px solid #06acf4' : 'none')};
+  cursor: pointer;
 `;
 
 const Info = styled.div`
