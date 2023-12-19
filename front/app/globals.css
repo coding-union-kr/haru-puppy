@@ -3,7 +3,88 @@
    License: none (public domain)
 */
 html,
-body,
+body {
+
+	.react-datepicker {
+		border: 1px solid #dcdde1;
+		border-radius: 20px;
+
+		.react-datepicker__day--outside-month {
+
+			cursor: default;
+			visibility: hidden;
+		}
+
+		.calenderWrapper {
+			background-color: #0E0E0E;
+		}
+
+		.react-datepicker__day {
+			position: relative;
+		}
+
+		.selectedDay,
+		.unselectedDay {
+			position: relative;
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			color: #4A4A4A;
+			padding: 2px;
+			width: 40px;
+			height: 40px;
+
+
+		}
+
+		.selectedDay {
+			background-color: #FA9E52;
+			border-radius: 30%;
+			color: white;
+
+			&:hover {
+				border-radius: 30%;
+				background-color: #FA9E52;
+			}
+		}
+
+		.unselectedDay {
+			&:hover {
+				border-radius: 30%;
+				background-color: rgba(#FCFCFC, 0.08);
+			}
+		}
+
+		.react-datepicker__header {
+			background-color: #FCFCFC;
+			color: white;
+			border-bottom: none;
+			border-radius: 20px;
+
+			.react-datepicker__day-names {
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				margin-top: 5px;
+				height: 30px;
+
+				.react-datepicker__day-name {
+					color: #5b5b5b;
+					margin: 11px;
+				}
+			}
+		}
+
+		.react-datepicker__triangle {
+			display: none;
+		}
+	}
+
+	.calenderWrapper {
+		background-color: #FCFCFC;
+	}
+}
+
 div,
 span,
 applet,
@@ -90,6 +171,7 @@ video {
 	font: inherit;
 	vertical-align: baseline;
 }
+
 /* HTML5 display-role reset for older browsers */
 article,
 aside,
@@ -104,17 +186,21 @@ nav,
 section {
 	display: block;
 }
+
 body {
 	line-height: 1;
 }
+
 ol,
 ul {
 	list-style: none;
 }
+
 blockquote,
 q {
 	quotes: none;
 }
+
 blockquote:before,
 blockquote:after,
 q:before,
@@ -122,6 +208,7 @@ q:after {
 	content: "";
 	content: none;
 }
+
 table {
 	border-collapse: collapse;
 	border-spacing: 0;
@@ -152,7 +239,7 @@ button {
 	border: none;
 	cursor: pointer;
 	background-color: transparent;
-    font-family: 'Pretendard';
+	font-family: 'Pretendard';
 }
 
 textarea {
@@ -164,5 +251,3 @@ textarea {
 textarea:focus {
 	outline: none;
 }
-
-  

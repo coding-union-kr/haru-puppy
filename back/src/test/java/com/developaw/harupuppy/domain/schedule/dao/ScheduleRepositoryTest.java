@@ -51,6 +51,4 @@ public class ScheduleRepositoryTest {
         Assertions.assertEquals(savedSchedule.getScheduleType(), ScheduleType.POO);
         Assertions.assertNotNull(foundedUserSchedule);
     }
-
-
 }

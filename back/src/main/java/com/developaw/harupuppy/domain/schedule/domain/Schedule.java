@@ -131,7 +131,6 @@ public class Schedule extends DateEntity {
     public void setRepeatId(String repeatId) {
         this.repeatId = repeatId;
     }
-
     public void addMate(UserSchedule mate) {
         mates.add(mate);
         mate.getUserSchedulePK().setSchedule(this);
