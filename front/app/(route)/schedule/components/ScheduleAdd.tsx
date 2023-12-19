@@ -19,9 +19,9 @@ export interface IScheduleAddProps {
 
 export interface Imates {
     user_id: string;
-    user_img: string;
-    nickname: string;
-    role: string;
+    user_img?: string;
+    nickname?: string;
+    role?: string;
 }
 
 export interface IFormData {
