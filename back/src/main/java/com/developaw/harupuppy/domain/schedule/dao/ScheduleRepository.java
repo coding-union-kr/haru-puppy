@@ -8,4 +8,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ScheduleRepository extends JpaRepository<Schedule, Long> {
     Optional<List<Schedule>> findAllByRepeatIdAndScheduleDateTimeAfter(String repeatId, LocalDateTime scheduleDateTime);
+    Optional<List<Schedule>> findAllByScheduleDateTimeBetweenOrderByScheduleDateTimeAsc(LocalDateTime startDate, LocalDateTime endDate);
 }

@@ -8,9 +8,11 @@ import com.developaw.harupuppy.global.common.response.ApiResponse;
 import com.developaw.harupuppy.global.common.response.Response.Status;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -50,5 +52,16 @@ public class ScheduleController {
     public ApiResponse<ScheduleResponse> updateStatus(@NotNull(message = "스케줄 상태는 필수입니다") @RequestParam Boolean active,
                                                       @NotNull(message = "스케줄 아이디는 필수입니다") @PathVariable Long scheduleId) {
         return ApiResponse.ok(Status.UPDATE, scheduleService.updateStatus(scheduleId, active));
+    }
+
+    @GetMapping("/{scheduleId}")
+    public ApiResponse<ScheduleResponse> get(@NotNull(message = "스케줄 아이디는 필수입니다") @PathVariable Long scheduleId){
+        return ApiResponse.ok(Status.RETRIEVE, scheduleService.get(scheduleId));
+    }
+
+    @GetMapping
+    public ApiResponse<List<ScheduleResponse>> getSchedules(@NotNull(message = "조회 연도는 필수입니다") @RequestParam("year") Integer year,
+                                                            @NotNull(message = "조회 월은 필수입니다") @RequestParam("month") Integer month){
+        return ApiResponse.ok(Status.RETRIEVE, scheduleService.getSchedules(year, month));
     }
 }
