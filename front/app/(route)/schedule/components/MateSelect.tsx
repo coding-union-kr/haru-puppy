@@ -2,30 +2,53 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import PeopleOutlineRoundedIcon from '@mui/icons-material/PeopleOutlineRounded';
 import MateProfile from '@/app/components/profile/MateProfile';
+import { Imates } from './ScheduleAdd';
+
 
 interface IMateSelectProps {
-    onValueChange: (value: Array<{ userId: string }>) => void;
-  }
+  onValueChange: (value: Imates[]) => void;
+  mates: Imates[] | null;
+}
 
-const MateSelect = ({onValueChange }: IMateSelectProps) => {
-    const [selectedValue, setSelectedValue] = useState<Array<{ userId: string }>>([]);
+const MateSelect = ({ onValueChange, mates }: IMateSelectProps) => {
+  const [selectedMates, setSelectedMates] = useState<string[]>([]);
 
-    const handleSelect = (value: { userId: string }) => {
-        setSelectedValue(prevSelectedValue => [...prevSelectedValue, value]);
-        onValueChange([...selectedValue, value]);
-    };
-        
+  const handleMateClick = (userId: string) => {
+    const isSelected = selectedMates.includes(userId);
+    const newSelectedMates = isSelected
+      ? selectedMates.filter((mateId) => mateId !== userId)
+      : [...selectedMates, userId];
+
+    setSelectedMates(newSelectedMates);
+    const selectedMateObjects = mates?.filter((mate) => newSelectedMates.includes(mate.user_id)) || [];
+    onValueChange(selectedMateObjects);
+  };
+
   return (
     <MateSelectWrap>
       <label htmlFor='schedule-type'>
-        <span><PeopleOutlineRoundedIcon/></span>
+        <span><PeopleOutlineRoundedIcon /></span>
         담당 선택
       </label>
-    <MateProfile/>
+      <MateProfileWrapper>
+        {mates?.map((mate) => (
+          <MateProfile
+            key={mate.user_id}
+            mate={mate}
+            isClicked={selectedMates.includes(mate.user_id)}
+            onClick={handleMateClick}
+          />
+        ))}
+      </MateProfileWrapper>
     </MateSelectWrap>
-    )
+  )
 };
 
+
+const MateProfileWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+`
 const MateSelectWrap = styled.div`
 position: relative; 
 width: 300px;

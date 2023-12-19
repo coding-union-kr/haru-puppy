@@ -1,5 +1,5 @@
 
-import {useState} from 'react';
+import { useState } from 'react';
 import Image from 'next/image';
 import dayjs from 'dayjs';
 import NotiDropdown from './NotiDropdown';
@@ -10,23 +10,32 @@ import TimeDropdown from './TimeDropdown';
 import DateDropdown from './DateDropdown';
 import ScheduleTypeDropdown from './ScheduleTypeDropdown';
 import MateSelect from './MateSelect';
+import { dummyMatesData } from '@/app/page';
 
-interface IScheduleAddProps {
+export interface IScheduleAddProps {
     isOpen: boolean;
-    onClose: () => void;
-  }
-  
+    onClose?: () => void;
+}
 
-const ScheduleAdd= ({ isOpen, onClose }: IScheduleAddProps)  => {
-    interface FormData {
-        type: string;
-        mates: Array<{ userId: string }> | null;
-        date: Date | null;
-        time: Date | null;  
-        repeat: string;  
-        noti: string;    
-    }
-    const [formData, setFormData] = useState<FormData>({
+export interface Imates {
+    user_id: string;
+    user_img: string;
+    nickname: string;
+    role: string;
+}
+
+export interface IFormData {
+    type: string;
+    mates: Imates[] | null;
+    date: Date | null;
+    time: Date | null;
+    repeat: string;
+    noti: string;
+}
+
+const ScheduleAdd = ({ isOpen, onClose }: IScheduleAddProps) => {
+
+    const [formData, setFormData] = useState<IFormData>({
         type: '',
         mates: null,
         date: null,
@@ -40,55 +49,58 @@ const ScheduleAdd= ({ isOpen, onClose }: IScheduleAddProps)  => {
 
         if (name === 'date' && value instanceof Date) {
             value = dayjs(value).format('YYYY-MM-DD');
-          }
+        }
 
         if (name === 'time' && value instanceof Date) {
             formattedValue = dayjs(value).format('HH:mm');
         }
-        
+        if (name === 'mates' && value instanceof Array) {
+            formattedValue = value;
+        }
+
         const newFormData = {
             ...formData,
             [name]: value
         };
         console.log('업데이트 된 formData:', newFormData);
-    
+
         setFormData(newFormData);
     };
 
-   const handleSave = () => {
+    const handleSave = () => {
         console.log('저장');
-       }
+    }
 
-   const handleDelete = () => {
-    console.log('삭제');
-   }
+    const handleDelete = () => {
+        console.log('삭제');
+    }
 
-   return (
-   <ScheduleAddWrap isOpen={isOpen}>
-      <FormWrap>
-        <ScheduleTypeDropdown onValueChange={(value) => handleSelectChange('type', value)}/>
-        <MateSelect onValueChange={(value) => handleSelectChange('mates', value)}/>
-        <DateDropdown onValueChange={(value) => handleSelectChange('date', value)}/>
-        <TimeDropdown onValueChange={(value) => handleSelectChange('time', value)}/>       
-        <RepeatDropdown onValueChange={(value) => handleSelectChange('repeat', value)}/>
-        <NotiDropdown onValueChange={(value) => handleSelectChange('noti', value)}/>
-        <ButtonGroupWrap>
-            <Button onClick={handleSave} width="135px" height="32px">저장</Button> 
-            <Button onClick={handleDelete} width="135px" height="32px">삭제</Button>
-        </ButtonGroupWrap>
-      </FormWrap>
-      <CloseButton onClick={onClose}>
-      <Image 
-          src='/svgs/close_grey.svg'
-          alt='닫기' 
-          width={24} 
-          height={24} />
-      </CloseButton>
-    </ScheduleAddWrap>
-   )
+    return (
+        <ScheduleAddWrap isOpen={isOpen}>
+            <FormWrap>
+                <ScheduleTypeDropdown onValueChange={(value) => handleSelectChange('type', value)} />
+                <MateSelect onValueChange={(value) => handleSelectChange('mates', value)} mates={dummyMatesData} />
+                <DateDropdown onValueChange={(value) => handleSelectChange('date', value)} />
+                <TimeDropdown onValueChange={(value) => handleSelectChange('time', value)} />
+                <RepeatDropdown onValueChange={(value) => handleSelectChange('repeat', value)} />
+                <NotiDropdown onValueChange={(value) => handleSelectChange('noti', value)} />
+                <ButtonGroupWrap>
+                    <Button onClick={handleSave} width="135px" height="32px">저장</Button>
+                    <Button onClick={handleDelete} width="135px" height="32px">삭제</Button>
+                </ButtonGroupWrap>
+            </FormWrap>
+            <CloseButton onClick={onClose}>
+                <Image
+                    src='/svgs/close_grey.svg'
+                    alt='닫기'
+                    width={24}
+                    height={24} />
+            </CloseButton>
+        </ScheduleAddWrap>
+    )
 };
 
-const ScheduleAddWrap = styled.main<{isOpen: boolean}>`
+const ScheduleAddWrap = styled.main<{ isOpen: boolean }>`
      padding: 37px 0 61px;
      width: 390px;
      height: 712px;
@@ -128,5 +140,4 @@ const ButtonGroupWrap = styled.div`
         margin-right: 26px;
     }
 `
-  export default ScheduleAdd;
-  
+export default ScheduleAdd;
