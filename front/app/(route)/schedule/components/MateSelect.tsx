@@ -20,7 +20,8 @@ const MateSelect = ({ onValueChange, mates }: IMateSelectProps) => {
       : [...selectedMates, userId];
 
     setSelectedMates(newSelectedMates);
-    const selectedMateObjects = mates?.filter((mate) => newSelectedMates.includes(mate.user_id)) || [];
+    const selectedMateObjects = newSelectedMates.map((mateId) => ({ user_id: mateId }));
+
     onValueChange(selectedMateObjects);
   };
 
