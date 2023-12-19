@@ -51,7 +51,7 @@ public record ScheduleCreateRequest(
 
     private static void validateDateTime(String date, String time) {
         try {
-            LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            LocalDate.parse(date, DateTimeFormatter.ofPattern("uuuu-MM-dd"));
             LocalTime.parse(time, DateTimeFormatter.ofPattern("HH:mm"));
         } catch (Exception e) {
             throw new IllegalArgumentException("스케줄 날짜와 시간이 유효하지 않습니다", e);
