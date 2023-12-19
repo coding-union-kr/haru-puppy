@@ -36,7 +36,7 @@ public class ScheduleRepositoryTest {
 
     @Test
     void save() {
-        ScheduleCreateRequest createDto = ScheduleFixture.getCreateDto();
+        ScheduleCreateRequest createDto = ScheduleFixture.getCreateDto("2023-12-25");
         List<User> mates = ScheduleFixture.getMates();
         userRepository.saveAll(mates);
 

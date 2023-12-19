@@ -21,11 +21,18 @@ public class ScheduleFixture {
         );
     }
 
-    public static ScheduleCreateRequest getCreateDto() {
+    public static List<Schedule> getSchedulesWithMonth(){
+        return List.of(ScheduleCreateRequest.fromDto(ScheduleFixture.getCreateDto("2024-01-02")),
+                ScheduleCreateRequest.fromDto(ScheduleFixture.getCreateDto("2024-01-11")),
+                ScheduleCreateRequest.fromDto(ScheduleFixture.getCreateDto("2024-01-21"))
+         );
+    }
+
+    public static ScheduleCreateRequest getCreateDto(String date) {
         return new ScheduleCreateRequest(
                 ScheduleType.POO,
                 List.of(new UserScheduleDto(1L), new UserScheduleDto(2L)),
-                "2023-12-25",
+                date,
                 "12:35",
                 RepeatType.NONE,
                 AlertType.NONE,

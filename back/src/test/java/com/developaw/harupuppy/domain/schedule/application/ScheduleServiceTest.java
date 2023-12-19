@@ -56,7 +56,7 @@ class ScheduleServiceTest {
 
     @BeforeEach
     void init() {
-        createDto = ScheduleFixture.getCreateDto();
+        createDto = ScheduleFixture.getCreateDto("2023-12-25");
         repeatedDto = ScheduleFixture.getDailyRepeatedDto();
         invalidDto = ScheduleFixture.getCreateDtoWithInvalidDateType();
         updateDto = ScheduleFixture.getUpdateDto();
@@ -193,6 +193,29 @@ class ScheduleServiceTest {
         when(scheduleRepository.findAllByRepeatIdAndScheduleDateTimeAfter(
                 anyString(), any())).thenReturn(Optional.of(repeatSchedules));
         assertThatNoException().isThrownBy(() -> scheduleService.delete(1L, all));
+    }
+
+    @Test
+    @DisplayName("스케줄 아이디에 해당하는 스케줄을 찾아 반환한다")
+    void get() {
+        Schedule schedule = ScheduleCreateRequest.fromDto(createDto);
+        ReflectionTestUtils.setField(schedule, "id", 1L);
+        when(scheduleRepository.findById(anyLong())).thenReturn(Optional.of(schedule));
+
+        ScheduleResponse response = scheduleService.get(schedule.getId());
+        assertThat(response.scheduleId()).isEqualTo(1L);
+    }
+
+    @Test
+    @DisplayName("특정 연도, 월에 해당하는 모든 스케줄을 찾아 반환한다")
+    void getSchedules() {
+        List<Schedule> scheduleList = ScheduleFixture.getSchedulesWithMonth();
+
+        when(scheduleRepository.findAllByScheduleDateTimeBetweenOrderByScheduleDateTimeAsc(any(), any()))
+                .thenReturn(Optional.of(scheduleList));
+
+        List<ScheduleResponse> response = scheduleService.getSchedules(2024, 1);
+        assertThat(response.get(0).scheduleDateTime()).isEqualTo(LocalDateTime.of(2024, 1, 2, 12, 35));
     }
 
     private List<Schedule> captureSaveAllInvocation() {

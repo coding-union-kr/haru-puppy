@@ -30,7 +30,7 @@ public class ScheduleControllerTest {
     @Test
     @DisplayName("스케줄 생성")
     void create() throws Exception {
-        ScheduleCreateRequest validDto = ScheduleFixture.getCreateDto();
+        ScheduleCreateRequest validDto = ScheduleFixture.getCreateDto("2023-12-25");
         mvc.perform(
                         post("/api/schedules")
                                 .content(objectMapper.writeValueAsString(validDto))
