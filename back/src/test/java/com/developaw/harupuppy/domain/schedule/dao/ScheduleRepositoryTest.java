@@ -3,7 +3,7 @@ package com.developaw.harupuppy.domain.schedule.dao;
 import com.developaw.harupuppy.domain.schedule.domain.Schedule;
 import com.developaw.harupuppy.domain.schedule.domain.ScheduleType;
 import com.developaw.harupuppy.domain.schedule.domain.UserSchedule;
-import com.developaw.harupuppy.domain.schedule.dto.ScheduleCreateDto;
+import com.developaw.harupuppy.domain.schedule.dto.request.ScheduleCreateRequest;
 import com.developaw.harupuppy.domain.user.domain.User;
 import com.developaw.harupuppy.domain.user.repository.UserRepository;
 import com.developaw.harupuppy.fixture.ScheduleFixture;
@@ -36,11 +36,11 @@ public class ScheduleRepositoryTest {
 
     @Test
     void save() {
-        ScheduleCreateDto createDto = ScheduleFixture.getCreateDto();
+        ScheduleCreateRequest createDto = ScheduleFixture.getCreateDto("2023-12-25");
         List<User> mates = ScheduleFixture.getMates();
         userRepository.saveAll(mates);
 
-        Schedule savedSchedule = scheduleRepository.save(ScheduleCreateDto.fromDto(createDto));
+        Schedule savedSchedule = scheduleRepository.save(ScheduleCreateRequest.fromDto(createDto));
 
         List<UserSchedule> userSchedules = ScheduleFixture.getUserSchedules(mates, savedSchedule);
         userScheduleRepository.saveAll(userSchedules);
@@ -51,6 +51,4 @@ public class ScheduleRepositoryTest {
         Assertions.assertEquals(savedSchedule.getScheduleType(), ScheduleType.POO);
         Assertions.assertNotNull(foundedUserSchedule);
     }
-
-
 }
