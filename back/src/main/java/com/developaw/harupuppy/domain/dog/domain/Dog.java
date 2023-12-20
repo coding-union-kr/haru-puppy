@@ -1,6 +1,7 @@
 package com.developaw.harupuppy.domain.dog.domain;
 
 import com.developaw.harupuppy.domain.home.domain.Home;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -41,19 +42,20 @@ public class Dog {
 
     private LocalDate birthday;
 
-    private double weight;
+    private Double weight;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "home_id")
     private Home home;
 
     @Builder
     public Dog(
-            String name, String profilePicture, DogGender gender, LocalDate birthday, double weight) {
+            String name, String profilePicture, DogGender gender, LocalDate birthday, Double weight, Home home) {
         this.name = name;
         this.profilePicture = profilePicture;
         this.gender = gender;
         this.birthday = birthday;
         this.weight = weight;
+        this.home = home;
     }
 }
