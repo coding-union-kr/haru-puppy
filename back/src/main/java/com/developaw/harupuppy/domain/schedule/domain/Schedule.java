@@ -47,6 +47,9 @@ public class Schedule extends DateEntity {
     @Column(name = "schedule_datetime")
     private LocalDateTime scheduleDateTime;
 
+    @NotNull
+    private String homeId;
+
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserSchedule> mates = new ArrayList<>();
 
@@ -70,6 +73,7 @@ public class Schedule extends DateEntity {
     public Schedule(
             ScheduleType scheduleType,
             LocalDateTime scheduleDateTime,
+            String homeId,
             List<UserSchedule> mates,
             String repeatId,
             RepeatType repeatType,
@@ -77,6 +81,7 @@ public class Schedule extends DateEntity {
             String memo) {
         this.scheduleType = scheduleType;
         this.scheduleDateTime = scheduleDateTime;
+        this.homeId = homeId;
         this.mates = mates;
         this.repeatId = repeatId;
         this.repeatType = repeatType;
@@ -88,6 +93,7 @@ public class Schedule extends DateEntity {
         return Schedule.builder()
                 .scheduleType(schedule.scheduleType)
                 .scheduleDateTime(repeatDateTime)
+                .homeId(schedule.homeId)
                 .mates(schedule.mates)
                 .repeatId(repeatId)
                 .repeatType(schedule.repeatType)
@@ -120,10 +126,6 @@ public class Schedule extends DateEntity {
         isActive = false;
     }
 
-    public void delete() {
-        isDeleted = true;
-    }
-
     public void setScheduleDateTime(LocalDateTime dateTime) {
         this.scheduleDateTime = dateTime;
     }
@@ -131,6 +133,7 @@ public class Schedule extends DateEntity {
     public void setRepeatId(String repeatId) {
         this.repeatId = repeatId;
     }
+
     public void addMate(UserSchedule mate) {
         mates.add(mate);
         mate.getUserSchedulePK().setSchedule(this);
