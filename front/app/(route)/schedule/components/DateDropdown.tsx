@@ -11,21 +11,17 @@ export enum DateDropdownLabel {
   ScheduleDay = '날짜',
 }
 
-export enum DateDropdownSize {
-  Birthday = 'birthday',
-  Schedule = 'schedule',
-}
 
-export const sizeWidthMap: Record<DateDropdownSize, string> = {
-  [DateDropdownSize.Birthday]: '340px',
-  [DateDropdownSize.Schedule]: '300px',
+export const sizeWidthMap: Record<DateDropdownLabel, string> = {
+  [DateDropdownLabel.Birthday]: '340px',
+  [DateDropdownLabel.ScheduleDay]: '300px',
 };
 
 interface IDateDropdownProps {
   onValueChange: (date: Date) => void;
   label?: DateDropdownLabel;
   isRequired?: boolean;
-  size?: DateDropdownSize;
+  size?: DateDropdownLabel;
 }
 
 const DateDropdown = ({ onValueChange, label, isRequired, size }: IDateDropdownProps) => {
@@ -65,6 +61,7 @@ const DateDropdown = ({ onValueChange, label, isRequired, size }: IDateDropdownP
 
 const DateSelectWrap = styled.div<{ size?: string; width: string }>`
 position: relative; 
+margin: 0 auto;
 width: ${({ width }) => width};
 display: flex;
 flex-direction: column;

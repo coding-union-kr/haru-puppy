@@ -34,6 +34,8 @@ const GenderSelect = ({ onValueChange }: DogGenderSelectorProps) => {
 const Wrapper = styled.div`
     width: 340px;
     height: 74px;
+    margin: 0 auto;
+
 `;
 
 

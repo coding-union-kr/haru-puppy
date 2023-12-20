@@ -148,6 +148,8 @@ const InputWrap = styled.div<{ showErr?: boolean }>`
  height: 74px; 
  display: flex;
  flex-direction: column;
+ margin: 0 auto;
+
 
  & label {
     font-size: 14;
