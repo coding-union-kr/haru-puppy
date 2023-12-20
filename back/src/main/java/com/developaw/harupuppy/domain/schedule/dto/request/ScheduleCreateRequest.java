@@ -23,11 +23,12 @@ public record ScheduleCreateRequest(
         String memo
 ) {
 
-    public static Schedule fromDto(ScheduleCreateRequest dto, String repeatId) {
+    public static Schedule fromDto(ScheduleCreateRequest dto, String homeId, String repeatId) {
         validateDateTime(dto.scheduleDate, dto.scheduleTime);
         return Schedule.builder()
                 .scheduleDateTime(Schedule.parseDateTime(dto.scheduleDate(), dto.scheduleTime()))
                 .scheduleType(dto.scheduleType())
+                .homeId(homeId)
                 .mates(new ArrayList<>())
                 .alertType(dto.alertType())
                 .repeatId(repeatId)
@@ -36,11 +37,12 @@ public record ScheduleCreateRequest(
                 .build();
     }
 
-    public static Schedule fromDto(ScheduleCreateRequest dto) {
+    public static Schedule fromDto(ScheduleCreateRequest dto, String homeId) {
         validateDateTime(dto.scheduleDate, dto.scheduleTime);
         return Schedule.builder()
                 .scheduleDateTime(Schedule.parseDateTime(dto.scheduleDate(), dto.scheduleTime()))
                 .scheduleType(dto.scheduleType())
+                .homeId(homeId)
                 .mates(new ArrayList<>())
                 .alertType(dto.alertType())
                 .repeatId(null)

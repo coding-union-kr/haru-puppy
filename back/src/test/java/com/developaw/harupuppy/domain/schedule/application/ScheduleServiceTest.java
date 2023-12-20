@@ -154,7 +154,7 @@ class ScheduleServiceTest {
     @Test
     @DisplayName("요청된 내용으로 해당 스케줄과 반복된 스케줄들의 내용을 전부 수정한다")
     void updateRepeatSchedule() {
-        Schedule rawSchedule = ScheduleCreateRequest.fromDto(ScheduleFixture.getMonthlyRepeatedDto());
+        Schedule rawSchedule = ScheduleCreateRequest.fromDto(ScheduleFixture.getMonthlyRepeatedDto(), "homeId");
         ReflectionTestUtils.setField(rawSchedule, "id", 1L);
         List<Schedule> repeatSchedules = ScheduleFixture.getRepeatSchedules(rawSchedule);
         boolean all = true;
@@ -172,7 +172,7 @@ class ScheduleServiceTest {
     @Test
     @DisplayName("요청한 스케줄 아이디로 스케줄을 삭제한다")
     void deleteSchedule() {
-        Schedule schedule = ScheduleCreateRequest.fromDto(createDto);
+        Schedule schedule = ScheduleCreateRequest.fromDto(createDto, "homeId");
         ReflectionTestUtils.setField(schedule, "id", 1L);
         boolean all = false;
 
@@ -184,7 +184,7 @@ class ScheduleServiceTest {
     @Test
     @DisplayName("요청한 스케줄 아이디로 반복되는 스케줄까지 전부 삭제한다")
     void deleteRepeatedSchedule() {
-        Schedule schedule = ScheduleCreateRequest.fromDto(repeatedDto);
+        Schedule schedule = ScheduleCreateRequest.fromDto(repeatedDto, "homeId", "repeatId");
         List<Schedule> repeatSchedules = ScheduleFixture.getRepeatSchedules(schedule);
         ReflectionTestUtils.setField(schedule, "repeatId", "repeatId");
         ReflectionTestUtils.setField(schedule, "id", 1L);
@@ -199,7 +199,7 @@ class ScheduleServiceTest {
     @Test
     @DisplayName("스케줄 아이디에 해당하는 스케줄을 찾아 반환한다")
     void get() {
-        Schedule schedule = ScheduleCreateRequest.fromDto(createDto);
+        Schedule schedule = ScheduleCreateRequest.fromDto(createDto, "homeId");
         ReflectionTestUtils.setField(schedule, "id", 1L);
         when(scheduleRepository.findById(anyLong())).thenReturn(Optional.of(schedule));
 
@@ -212,10 +212,10 @@ class ScheduleServiceTest {
     void getSchedules() {
         List<Schedule> scheduleList = ScheduleFixture.getSchedulesWithMonth();
 
-        when(scheduleRepository.findAllByScheduleDateTimeBetweenOrderByScheduleDateTimeAsc(any(), any()))
+        when(scheduleRepository.findAllByHomeIdAndScheduleDateTimeBetweenOrderByScheduleDateTimeAsc(any(), any(), any()))
                 .thenReturn(Optional.of(scheduleList));
 
-        List<ScheduleResponse> response = scheduleService.getSchedules(2024, 1);
+        List<ScheduleResponse> response = scheduleService.getSchedules("homeId", 2024, 1);
         assertThat(response.get(0).scheduleDateTime()).isEqualTo(LocalDateTime.of(2024, 1, 2, 12, 35));
     }
 
