@@ -41,6 +41,7 @@ const Wrapper = styled.div`
 
 const Title = styled.div`
     display: flex;  
+    margin-bottom: 5px;
     & span {
     margin-left: 8px;
     color: ${({ theme }) => theme.colors.alert};
