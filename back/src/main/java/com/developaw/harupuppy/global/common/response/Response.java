@@ -9,6 +9,9 @@ public class Response {
     @RequiredArgsConstructor
     public enum ErrorCode {
         NOT_FOUND_USER(HttpStatus.NOT_FOUND, "가입된 유저가 아닙니다"),
+
+        NOT_FOUND_SCHEDULE(HttpStatus.NOT_FOUND, "해당 내용으로 저장된 스케줄이 없습니다"),
+
         INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "서버 내부 에러")
         ;
         private final HttpStatus status;

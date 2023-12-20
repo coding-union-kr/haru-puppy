@@ -23,9 +23,16 @@ public class UserSchedule {
         this.userSchedulePK = userSchedulePK;
     }
 
-    public static List<UserSchedule> of(List<User> dto, Schedule schedule) {
-        return dto.stream().map(user -> {
+    public static List<UserSchedule> of(List<User> mates, Schedule schedule) {
+        return mates.stream().map(user -> {
             return new UserSchedule(new UserSchedulePK(user, schedule));
         }).collect(Collectors.toList());
+    }
+    public static List<UserSchedule> of(List<User> mates, List<Schedule> repeatSchedules) {
+        return repeatSchedules.stream()
+                .flatMap(schedule -> mates.stream().map(user -> {
+                    return new UserSchedule(new UserSchedulePK(user, schedule));
+                }))
+                .collect(Collectors.toList());
     }
 }
