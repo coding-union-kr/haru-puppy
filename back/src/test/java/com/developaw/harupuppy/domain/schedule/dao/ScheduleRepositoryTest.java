@@ -40,7 +40,7 @@ public class ScheduleRepositoryTest {
         List<User> mates = ScheduleFixture.getMates();
         userRepository.saveAll(mates);
 
-        Schedule savedSchedule = scheduleRepository.save(ScheduleCreateRequest.fromDto(createDto));
+        Schedule savedSchedule = scheduleRepository.save(ScheduleCreateRequest.fromDto(createDto, "homeId"));
 
         List<UserSchedule> userSchedules = ScheduleFixture.getUserSchedules(mates, savedSchedule);
         userScheduleRepository.saveAll(userSchedules);

@@ -12,9 +12,7 @@ import com.developaw.harupuppy.domain.user.domain.User;
 import com.developaw.harupuppy.domain.user.dto.UserScheduleDto;
 import com.developaw.harupuppy.domain.user.repository.UserRepository;
 import com.developaw.harupuppy.global.common.exception.CustomException;
-import com.developaw.harupuppy.global.common.response.ApiResponse;
 import com.developaw.harupuppy.global.common.response.Response.ErrorCode;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.util.ArrayList;
@@ -38,9 +36,10 @@ public class ScheduleService {
 
     @Transactional
     public ScheduleResponse create(ScheduleCreateRequest dto) {
+        String homeId = "";// 매개변수로 넘어온 userDto에서 homeId 꺼내기
         List<User> mates = validateMates(dto.mates());
 
-        Schedule schedule = ScheduleCreateRequest.fromDto(dto);
+        Schedule schedule = ScheduleCreateRequest.fromDto(dto, homeId);
         scheduleRepository.save(schedule);
 
         List<UserSchedule> userSchedules = UserSchedule.of(mates, schedule);
@@ -119,16 +118,18 @@ public class ScheduleService {
         }
         return ScheduleResponse.of(schedule);
     }
-    public ScheduleResponse get(Long ScheduleId){
+
+    public ScheduleResponse get(Long ScheduleId) {
         Schedule schedule = scheduleRepository.findById(ScheduleId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_SCHEDULE));
         return ScheduleResponse.of(schedule);
     }
 
-    public List<ScheduleResponse> getSchedules(int year, int month){
+    public List<ScheduleResponse> getSchedules(int year, int month) {
         LocalDateTime startDate = LocalDateTime.of(year, month, 1, 0, 0);
         LocalDateTime endDate = LocalDateTime.of(year, month, YearMonth.of(year, month).lengthOfMonth(), 23, 59);
-        List<Schedule> scheduleList = scheduleRepository.findAllByScheduleDateTimeBetweenOrderByScheduleDateTimeAsc(startDate, endDate)
+        List<Schedule> scheduleList = scheduleRepository.findAllByScheduleDateTimeBetweenOrderByScheduleDateTimeAsc(
+                        startDate, endDate)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_SCHEDULE));
 
         return scheduleList.stream()
@@ -136,7 +137,8 @@ public class ScheduleService {
                 .collect(Collectors.toList());
     }
 
-    public static List<LocalDateTime> getDateTimesUntilNextYear(RepeatType type, LocalDateTime startDate,
+    public static List<LocalDateTime> getDateTimesUntilNextYear(RepeatType type,
+                                                                LocalDateTime startDate,
                                                                 LocalDateTime endDate,
                                                                 List<LocalDateTime> repeatedDateTimes) {
         LocalDateTime current = null;
