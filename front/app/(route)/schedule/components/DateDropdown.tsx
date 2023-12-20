@@ -6,40 +6,47 @@ import styled from 'styled-components';
 import CalendarMonthRoundedIcon from '@mui/icons-material/CalendarMonthRounded';
 
 
+export enum DateDropdownLabel {
+  Birthday = '생일',
+  ScheduleDay = '날짜',
+}
+
 interface IDateDropdownProps {
-    onValueChange: (date: Date) => void;
-  }
+  onValueChange: (date: Date) => void;
+  label?: DateDropdownLabel;
+  isRequired?: boolean;
+}
 
-const DateDropdown = ({onValueChange }: IDateDropdownProps) => {
-    const [isOpen, setIsOpen] = useState(false);
-    const [selectedDate, setSelectedDate] = useState(new Date()); 
+const DateDropdown = ({ onValueChange, label, isRequired }: IDateDropdownProps) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(new Date());
 
-    const handleDateSelect = (date: Date) => {
-        setSelectedDate(date); 
-        onValueChange(date);
-        setIsOpen(false); 
-      };
-      
+  const handleDateSelect = (date: Date) => {
+    setSelectedDate(date);
+    onValueChange(date);
+    setIsOpen(false);
+  };
+
   return (
     <DateSelectWrap>
       <label htmlFor='schedule-date'>
-        <span><CalendarMonthRoundedIcon/></span>
-        날짜
+        <span><CalendarMonthRoundedIcon /></span>
+        {label}
       </label>
       <div onClick={() => setIsOpen(!isOpen)}>
-      {selectedDate.toLocaleDateString()}
-        <Image 
+        {selectedDate.toLocaleDateString()}
+        <Image
           src='/svgs/cover-box.svg'
-          alt='드롭다운 열기' 
-          width={20} 
+          alt='드롭다운 열기'
+          width={20}
           height={20} />
       </div>
       <DateDropdownWrap>
 
-      {isOpen && <StyledDatePicker selected={selectedDate} onChange={handleDateSelect} inline className='react-datepicker-custom-b'/>}
-    </DateDropdownWrap>
+        {isOpen && <StyledDatePicker selected={selectedDate} onChange={handleDateSelect} inline className='react-datepicker-custom-b' />}
+      </DateDropdownWrap>
     </DateSelectWrap>
-    )
+  )
 };
 
 const DateSelectWrap = styled.div`

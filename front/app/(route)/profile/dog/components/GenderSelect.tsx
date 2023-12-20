@@ -1,31 +1,52 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 
-export interface DogGenderSelectorProps {
-    onValueChange?: () => void;
+interface DogGenderSelectorProps {
+    onValueChange: (value: string) => void;
 }
 
-const genderOptions = ['male', 'female'];
-
 const GenderSelect = ({ onValueChange }: DogGenderSelectorProps) => {
+
+    const genderOptions = ['male', 'female'];
+
     const [selectedGender, setSelectedGender] = useState<string>('');
 
     const handleGenderClick = (gender: string) => {
         console.log('gender', gender)
         setSelectedGender(gender);
-        // onValueChange(gender);
+        onValueChange(gender);
     };
 
     return (
-        <GenderWrapper>
-            {genderOptions.map((gender) => (
-                <GenderButton key={gender} selected={selectedGender === gender} onClick={() => handleGenderClick(gender)}>
-                    {gender === 'female' ? '여아' : '남아'}
-                </GenderButton>
-            ))}
-        </GenderWrapper>
+        <Wrapper>
+            <Title><p>성별</p><span>*</span></Title>
+            <GenderWrapper>
+                {genderOptions.map((gender) => (
+                    <GenderButton key={gender} selected={selectedGender === gender} onClick={() => handleGenderClick(gender)}>
+                        {gender === 'female' ? '여아' : '남아'}
+                    </GenderButton>
+                ))}
+            </GenderWrapper>
+        </Wrapper>
     );
 };
+
+const Wrapper = styled.div`
+    width: 340px;
+    height: 74px;
+`;
+
+
+const Title = styled.div`
+    display: flex;  
+    & span {
+    margin-left: 8px;
+    color: ${({ theme }) => theme.colors.alert};
+   }
+     & > p {
+        font-size: 14px;
+    }
+`
 
 const GenderWrapper = styled.div`
     display: flex;
@@ -38,6 +59,7 @@ const GenderButton = styled.div<{ selected: boolean }>`
   height: 38px;
   margin: 5px;
   display: flex;
+  font-size: 14px;
   justify-content: center;
   align-items: center;
   cursor: pointer;
