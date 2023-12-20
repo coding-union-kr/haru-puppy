@@ -1,5 +1,6 @@
 package com.developaw.harupuppy.domain.schedule.domain;
 
+import com.developaw.harupuppy.domain.schedule.dto.request.ScheduleUpdateRequest;
 import com.developaw.harupuppy.global.common.DateEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -19,6 +20,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -42,11 +44,13 @@ public class Schedule extends DateEntity {
     private ScheduleType scheduleType;
 
     @NotNull
-    @Column(name = "reserved_date")
+    @Column(name = "schedule_datetime")
     private LocalDateTime scheduleDateTime;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserSchedule> mates = new ArrayList<>();
+
+    private String repeatId;
 
     @Enumerated(EnumType.STRING)
     private RepeatType repeatType = RepeatType.NONE;
@@ -67,18 +71,52 @@ public class Schedule extends DateEntity {
             ScheduleType scheduleType,
             LocalDateTime scheduleDateTime,
             List<UserSchedule> mates,
+            String repeatId,
             RepeatType repeatType,
             AlertType alertType,
             String memo) {
         this.scheduleType = scheduleType;
         this.scheduleDateTime = scheduleDateTime;
         this.mates = mates;
+        this.repeatId = repeatId;
         this.repeatType = repeatType;
         this.alertType = alertType;
         this.memo = memo;
     }
 
+    public static Schedule of(Schedule schedule, String repeatId, LocalDateTime repeatDateTime) {
+        return Schedule.builder()
+                .scheduleType(schedule.scheduleType)
+                .scheduleDateTime(repeatDateTime)
+                .mates(schedule.mates)
+                .repeatId(repeatId)
+                .repeatType(schedule.repeatType)
+                .alertType(schedule.alertType)
+                .memo(schedule.memo)
+                .build();
+    }
+
+    public static List<Schedule> of(List<LocalDateTime> dateTimesUntilNextYear, Schedule schedule, String repeatId) {
+        return dateTimesUntilNextYear.stream()
+                .map(datetime -> {
+                    return Schedule.of(schedule, repeatId, datetime);
+                }).collect(Collectors.toList());
+    }
+
+    public void update(ScheduleUpdateRequest dto, List<UserSchedule> mates) {
+        this.scheduleType = dto.scheduleType();
+        this.scheduleDateTime = parseDateTime(dto.scheduleDate(), dto.scheduleTime());
+        this.mates = mates;
+        this.repeatType = dto.repeatType();
+        this.alertType = dto.alertType();
+        this.memo = dto.memo();
+    }
+
     public void done() {
+        isActive = true;
+    }
+
+    public void planned() {
         isActive = false;
     }
 
@@ -86,6 +124,13 @@ public class Schedule extends DateEntity {
         isDeleted = true;
     }
 
+    public void setScheduleDateTime(LocalDateTime dateTime) {
+        this.scheduleDateTime = dateTime;
+    }
+
+    public void setRepeatId(String repeatId) {
+        this.repeatId = repeatId;
+    }
     public void addMate(UserSchedule mate) {
         mates.add(mate);
         mate.getUserSchedulePK().setSchedule(this);
