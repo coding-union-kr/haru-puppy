@@ -7,6 +7,7 @@ import com.developaw.harupuppy.domain.schedule.dto.response.ScheduleResponse;
 import com.developaw.harupuppy.global.common.response.ApiResponse;
 import com.developaw.harupuppy.global.common.response.Response.Status;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -55,13 +56,15 @@ public class ScheduleController {
     }
 
     @GetMapping("/{scheduleId}")
-    public ApiResponse<ScheduleResponse> get(@NotNull(message = "스케줄 아이디는 필수입니다") @PathVariable Long scheduleId){
+    public ApiResponse<ScheduleResponse> get(@NotNull(message = "스케줄 아이디는 필수입니다") @PathVariable Long scheduleId) {
         return ApiResponse.ok(Status.RETRIEVE, scheduleService.get(scheduleId));
     }
 
-    @GetMapping
-    public ApiResponse<List<ScheduleResponse>> getSchedules(@NotNull(message = "조회 연도는 필수입니다") @RequestParam("year") Integer year,
-                                                            @NotNull(message = "조회 월은 필수입니다") @RequestParam("month") Integer month){
-        return ApiResponse.ok(Status.RETRIEVE, scheduleService.getSchedules(year, month));
+    @GetMapping("/home/{homeId}")
+    public ApiResponse<List<ScheduleResponse>> getSchedules(
+            @NotNull(message = "조회 연도는 필수입니다") @RequestParam("year") Integer year,
+            @NotNull(message = "조회 월은 필수입니다") @RequestParam("month") Integer month,
+            @NotBlank(message = "홈 아이디는 필수입니다") @PathVariable String homeId) {
+        return ApiResponse.ok(Status.RETRIEVE, scheduleService.getSchedules(homeId, year, month));
     }
 }

@@ -212,10 +212,10 @@ class ScheduleServiceTest {
     void getSchedules() {
         List<Schedule> scheduleList = ScheduleFixture.getSchedulesWithMonth();
 
-        when(scheduleRepository.findAllByScheduleDateTimeBetweenOrderByScheduleDateTimeAsc(any(), any()))
+        when(scheduleRepository.findAllByHomeIdAndScheduleDateTimeBetweenOrderByScheduleDateTimeAsc(any(), any(), any()))
                 .thenReturn(Optional.of(scheduleList));
 
-        List<ScheduleResponse> response = scheduleService.getSchedules(2024, 1);
+        List<ScheduleResponse> response = scheduleService.getSchedules("homeId", 2024, 1);
         assertThat(response.get(0).scheduleDateTime()).isEqualTo(LocalDateTime.of(2024, 1, 2, 12, 35));
     }
 
