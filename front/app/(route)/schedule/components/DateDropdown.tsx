@@ -11,15 +11,28 @@ export enum DateDropdownLabel {
   ScheduleDay = '날짜',
 }
 
+export enum DateDropdownSize {
+  Birthday = 'birthday',
+  Schedule = 'schedule',
+}
+
+export const sizeWidthMap: Record<DateDropdownSize, string> = {
+  [DateDropdownSize.Birthday]: '340px',
+  [DateDropdownSize.Schedule]: '300px',
+};
+
 interface IDateDropdownProps {
   onValueChange: (date: Date) => void;
   label?: DateDropdownLabel;
   isRequired?: boolean;
+  size?: DateDropdownSize;
 }
 
-const DateDropdown = ({ onValueChange, label, isRequired }: IDateDropdownProps) => {
+const DateDropdown = ({ onValueChange, label, isRequired, size }: IDateDropdownProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
+
+  const width = size ? sizeWidthMap[size] : '300px';
 
   const handleDateSelect = (date: Date) => {
     setSelectedDate(date);
@@ -27,8 +40,9 @@ const DateDropdown = ({ onValueChange, label, isRequired }: IDateDropdownProps) 
     setIsOpen(false);
   };
 
+
   return (
-    <DateSelectWrap>
+    <DateSelectWrap size={size} width={width}>
       <label htmlFor='schedule-date'>
         <span><CalendarMonthRoundedIcon /></span>
         {label}
@@ -49,9 +63,9 @@ const DateDropdown = ({ onValueChange, label, isRequired }: IDateDropdownProps) 
   )
 };
 
-const DateSelectWrap = styled.div`
+const DateSelectWrap = styled.div<{ size?: string; width: string }>`
 position: relative; 
-width: 300px;
+width: ${({ width }) => width};
 display: flex;
 flex-direction: column;
 cursor: pointer;
