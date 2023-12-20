@@ -125,11 +125,11 @@ public class ScheduleService {
         return ScheduleResponse.of(schedule);
     }
 
-    public List<ScheduleResponse> getSchedules(int year, int month) {
+    public List<ScheduleResponse> getSchedules(String homeId, int year, int month) {
         LocalDateTime startDate = LocalDateTime.of(year, month, 1, 0, 0);
         LocalDateTime endDate = LocalDateTime.of(year, month, YearMonth.of(year, month).lengthOfMonth(), 23, 59);
-        List<Schedule> scheduleList = scheduleRepository.findAllByScheduleDateTimeBetweenOrderByScheduleDateTimeAsc(
-                        startDate, endDate)
+        List<Schedule> scheduleList = scheduleRepository.findAllByHomeIdAndScheduleDateTimeBetweenOrderByScheduleDateTimeAsc(
+                        homeId, startDate, endDate)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_SCHEDULE));
 
         return scheduleList.stream()
