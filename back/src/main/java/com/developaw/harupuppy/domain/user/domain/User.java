@@ -2,10 +2,12 @@ package com.developaw.harupuppy.domain.user.domain;
 
 import com.developaw.harupuppy.domain.dog.domain.Dog;
 import com.developaw.harupuppy.domain.home.domain.Home;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -49,11 +51,11 @@ public class User {
     @Column(name = "allow_notification", columnDefinition = "TINYINT(1)")
     private boolean allowNotification;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "dog_id")
     private Dog dog;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "home_id")
     private Home home;
 
@@ -65,6 +67,14 @@ public class User {
         this.userRole = userRole;
         this.isDeleted = false;
         this.allowNotification = true;
+    }
+
+    public void setHome(Home home){
+        this.home = home;
+    }
+
+    public void setDog(Dog dog){
+        this.dog = dog;
     }
 
     public void delete() {
