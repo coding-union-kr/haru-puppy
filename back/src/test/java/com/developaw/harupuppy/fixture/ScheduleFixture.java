@@ -22,9 +22,9 @@ public class ScheduleFixture {
     }
 
     public static List<Schedule> getSchedulesWithMonth(){
-        return List.of(ScheduleCreateRequest.fromDto(ScheduleFixture.getCreateDto("2024-01-02")),
-                ScheduleCreateRequest.fromDto(ScheduleFixture.getCreateDto("2024-01-11")),
-                ScheduleCreateRequest.fromDto(ScheduleFixture.getCreateDto("2024-01-21"))
+        return List.of(ScheduleCreateRequest.fromDto(ScheduleFixture.getCreateDto("2024-01-02"), "homeId", "repeatId"),
+                ScheduleCreateRequest.fromDto(ScheduleFixture.getCreateDto("2024-01-11"), "homeId", "repeatId"),
+                ScheduleCreateRequest.fromDto(ScheduleFixture.getCreateDto("2024-01-21"), "homeId", "repeatId")
          );
     }
 
