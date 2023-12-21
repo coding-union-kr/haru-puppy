@@ -37,7 +37,8 @@ const MateSelect = ({ onValueChange, mates }: IMateSelectProps) => {
             key={mate.user_id}
             mate={mate}
             isClicked={selectedMates.includes(mate.user_id)}
-            onClick={handleMateClick}
+            onClick={() => handleMateClick(mate.user_id)}
+            size='40'
           />
         ))}
       </MateProfileWrapper>

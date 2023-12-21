@@ -8,19 +8,21 @@ interface IMateProfileProps {
   onClick?: () => void;
   mate: Imates
   isEditClick?: boolean;
+  size?: string;
 }
 
 
-const MateProfile = ({ isClicked, onClick, mate, isEditClick }: IMateProfileProps) => {
+
+const MateProfile = ({ isClicked, onClick, mate, isEditClick, size }: IMateProfileProps) => {
 
   const onMateDelete = () => {
-    console.log('mate 삭제 요청')
+    console.log('mate 삭제')
   }
 
   return (
     <Wrapper>
       <ProfileContainer>
-        <Profile isClicked={isClicked} onClick={onClick} />
+        <Profile isClicked={isClicked} onClick={onClick} size={size} />
         {isClicked &&
           <Image src='/svgs/mate_check.svg' alt='mate-check' width={20} height={20} />
         }
@@ -58,9 +60,9 @@ position: relative;
   }
 `;
 
-const Profile = styled.div<{ isClicked: boolean | undefined }>`
-  width: 40px;
-  height: 40px;
+const Profile = styled.div<{ isClicked: boolean | undefined; size: string | undefined }>`
+  width: ${({ size }) => `${size}px`};
+  height: ${({ size }) => `${size}px`};
   border-radius: 50%;
   background-color: ${({ theme }) => theme.colors.light};
   position: relative;
@@ -71,9 +73,11 @@ const Profile = styled.div<{ isClicked: boolean | undefined }>`
 
 const Info = styled.div`
   display: flex;
+  height: 40px;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  /* margin-top: 20px; */
   p {
     display: inline-block;
     margin: 3px;
