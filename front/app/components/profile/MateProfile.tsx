@@ -4,18 +4,28 @@ import styled from 'styled-components';
 import Image from 'next/image';
 
 interface IMateProfileProps {
-  isClicked: boolean;
-  onClick: (userId: string) => void;
+  isClicked?: boolean;
+  onClick?: () => void;
   mate: Imates
+  isEditClick?: boolean;
 }
 
-const MateProfile = ({ isClicked, onClick, mate }: IMateProfileProps) => {
+
+const MateProfile = ({ isClicked, onClick, mate, isEditClick }: IMateProfileProps) => {
+
+  const onMateDelete = () => {
+    console.log('mate 삭제 요청')
+  }
+
   return (
     <Wrapper>
       <ProfileContainer>
-        <Profile isClicked={isClicked} onClick={() => onClick(mate.user_id)} />
+        <Profile isClicked={isClicked} onClick={onClick} />
         {isClicked &&
           <Image src='/svgs/mate_check.svg' alt='mate-check' width={20} height={20} />
+        }
+        {isEditClick &&
+          <Image src='/svgs/home_edit_close_btn.svg' alt='mate-check' width={20} height={20} onClick={onMateDelete} />
         }
       </ProfileContainer>
       <Info>
@@ -48,7 +58,7 @@ position: relative;
   }
 `;
 
-const Profile = styled.div<{ isClicked: boolean }>`
+const Profile = styled.div<{ isClicked: boolean | undefined }>`
   width: 40px;
   height: 40px;
   border-radius: 50%;
