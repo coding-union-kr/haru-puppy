@@ -7,7 +7,7 @@ import RepeatDropdown from './RepeatDropdown';
 import Button from "@/app/components/button/Button";
 import styled from "styled-components";
 import TimeDropdown from './TimeDropdown';
-import DateDropdown from './DateDropdown';
+import DateDropdown, { DateDropdownLabel } from './DateDropdown';
 import ScheduleTypeDropdown from './ScheduleTypeDropdown';
 import MateSelect from './MateSelect';
 import { dummyMatesData } from '@/app/page';
@@ -80,7 +80,7 @@ const ScheduleAdd = ({ isOpen, onClose }: IScheduleAddProps) => {
             <FormWrap>
                 <ScheduleTypeDropdown onValueChange={(value) => handleSelectChange('type', value)} />
                 <MateSelect onValueChange={(value) => handleSelectChange('mates', value)} mates={dummyMatesData} />
-                <DateDropdown onValueChange={(value) => handleSelectChange('date', value)} />
+                <DateDropdown onValueChange={(value) => handleSelectChange('date', value)} label={DateDropdownLabel.ScheduleDay} isRequired={true} />
                 <TimeDropdown onValueChange={(value) => handleSelectChange('time', value)} />
                 <RepeatDropdown onValueChange={(value) => handleSelectChange('repeat', value)} />
                 <NotiDropdown onValueChange={(value) => handleSelectChange('noti', value)} />

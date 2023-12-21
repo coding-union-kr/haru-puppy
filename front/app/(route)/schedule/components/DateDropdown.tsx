@@ -6,45 +6,63 @@ import styled from 'styled-components';
 import CalendarMonthRoundedIcon from '@mui/icons-material/CalendarMonthRounded';
 
 
+export enum DateDropdownLabel {
+  Birthday = '생일',
+  ScheduleDay = '날짜',
+}
+
+
+export const sizeWidthMap: Record<DateDropdownLabel, string> = {
+  [DateDropdownLabel.Birthday]: '340px',
+  [DateDropdownLabel.ScheduleDay]: '300px',
+};
+
 interface IDateDropdownProps {
-    onValueChange: (date: Date) => void;
-  }
+  onValueChange: (date: Date) => void;
+  label?: DateDropdownLabel;
+  isRequired?: boolean;
+  size?: DateDropdownLabel;
+}
 
-const DateDropdown = ({onValueChange }: IDateDropdownProps) => {
-    const [isOpen, setIsOpen] = useState(false);
-    const [selectedDate, setSelectedDate] = useState(new Date()); 
+const DateDropdown = ({ onValueChange, label, isRequired, size }: IDateDropdownProps) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(new Date());
 
-    const handleDateSelect = (date: Date) => {
-        setSelectedDate(date); 
-        onValueChange(date);
-        setIsOpen(false); 
-      };
-      
+  const width = size ? sizeWidthMap[size] : '300px';
+
+  const handleDateSelect = (date: Date) => {
+    setSelectedDate(date);
+    onValueChange(date);
+    setIsOpen(false);
+  };
+
+
   return (
-    <DateSelectWrap>
+    <DateSelectWrap size={size} width={width}>
       <label htmlFor='schedule-date'>
-        <span><CalendarMonthRoundedIcon/></span>
-        날짜
+        <span><CalendarMonthRoundedIcon /></span>
+        {label}
       </label>
       <div onClick={() => setIsOpen(!isOpen)}>
-      {selectedDate.toLocaleDateString()}
-        <Image 
+        {selectedDate.toLocaleDateString()}
+        <Image
           src='/svgs/cover-box.svg'
-          alt='드롭다운 열기' 
-          width={20} 
+          alt='드롭다운 열기'
+          width={20}
           height={20} />
       </div>
       <DateDropdownWrap>
 
-      {isOpen && <StyledDatePicker selected={selectedDate} onChange={handleDateSelect} inline className='react-datepicker-custom-b'/>}
-    </DateDropdownWrap>
+        {isOpen && <StyledDatePicker selected={selectedDate} onChange={handleDateSelect} inline className='react-datepicker-custom-b' />}
+      </DateDropdownWrap>
     </DateSelectWrap>
-    )
+  )
 };
 
-const DateSelectWrap = styled.div`
+const DateSelectWrap = styled.div<{ size?: string; width: string }>`
 position: relative; 
-width: 300px;
+margin: 0 auto;
+width: ${({ width }) => width};
 display: flex;
 flex-direction: column;
 cursor: pointer;
