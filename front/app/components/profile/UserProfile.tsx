@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import Image from 'next/image';
 import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
 
-interface IUserProfileProps {
+export interface IUserProfileProps {
     user?: {
         profileImg?: string;
     };
