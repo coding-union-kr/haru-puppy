@@ -10,7 +10,6 @@ const UserProfile = ({ user }: IUserProfileProps) => {
         {user && user.profileImg ? (
           <>
             <Image
-
               src={user.profileImg}
               alt="User Profile"
               layout="fill"
@@ -44,7 +43,7 @@ const UserProfile = ({ user }: IUserProfileProps) => {
         </div>
       </UserInfo>
       <EditBtn>
-        <Image src={'/svgs/home_edit_btn.svg'} alt='mate-edit-btn' width={30} height={30} />
+        <Image src={'/svgs/home_edit_btn.svg'} alt='mate-edit-btn' width={40} height={40} />
       </EditBtn>
     </Wrapper>
   )
@@ -87,6 +86,7 @@ const EditBtn = styled.div`
   display: flex;
   align-items: flex-start;
   justify-content: flex-end;
+  cursor: pointer;
 `
 
 const ImageWrapper = styled.div`
@@ -98,6 +98,7 @@ const ImageWrapper = styled.div`
     > img {
       width: 140px;
       height: 140px;
+    
     }
 `;
 

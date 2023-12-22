@@ -23,8 +23,8 @@ const MateList = ({ mates }: IMateHomeProps) => {
             <UpperWrapper>
                 <p>메이트</p>
                 <div onClick={onEditClick}>
-                    {isEdit ? <Image src={'/svgs/home_edit_close_btn.svg'} alt='mate-edit-btn' width={30} height={30} /> :
-                        <Image src={'/svgs/home_edit_btn.svg'} alt='mate-edit-btn' width={30} height={30} />}
+                    {isEdit ? <Image src={'/svgs/home_edit_close_btn.svg'} alt='mate-edit-btn' width={40} height={40} /> :
+                        <Image src={'/svgs/home_edit_btn.svg'} alt='mate-edit-btn' width={40} height={40} />}
                 </div>
             </UpperWrapper>
 
@@ -76,7 +76,8 @@ const ProfileWrapper = styled.div`
 
 
 const PlusWrapper = styled.div`
-    margin: -30px auto 0;    
+    margin: -30px auto 0;  
+    cursor: pointer;  
 `
 
 
