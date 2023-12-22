@@ -8,7 +8,7 @@ import styled from "styled-components";
 
 const TopNavigation = () => {
   const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
-  const [showNotiButton, setShowNotiButton] = useState(!!token);
+  const [showBtns, setShowBtns] = useState(!!token);
 
   const [hasNotification, setHasNotification] = useState(true);
 
@@ -57,7 +57,7 @@ const TopNavigation = () => {
   }, [pathname]); 
 
   return (
-    <TopNavigationWrap showNoti={showNotiButton}>
+    <TopNavigationWrap showBtns={showBtns}>
         <button onClick={handleGoBack}><ArrowBackRoundedIcon /></button>
         <strong>{currentTitle}</strong>
         <button onClick={handleNotiClick}>{NotiComponent}</button>
@@ -66,7 +66,7 @@ const TopNavigation = () => {
 
 };
 
-const TopNavigationWrap = styled.nav<{ showNoti: boolean }>`
+const TopNavigationWrap = styled.nav<{ showBtns: boolean }>`
     position: fixed;
     top: 0;
     left: 50%;
@@ -86,13 +86,11 @@ const TopNavigationWrap = styled.nav<{ showNoti: boolean }>`
     & > button {
         padding: 12px 15px;
         color: ${({ theme }) => theme.colors.black80};
+        visibility: ${({ showBtns }) => (showBtns ? 'visible' : 'hidden')};
 
         &:hover {
             color: ${({ theme }) => theme.colors.black90};
         }
-    }
-    & > button:last-of-type {
-        visibility: ${({ showNoti }) => (showNoti ? 'visible' : 'hidden')};
     }
 `;
 
