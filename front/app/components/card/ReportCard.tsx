@@ -2,14 +2,22 @@ import React from 'react'
 import styled from 'styled-components'
 import PetsIcon from '@mui/icons-material/Pets';
 
-const ReportCard = () => {
+
+interface IReportCard {
+    title: string;
+    count: string | number;
+    unit: string | undefined;
+    icon: React.ReactNode;
+}
+
+const ReportCard = ({ title, count, unit, icon }: IReportCard) => {
     return (
         <Wrapper>
-            <p>지난주 산책</p>
+            <p>{title}</p>
             <Info>
-                <PetsIcon />
+                {icon}
                 <Count>
-                    9<p>회</p>
+                    {count}<p>{unit}</p>
                 </Count>
             </Info>
         </Wrapper>
@@ -19,7 +27,7 @@ const ReportCard = () => {
 const Wrapper = styled.div`
     width: 156px;
     height: 84px;
-    border: 2px solid ${({ theme }) => theme.colors.black70};
+    border: 2px solid ${({ theme }) => theme.colors.black60};
     border-radius: 12px;
     display: flex;
     flex-direction: column;
@@ -34,7 +42,7 @@ const Wrapper = styled.div`
 
 const Info = styled.div`
     display: flex;
-    margin-top: 5px;
+    margin-top: 10px;
     svg {
     width: 40px; 
     height: 40px;
@@ -44,11 +52,12 @@ const Info = styled.div`
 
 
 const Count = styled.div`
-    font-size: 30px;
+    font-size: 28px;
     color: ${({ theme }) => theme.colors.black90};
-    margin-left: 20px;
+    margin-left: 14px;
     display: flex;
     align-items: flex-end;
+    padding-bottom: 5px;
     p {
         display: inline-block;
         font-size: 14px;
