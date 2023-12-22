@@ -48,12 +48,20 @@ const Wrapper = styled.div`
     align-items: center;  
     width: 370px;  
     padding: 20px;
+    margin: 0 auto;
 `
 
 const UpperWrapper = styled.div`
     display: flex;
     justify-content: space-between;
-    width: 90%; 
+    width: 100%; 
+    margin-bottom: 20px;
+    > p  {
+        font-size: 20px;
+    }
+    > div {
+        cursor: pointer;
+    }
 
 `
 

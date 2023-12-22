@@ -1,32 +1,69 @@
 import React from 'react'
 import styled from 'styled-components'
 import PetsIcon from '@mui/icons-material/Pets';
+import dayjs from 'dayjs';
+import Image from 'next/image';
 
+
+interface IDummyData {
+    today_poo_cnt: number,
+    last_week_walk_cnt: number,
+    last_wash_date: string,
+    last_hospital_date: string,
+}
 
 interface IReportCard {
-    title: string;
-    count: string | number;
-    unit: string | undefined;
-    icon: React.ReactNode;
+    dummyReports: IDummyData
+
 }
 
-const ReportCard = ({ title, count, unit, icon }: IReportCard) => {
+const ReportCard = ({ dummyReports }: IReportCard) => {
+    const reportsArray = [
+        { title: '오늘의 배변활동', count: dummyReports.today_poo_cnt, unit: '회', icon: <Image src={'/svgs/poop.svg'} alt="배변활동 아이콘" width={30} height={30} /> },
+        { title: '지난주 산책', count: dummyReports.last_week_walk_cnt, unit: '회', icon: <Image src={'/svgs/paw.svg'} alt="산책 아이콘" width={25} height={25} /> },
+        { title: '마지막 목욕', count: dayjs(dummyReports.last_wash_date).format('MM.DD'), icon: <Image src={'/svgs/dog_bath.svg'} alt="마지막 목욕 아이콘" width={30} height={30} /> },
+        { title: '마지막 검진', count: dayjs(dummyReports.last_hospital_date).format('MM.DD'), icon: <Image src={'/svgs/dog_health_check.svg'} alt="마지막 검진 아이콘" width={30} height={30} /> },
+    ];
     return (
-        <Wrapper>
-            <p>{title}</p>
-            <Info>
-                {icon}
-                <Count>
-                    {count}<p>{unit}</p>
-                </Count>
-            </Info>
-        </Wrapper>
+        <>
+            <ReportCardWrapper>
+                <Title>멍순이 리포트</Title>
+
+                {reportsArray.map((report, index) => (
+                    <Wrapper key={index}>
+                        <p>{report.title}</p>
+                        <Info>
+                            {report.icon}
+                            <Count>
+                                {report.count}<p>{report.unit}</p>
+                            </Count>
+                        </Info>
+                    </Wrapper>
+                ))}
+            </ReportCardWrapper>
+        </>
     )
 }
+
+const ReportCardWrapper = styled.div`
+    width: 370px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    padding: 20px;
+    `;
+
+const Title = styled.span`
+    font-size: 20px;
+    grid-column: span 2; 
+    text-align: start; 
+    margin-bottom: 10px; 
+`;
 
 const Wrapper = styled.div`
     width: 156px;
     height: 84px;
+    margin: 0 auto;
     border: 2px solid ${({ theme }) => theme.colors.black60};
     border-radius: 12px;
     display: flex;

@@ -12,7 +12,6 @@ interface IMateProfileProps {
 }
 
 
-
 const MateProfile = ({ isClicked, onClick, mate, isEditClick, size }: IMateProfileProps) => {
 
   const onMateDelete = () => {
@@ -27,10 +26,10 @@ const MateProfile = ({ isClicked, onClick, mate, isEditClick, size }: IMateProfi
           <Image src='/svgs/mate_check.svg' alt='mate-check' width={20} height={20} />
         }
         {isEditClick &&
-          <Image src='/svgs/home_edit_close_btn.svg' alt='mate-check' width={20} height={20} onClick={onMateDelete} />
+          <Image src='/svgs/home_edit_close_btn.svg' alt='mate-check' width={30} height={30} onClick={onMateDelete} style={{ cursor: 'pointer' }} />
         }
       </ProfileContainer>
-      <Info>
+      <Info size={size}>
         <NickName>{mate.nickname}</NickName>
         <Name>{mate.role}</Name>
       </Info>
@@ -71,13 +70,14 @@ const Profile = styled.div<{ isClicked: boolean | undefined; size: string | unde
   cursor: pointer;
 `;
 
-const Info = styled.div`
+const Info = styled.div<{ size?: string }>`
   display: flex;
   height: 40px;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  /* margin-top: 20px; */
+  /* margin-top: ${({ size }) => (size === '60' ? '20px' : '0')} */
+  ${({ size }) => size === '60' && 'margin-top: 20px;'}
   p {
     display: inline-block;
     margin: 3px;
