@@ -4,21 +4,32 @@ import styled from 'styled-components';
 import Image from 'next/image';
 
 interface IMateProfileProps {
-  isClicked: boolean;
-  onClick: (userId: string) => void;
+  isClicked?: boolean;
+  onClick?: () => void;
   mate: Imates
+  isEditClick?: boolean;
+  size?: string;
 }
 
-const MateProfile = ({ isClicked, onClick, mate }: IMateProfileProps) => {
+
+const MateProfile = ({ isClicked, onClick, mate, isEditClick, size }: IMateProfileProps) => {
+
+  const onMateDelete = () => {
+    console.log('mate 삭제')
+  }
+
   return (
     <Wrapper>
       <ProfileContainer>
-        <Profile isClicked={isClicked} onClick={() => onClick(mate.user_id)} />
+        <Profile isClicked={isClicked} onClick={onClick} size={size} />
         {isClicked &&
           <Image src='/svgs/mate_check.svg' alt='mate-check' width={20} height={20} />
         }
+        {isEditClick &&
+          <Image src='/svgs/home_edit_close_btn.svg' alt='mate-check' width={30} height={30} onClick={onMateDelete} style={{ cursor: 'pointer' }} />
+        }
       </ProfileContainer>
-      <Info>
+      <Info size={size}>
         <NickName>{mate.nickname}</NickName>
         <Name>{mate.role}</Name>
       </Info>
@@ -48,9 +59,9 @@ position: relative;
   }
 `;
 
-const Profile = styled.div<{ isClicked: boolean }>`
-  width: 40px;
-  height: 40px;
+const Profile = styled.div<{ isClicked: boolean | undefined; size: string | undefined }>`
+  width: ${({ size }) => `${size}px`};
+  height: ${({ size }) => `${size}px`};
   border-radius: 50%;
   background-color: ${({ theme }) => theme.colors.light};
   position: relative;
@@ -59,11 +70,14 @@ const Profile = styled.div<{ isClicked: boolean }>`
   cursor: pointer;
 `;
 
-const Info = styled.div`
+const Info = styled.div<{ size?: string }>`
   display: flex;
+  height: 40px;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  /* margin-top: ${({ size }) => (size === '60' ? '20px' : '0')} */
+  ${({ size }) => size === '60' && 'margin-top: 20px;'}
   p {
     display: inline-block;
     margin: 3px;
