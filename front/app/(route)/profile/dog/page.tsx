@@ -39,7 +39,7 @@ const page = () => {
     const handleSelectChange = (name: string, value: any) => {
         let formattedValue = value;
 
-        if (name === 'date' && value instanceof Date) {
+        if (name === 'birthday' && value instanceof Date) {
             value = dayjs(value).format('YYYY-MM-DD');
         }
 
@@ -76,7 +76,7 @@ const page = () => {
                     onInputValue={(value) => handleSelectChange('name', value)}
                 />
                 <GenderSelect onValueChange={(value) => handleSelectChange('gender', value)} />
-                <DateDropdown onValueChange={(value) => handleSelectChange('date', value)} label={DateDropdownLabel.Birthday} isRequired={false} size={DateDropdownLabel.Birthday} />
+                <DateDropdown onValueChange={(value) => handleSelectChange('birthday', value)} label={DateDropdownLabel.Birthday} isRequired={false} size={DateDropdownLabel.Birthday} />
                 <Input
                     inputType={InputType.Weight}
                     onInputValue={(value) => handleSelectChange('weight', value)}
