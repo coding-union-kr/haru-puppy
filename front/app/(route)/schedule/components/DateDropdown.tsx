@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import Image from 'next/image';
 import 'react-datepicker/dist/react-datepicker.css';
 import DatePicker from 'react-datepicker';
@@ -27,6 +27,7 @@ interface IDateDropdownProps {
 const DateDropdown = ({ onValueChange, label, isRequired, size }: IDateDropdownProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const width = size ? sizeWidthMap[size] : '300px';
 
@@ -36,9 +37,23 @@ const DateDropdown = ({ onValueChange, label, isRequired, size }: IDateDropdownP
     setIsOpen(false);
   };
 
+  const handleClickOutside = (event: MouseEvent) => {
+    if (event.target instanceof Node) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    }
+  };
+
+    useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+    }, []);
 
   return (
-    <DateSelectWrap size={size} width={width}>
+    <DateSelectWrap ref={dropdownRef} size={size} width={width}>
       <label htmlFor='schedule-date'>
         <span><CalendarMonthRoundedIcon /></span>
         {label}

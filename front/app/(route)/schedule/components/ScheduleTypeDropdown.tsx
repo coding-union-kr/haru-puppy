@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useRef, useState, useEffect} from 'react';
+;
 import Image from 'next/image';
 import styled from 'styled-components';
 import TaskAltRoundedIcon from '@mui/icons-material/TaskAltRounded';
@@ -28,19 +29,35 @@ interface IScheduleTypeDropdownProps {
 const ScheduleTypeDropdown = ({onValueChange }: IScheduleTypeDropdownProps) => {
     const [isOpen, setIsOpen] = useState(false);
     const [selectedValue, setSelectedValue] = useState(options[0]); 
+    const dropdownRef = useRef<HTMLDivElement>(null);
 
-        const handleSelect = (label: string) => {
-            const selectedOption = options.find(option => option.label === label);
-            if (selectedOption) {
-                setSelectedValue(selectedOption); 
-                onValueChange(label);
+    const handleSelect = (label: string) => {
+        const selectedOption = options.find(option => option.label === label);
+        if (selectedOption) {
+            setSelectedValue(selectedOption); 
+            onValueChange(label);
+        }
+        setIsOpen(false); 
+    };
+
+    const handleClickOutside = (event: MouseEvent) => {
+        if (event.target instanceof Node) {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+            setIsOpen(false);
             }
-            setIsOpen(false); 
+        }
         };
+
+    useEffect(() => {
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
         
       
   return (
-    <ScheduleTypeSelectWrap>
+    <ScheduleTypeSelectWrap ref={dropdownRef}>
       <label htmlFor='schedule-type'>
         <span><TaskAltRoundedIcon/></span>
         활동 유형
