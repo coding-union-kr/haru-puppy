@@ -12,6 +12,8 @@ import ScheduleTypeDropdown from './ScheduleTypeDropdown';
 import MateSelect from './MateSelect';
 import { dummyMatesData } from '@/app/page';
 
+import MemoTextArea from '@/app/components/input/MemoTextArea';
+
 export interface IScheduleAddProps {
     isOpen: boolean;
     onClose?: () => void;
@@ -31,6 +33,7 @@ export interface IFormData {
     time: Date | null;
     repeat: string;
     noti: string;
+    memo: string;
 }
 
 const ScheduleAdd = ({ isOpen, onClose }: IScheduleAddProps) => {
@@ -42,6 +45,7 @@ const ScheduleAdd = ({ isOpen, onClose }: IScheduleAddProps) => {
         time: null,
         repeat: '',
         noti: '',
+        memo: '',
     });
 
     const handleSelectChange = (name: string, value: any) => {
@@ -80,10 +84,11 @@ const ScheduleAdd = ({ isOpen, onClose }: IScheduleAddProps) => {
             <FormWrap>
                 <ScheduleTypeDropdown onValueChange={(value) => handleSelectChange('type', value)} />
                 <MateSelect onValueChange={(value) => handleSelectChange('mates', value)} mates={dummyMatesData} />
-                <DateDropdown onValueChange={(value) => handleSelectChange('date', value)} label={DateDropdownLabel.ScheduleDay} isRequired={true} />
+                <DateDropdown onValueChange={(value) => handleSelectChange('date', value)} dateDropdownType={DateDropdownLabel.ScheduleDay} isRequired={true} />
                 <TimeDropdown onValueChange={(value) => handleSelectChange('time', value)} />
                 <RepeatDropdown onValueChange={(value) => handleSelectChange('repeat', value)} />
                 <NotiDropdown onValueChange={(value) => handleSelectChange('noti', value)} />
+                <MemoTextArea onValueChange={(value) => handleSelectChange('memo', value)}/>
                 <ButtonGroupWrap>
                     <Button onClick={handleSave} width="135px" height="32px">저장</Button>
                     <Button onClick={handleDelete} width="135px" height="32px">삭제</Button>
