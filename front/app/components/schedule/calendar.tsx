@@ -56,10 +56,8 @@ const Calendar = () => {
 
   const [showDatePicker, setShowDatePicker] = useState(false);
 
-
   const startOfWeek = subDays(date, date.getDay());
   const endOfWeek = addDays(startOfWeek, 6);
-
 
   useEffect(() => {
     const fetchScheduleData = async () => {
@@ -107,6 +105,9 @@ const Calendar = () => {
       } else if (inactiveScheduleItem) {
         setSelectedDateTasks([]);
       }
+
+      // weekcalendar와 fullcalendar모두 상태 동일하게 업데이트
+      setDate(clickedDate);
     } catch (error) {
       console.error('특정 날짜 스케줄 목록 조회 에러', error);
     }
@@ -152,11 +153,12 @@ const Calendar = () => {
         <WeekCalendar>
           {Array.from({ length: 7 }).map((_, index) => {
             const day = addDays(startOfWeek, index);
+            // console.log('day', day)
             return (
               <motion.div
                 key={index}
                 onClick={() => handleDateClick(day)}
-                className={day.toISOString().split('T')[0] === date.toISOString().split('T')[0] ? 'selectedDay' : 'unselectedDay'}
+                className={`weekDay ${format(day, 'd') === format(date, 'd') ? 'selectedDay' : ''}`}
                 layout
               >
                 {format(day, 'd')}
@@ -165,8 +167,6 @@ const Calendar = () => {
           })}
         </WeekCalendar>
       )}
-
-
       <ExpandMoreIcon onClick={() => setShowDatePicker(!showDatePicker)} />
       <TodoCard todoList={selectedDateTasks} />
     </Wrapper>
