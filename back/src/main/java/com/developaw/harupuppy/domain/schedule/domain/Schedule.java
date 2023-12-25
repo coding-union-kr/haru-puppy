@@ -2,6 +2,7 @@ package com.developaw.harupuppy.domain.schedule.domain;
 
 import com.developaw.harupuppy.domain.schedule.dto.request.ScheduleUpdateRequest;
 import com.developaw.harupuppy.global.common.DateEntity;
+import com.developaw.harupuppy.global.utils.DateUtils;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -14,10 +15,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,9 +29,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Schedule extends DateEntity {
-    static final DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    static final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "schedule_id")
@@ -111,7 +106,7 @@ public class Schedule extends DateEntity {
 
     public void update(ScheduleUpdateRequest dto, List<UserSchedule> mates) {
         this.scheduleType = dto.scheduleType();
-        this.scheduleDateTime = parseDateTime(dto.scheduleDate(), dto.scheduleTime());
+        this.scheduleDateTime = DateUtils.parseDateTime(dto.scheduleDate(), dto.scheduleTime());
         this.mates = mates;
         this.repeatType = dto.repeatType();
         this.alertType = dto.alertType();
@@ -137,11 +132,5 @@ public class Schedule extends DateEntity {
     public void addMate(UserSchedule mate) {
         mates.add(mate);
         mate.getUserSchedulePK().setSchedule(this);
-    }
-
-    public static LocalDateTime parseDateTime(String date, String time) {
-        LocalDate localDate = LocalDate.parse(date, dateFormatter);
-        LocalTime localTime = LocalTime.parse(time, timeFormatter);
-        return LocalDateTime.of(localDate, localTime);
     }
 }

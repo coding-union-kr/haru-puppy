@@ -5,11 +5,9 @@ import com.developaw.harupuppy.domain.schedule.domain.RepeatType;
 import com.developaw.harupuppy.domain.schedule.domain.Schedule;
 import com.developaw.harupuppy.domain.schedule.domain.ScheduleType;
 import com.developaw.harupuppy.domain.user.dto.UserScheduleDto;
+import com.developaw.harupuppy.global.utils.DateUtils;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,23 +22,14 @@ public record ScheduleCreateDto(
 ) {
 
     public static Schedule fromDto(ScheduleCreateDto dto) {
-        validateDateTime(dto.scheduleDate, dto.scheduleTime);
+        DateUtils.validateDateTime(dto.scheduleDate, dto.scheduleTime);
         return Schedule.builder()
-                .scheduleDateTime(Schedule.parseDateTime(dto.scheduleDate(), dto.scheduleTime()))
+                .scheduleDateTime(DateUtils.parseDateTime(dto.scheduleDate(), dto.scheduleTime()))
                 .scheduleType(dto.scheduleType())
                 .mates(new ArrayList<>())
                 .alertType(dto.alertType())
                 .repeatType(dto.repeatType())
                 .memo(dto.memo())
                 .build();
-    }
-
-    private static void validateDateTime(String date, String time) {
-        try {
-            LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-            LocalTime.parse(time, DateTimeFormatter.ofPattern("HH:mm"));
-        } catch (Exception e) {
-            throw new IllegalArgumentException("스케줄 날짜와 시간이 유효하지 않습니다", e);
-        }
     }
 }
