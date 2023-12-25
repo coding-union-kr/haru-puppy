@@ -1,6 +1,6 @@
 'use client'
 
-import { getYear, getMonth, getDate, subDays, addDays } from 'date-fns';
+import { getYear, getMonth, getDate, subDays, addDays, format } from 'date-fns';
 import { useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -8,6 +8,9 @@ import styled from 'styled-components';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import TodoCard from '../card/TodoCard';
+import { motion } from 'framer-motion';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+
 
 export interface ScheduleItem {
   scheduleId: number;
@@ -25,7 +28,6 @@ export interface ScheduleItem {
 export interface ScheduleResponse {
   schedule: ScheduleItem[];
 }
-
 
 
 const currentYear = getYear(new Date());
@@ -51,6 +53,13 @@ const Calendar = () => {
   const [scheduleData, setScheduleData] = useState<ScheduleResponse | null>(null);
   const [selectedDateTasks, setSelectedDateTasks] = useState<ScheduleItem[]>([]);
   const [markedDates, setMarkedDates] = useState<Date[]>([new Date('2023-12-01'), new Date('2023-12-05'), new Date('2023-12-10')]);
+
+  const [showDatePicker, setShowDatePicker] = useState(false);
+
+
+  const startOfWeek = subDays(date, date.getDay());
+  const endOfWeek = addDays(startOfWeek, 6);
+
 
   useEffect(() => {
     const fetchScheduleData = async () => {
@@ -105,51 +114,64 @@ const Calendar = () => {
 
   return (
     <Wrapper>
-      <DatePicker
-        renderDayContents={renderDayContents}
-        selected={date}
-        onChange={(newDate: Date) => {
-          setDate(newDate);
-          handleDateClick(newDate);
-        }}
-        inline
-        dayClassName={(d) => (d.getDate() === date!.getDate() ? 'selectedDay' : 'unselectedDay')}
-        calendarClassName={'calenderWrapper'}
-        closeOnScroll={true}
-        renderCustomHeader={({
-          date,
-          changeYear,
-          decreaseMonth,
-          increaseMonth,
-          prevMonthButtonDisabled,
-          nextMonthButtonDisabled,
-        }) => (
-          <CustomHeaderContainer>
-            <Button type='button' onClick={decreaseMonth} disabled={prevMonthButtonDisabled}>
-              <ChevronLeftIcon />
-            </Button>
-            <div>
-              <select value={getYear(date)} onChange={({ target: { value } }) => changeYear(+value)}>
-                {YEARS.map((option) => (
-                  <option key={option} value={option}>
-                    {option}
-                  </option>
-                ))}
-              </select>
-              <span>{MONTHS[getMonth(date)]}</span>
-            </div>
+      {showDatePicker ? (
+        <DatePicker
+          renderDayContents={renderDayContents}
+          selected={date}
+          onChange={(newDate: Date) => {
+            setDate(newDate);
+            handleDateClick(newDate);
+          }}
+          inline
+          dayClassName={(d) => (d.getDate() === date!.getDate() ? 'selectedDay' : 'unselectedDay')}
+          calendarClassName={'calenderWrapper'}
+          closeOnScroll={true}
+          renderCustomHeader={({ date, changeYear, decreaseMonth, increaseMonth, prevMonthButtonDisabled, nextMonthButtonDisabled }) => (
+            <CustomHeaderContainer>
+              <Button type='button' onClick={decreaseMonth} disabled={prevMonthButtonDisabled}>
+                <ChevronLeftIcon />
+              </Button>
+              <div>
+                <select value={getYear(date)} onChange={({ target: { value } }) => changeYear(+value)}>
+                  {YEARS.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </select>
+                <span>{MONTHS[getMonth(date)]}</span>
+              </div>
 
-            <Button type='button' onClick={increaseMonth} disabled={nextMonthButtonDisabled}>
-              <ChevronRightIcon />
-            </Button>
-          </CustomHeaderContainer>
-        )}
-      />
+              <Button type='button' onClick={increaseMonth} disabled={nextMonthButtonDisabled}>
+                <ChevronRightIcon />
+              </Button>
+            </CustomHeaderContainer>
+          )}
+        />
+      ) : (
+        <WeekCalendar>
+          {Array.from({ length: 7 }).map((_, index) => {
+            const day = addDays(startOfWeek, index);
+            return (
+              <motion.div
+                key={index}
+                onClick={() => handleDateClick(day)}
+                className={day.toISOString().split('T')[0] === date.toISOString().split('T')[0] ? 'selectedDay' : 'unselectedDay'}
+                layout
+              >
+                {format(day, 'd')}
+              </motion.div>
+            );
+          })}
+        </WeekCalendar>
+      )}
+
+
+      <ExpandMoreIcon onClick={() => setShowDatePicker(!showDatePicker)} />
       <TodoCard todoList={selectedDateTasks} />
     </Wrapper>
   );
 };
-
 
 const Wrapper = styled.div` 
 display: flex;
@@ -205,6 +227,29 @@ const CustomHeaderContainer = styled.div`
       font-weight: 400;
       padding-right: 5px;
       cursor: pointer;
+    }
+  }
+`;
+
+
+const WeekCalendar = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+
+  div {
+    width: 100%;
+    text-align: center;
+    padding: 10px;
+    cursor: pointer;
+
+    &.selectedDay {
+      background-color: #e15f41; 
+      color: white;
+    }
+
+    &.unselectedDay:hover {
+      background-color: #f0f0f0;
     }
   }
 `;
