@@ -11,25 +11,18 @@ export enum DateDropdownLabel {
   ScheduleDay = '날짜',
 }
 
-
-export const sizeWidthMap: Record<DateDropdownLabel, string> = {
-  [DateDropdownLabel.Birthday]: '340px',
-  [DateDropdownLabel.ScheduleDay]: '300px',
-};
-
 interface IDateDropdownProps {
   onValueChange: (date: Date) => void;
   label?: DateDropdownLabel;
   isRequired?: boolean;
-  size?: DateDropdownLabel;
 }
 
-const DateDropdown = ({ onValueChange, label, isRequired, size }: IDateDropdownProps) => {
+const DateDropdown = ({ onValueChange, label, isRequired }: IDateDropdownProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const width = size ? sizeWidthMap[size] : '300px';
+  const width = label === DateDropdownLabel.Birthday ? '340px' : '300px'
 
   const handleDateSelect = (date: Date) => {
     setSelectedDate(date);
@@ -45,15 +38,15 @@ const DateDropdown = ({ onValueChange, label, isRequired, size }: IDateDropdownP
     }
   };
 
-    useEffect(() => {
+  useEffect(() => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-    }, []);
+  }, []);
 
   return (
-    <DateSelectWrap ref={dropdownRef} size={size} width={width}>
+    <DateSelectWrap ref={dropdownRef} width={width}>
       <label htmlFor='schedule-date'>
         <span><CalendarMonthRoundedIcon /></span>
         {label}

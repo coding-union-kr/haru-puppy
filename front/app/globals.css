@@ -63,10 +63,11 @@ body {
 
 			.react-datepicker__day-names {
 				display: flex;
-				justify-content: center;
+				justify-content: space-between;
 				align-items: center;
 				margin-top: 5px;
 				height: 30px;
+				padding: 0 14px;
 
 				.react-datepicker__day-name {
 					color: #5b5b5b;

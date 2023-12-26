@@ -84,11 +84,11 @@ const ScheduleAdd = ({ isOpen, onClose }: IScheduleAddProps) => {
             <FormWrap>
                 <ScheduleTypeDropdown onValueChange={(value) => handleSelectChange('type', value)} />
                 <MateSelect onValueChange={(value) => handleSelectChange('mates', value)} mates={dummyMatesData} />
-                <DateDropdown onValueChange={(value) => handleSelectChange('date', value)} dateDropdownType={DateDropdownLabel.ScheduleDay} isRequired={true} />
+                <DateDropdown onValueChange={(value) => handleSelectChange('date', value)} label={DateDropdownLabel.ScheduleDay} isRequired={true} />
                 <TimeDropdown onValueChange={(value) => handleSelectChange('time', value)} />
                 <RepeatDropdown onValueChange={(value) => handleSelectChange('repeat', value)} />
                 <NotiDropdown onValueChange={(value) => handleSelectChange('noti', value)} />
-                <MemoTextArea onValueChange={(value) => handleSelectChange('memo', value)}/>
+                <MemoTextArea onValueChange={(value) => handleSelectChange('memo', value)} />
                 <ButtonGroupWrap>
                     <Button onClick={handleSave} width="135px" height="32px">저장</Button>
                     <Button onClick={handleDelete} width="135px" height="32px">삭제</Button>
