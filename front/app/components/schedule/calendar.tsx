@@ -57,7 +57,6 @@ const Calendar = () => {
   const [showDatePicker, setShowDatePicker] = useState(false);
 
   const startOfWeek = subDays(date, date.getDay());
-  const endOfWeek = addDays(startOfWeek, 6);
 
   useEffect(() => {
     const fetchScheduleData = async () => {
@@ -153,7 +152,8 @@ const Calendar = () => {
         <WeekCalendar>
           {Array.from({ length: 7 }).map((_, index) => {
             const day = addDays(startOfWeek, index);
-            // console.log('day', day)
+            const dayOfWeek = format(day, 'EEEE').charAt(0);
+            // console.log('day', day);
             return (
               <motion.div
                 key={index}
@@ -161,6 +161,7 @@ const Calendar = () => {
                 className={`weekDay ${format(day, 'd') === format(date, 'd') ? 'selectedDay' : ''}`}
                 layout
               >
+                <div className='dayOfWeek'>{dayOfWeek}</div>
                 {format(day, 'd')}
               </motion.div>
             );
@@ -236,23 +237,43 @@ const WeekCalendar = styled.div`
   display: flex;
   justify-content: space-between;
   margin-bottom: 10px;
-
+  width: 350px;
+  height: 60px;
+border: 1px solid #5b5b5b;
+border-radius: 12px;
+padding: 10px 0px;;
   div {
     width: 100%;
     text-align: center;
     padding: 10px;
     cursor: pointer;
-
+    position: relative;
+    padding-top: 30px;
+    border-radius: 12px;
+    justify-content: center;
+    align-items: center;
     &.selectedDay {
-      background-color: #e15f41; 
+      background-color: ${({ theme }) => theme.colors.main}; 
       color: white;
     }
 
     &.unselectedDay:hover {
       background-color: #f0f0f0;
     }
+
+    .dayOfWeek {
+      position: absolute;
+      bottom: 50%;
+      left: 50%;
+      transform: translateX(-50%);
+      color: #5b5b5b;
+      font-size: 14px;
+      margin-bottom: 5px;
+      padding: 5px;
+    }
   }
 `;
+
 
 const Button = styled.button`
     width: 34px;
