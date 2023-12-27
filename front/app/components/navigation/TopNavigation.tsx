@@ -13,8 +13,8 @@ const TopNavigation = () => {
   const [hasNotification, setHasNotification] = useState(true);
 
   const NotiComponent = hasNotification
-  ? <Image src={NotificationUnreadIcon} alt="알림" />
-  : <NotificationsNoneRoundedIcon />;
+    ? <Image src={NotificationUnreadIcon} alt="알림" />
+    : <NotificationsNoneRoundedIcon />;
 
   const handleNotiClick = () => {
     setHasNotification(false);
@@ -23,8 +23,8 @@ const TopNavigation = () => {
   const pathname = usePathname();
   const getTitle = (pathname: string) => {
     switch (pathname) {
-     case '/':
-        default: 
+      case '/':
+      default:
         return '홈';
       case '/auth/signup':
         return '회원가입';
@@ -40,6 +40,8 @@ const TopNavigation = () => {
         return '내 프로필';
       case '/setting':
         return '설정';
+      case '/auth/userprofile':
+        return '내 프로필'
     }
   };
 
@@ -52,15 +54,15 @@ const TopNavigation = () => {
   useEffect(() => {
     if (pathname) {
       const title = getTitle(pathname);
-      setCurrentTitle(title); 
+      setCurrentTitle(title);
     }
-  }, [pathname]); 
+  }, [pathname]);
 
   return (
     <TopNavigationWrap showBtns={showBtns}>
-        <button onClick={handleGoBack}><ArrowBackRoundedIcon /></button>
-        <strong>{currentTitle}</strong>
-        <button onClick={handleNotiClick}>{NotiComponent}</button>
+      <button onClick={handleGoBack}><ArrowBackRoundedIcon /></button>
+      <strong>{currentTitle}</strong>
+      <button onClick={handleNotiClick}>{NotiComponent}</button>
     </TopNavigationWrap>
   )
 
@@ -80,7 +82,7 @@ const TopNavigationWrap = styled.nav<{ showBtns: boolean }>`
 
     & > strong {
         font-size: 16px;
-        font-weight: ${({theme})=> theme.typo.semibold};
+        font-weight: ${({ theme }) => theme.typo.semibold};
     }
 
     & > button {
