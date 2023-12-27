@@ -155,15 +155,14 @@ const Calendar = () => {
             const dayOfWeek = format(day, 'EEEE').charAt(0);
             // console.log('day', day);
             return (
-              <motion.div
+              <div
                 key={index}
                 onClick={() => handleDateClick(day)}
                 className={`weekDay ${format(day, 'd') === format(date, 'd') ? 'selectedDay' : ''}`}
-                layout
               >
                 <div className='dayOfWeek'>{dayOfWeek}</div>
                 {format(day, 'd')}
-              </motion.div>
+              </div>
             );
           })}
         </WeekCalendar>
