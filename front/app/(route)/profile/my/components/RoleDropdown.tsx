@@ -3,16 +3,15 @@ import styled from 'styled-components';
 import Image from 'next/image';
 
 interface IDateDropdownProps {
+    selectedValue: string;
     onValueChange: (value: string) => void;
   }
 
-const RoleDropdown = ({onValueChange }: IDateDropdownProps) => {
+const RoleDropdown = ({ selectedValue,onValueChange }: IDateDropdownProps) => {
     const [isOpen, setIsOpen] = useState(false);
-    const [selectedValue, setSelectedValue] = useState('엄마'); 
     const options = ['아빠', '엄마', '언니/누나', '오빠/형'];
 
     const handleSelect = (value: string) => {
-        setSelectedValue(value); 
         onValueChange(value);
         setIsOpen(false); 
       };
