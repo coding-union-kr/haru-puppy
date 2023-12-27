@@ -1,21 +1,14 @@
-import { usePathname } from 'next/navigation';
 import styled from 'styled-components';
-import TopNavigation from '../navigation/TopNavigation';
-import BottomNavigation from '../navigation/BottomNavigation';
 
 const ContainerLayout = ({
   children, 
 }: {
   children: React.ReactNode;
 }) => {
-  const pathname = usePathname();
-  const showNavigation = pathname !== '/auth';
 
   return (
     <Container>
-      {showNavigation && <TopNavigation />}
       {children}
-      {showNavigation && <BottomNavigation />}
     </Container>
   );
 };
