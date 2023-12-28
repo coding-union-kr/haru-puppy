@@ -1,38 +1,22 @@
 import React, { useRef, useState, useEffect} from 'react';
 ;
+import { scheduleTypeOptions } from '../../../config/scheduleTypeOptions';
 import Image from 'next/image';
 import styled from 'styled-components';
 import TaskAltRoundedIcon from '@mui/icons-material/TaskAltRounded';
-import PetsRoundedIcon from '@mui/icons-material/PetsRounded';
-import WaterDropRoundedIcon from '@mui/icons-material/WaterDropRounded';
-import ContentCutRoundedIcon from '@mui/icons-material/ContentCutRounded';
-import ShowerRoundedIcon from '@mui/icons-material/ShowerRounded';
-import CakeRoundedIcon from '@mui/icons-material/CakeRounded';
-import LocalHospitalRoundedIcon from '@mui/icons-material/LocalHospitalRounded';
+
 
 interface IScheduleTypeDropdownProps {
     onValueChange: (value: string) => void;
   }
-  const options = [
-    {label: '산책', icon: <PetsRoundedIcon style={{ color: '#C5A0F6'}}/>}, 
-    {label: '밥 주기', icon:<Image src='/svgs/food.svg' alt='밥' width={20} height={20} />}, 
-    {label: '물 교체', icon:<WaterDropRoundedIcon style={{ color: '#9ad8ed'}}/>}, 
-    {label: '간식', icon: <Image src='/svgs/pet_supplies.svg' alt='간식' width={20} height={20} />}, 
-    {label: '미용', icon:<ContentCutRoundedIcon style={{ color: '#FFC267'}}/>},
-    {label: '배변', icon:<Image src='/svgs/poop.svg' alt='배변' width={20} height={20} />},
-    {label: '양치', icon: <Image src='/svgs/dentistry.svg' alt='양치' width={20} height={20} />},
-    {label: '목욕', icon:<ShowerRoundedIcon style={{ color: '#8295FD'}}/>},
-    {label: '병원', icon:<LocalHospitalRoundedIcon style={{ color: '#81CF34'}}/>},
-    {label: '생일', icon:<CakeRoundedIcon style={{ color: '#E68CB2'}}/>},
-    ];
 
-const ScheduleTypeDropdown = ({onValueChange }: IScheduleTypeDropdownProps) => {
+const ScheduleTypeDropdown = ({ onValueChange }: IScheduleTypeDropdownProps) => {
     const [isOpen, setIsOpen] = useState(false);
-    const [selectedValue, setSelectedValue] = useState(options[0]); 
+    const [selectedValue, setSelectedValue] = useState(scheduleTypeOptions[0]); 
     const dropdownRef = useRef<HTMLDivElement>(null);
 
     const handleSelect = (label: string) => {
-        const selectedOption = options.find(option => option.label === label);
+        const selectedOption = scheduleTypeOptions.find(option => option.label === label);
         if (selectedOption) {
             setSelectedValue(selectedOption); 
             onValueChange(label);
@@ -73,7 +57,7 @@ const ScheduleTypeDropdown = ({onValueChange }: IScheduleTypeDropdownProps) => {
       <span>
       {isOpen && <ScheduleTypeDropdownWrap>
            <ul>
-           {options.map(option => (
+           {scheduleTypeOptions.map(option => (
                     <li key={option.label} onClick={() => handleSelect(option.label)}>
                           {option.icon} {option.label}
                     </li>
