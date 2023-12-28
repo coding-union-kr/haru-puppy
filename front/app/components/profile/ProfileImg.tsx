@@ -43,14 +43,15 @@ const ProfileImg = ({ profileType, onValueChange }: IProfileImgProps) => {
 
 
   return (
-  <Wrap onClick={handleImageClick}>
+ <Wrap>
+  <ProfileImgWrap onClick={handleImageClick}>
     <input
       type="file"
       ref={fileInputRef}
       onChange={handleFileChange}
       style={{ display: 'none' }} 
     />
-    <ProfileImgWrap >
+    <ImgWrap >
     <Image
         src={imageSrc}
         alt="프로필 이미지"
@@ -58,23 +59,30 @@ const ProfileImg = ({ profileType, onValueChange }: IProfileImgProps) => {
         height={120}
         objectFit="cover"
     />
-    </ProfileImgWrap>
+    </ImgWrap>
     <EditableIcon
         src='/svgs/editable.svg'
         alt="편집"
         width={30}
         height={30}
     />
+  </ProfileImgWrap>
   </Wrap>
   )
 };
 
 const Wrap = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+`
+const ProfileImgWrap = styled.div`
    position: relative;
    width: 130px;
    cursor: pointer;
 `
-const ProfileImgWrap = styled.div`
+const ImgWrap = styled.div`
   width: 120px; 
   height: 120px; 
   border-radius: 50%; 
