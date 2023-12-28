@@ -19,7 +19,7 @@ const Page = () => {
         const handleLogin = async () => {
             try {
                 const response = await axios.get(
-                    `${BACKEND_REDIRECT_URL}/api/auth/login?code=${code}`,
+                    `${BACKEND_REDIRECT_URL}?code=${code}`,
                     { withCredentials: true }
                 );
 
