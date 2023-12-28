@@ -20,7 +20,6 @@ const Page = () => {
             try {
                 const response = await axios.get(
                     `${BACKEND_REDIRECT_URL}?code=${code}`,
-                    { withCredentials: true }
                 );
 
                 if (response) {
