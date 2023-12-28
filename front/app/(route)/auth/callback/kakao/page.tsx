@@ -14,6 +14,7 @@ const Page = () => {
     const code = params?.get('code');
     const [error, setError] = useState<string>();
 
+
     useEffect(() => {
         const handleLogin = async () => {
             try {
@@ -22,21 +23,19 @@ const Page = () => {
                     { withCredentials: true }
                 );
 
-                if (response.status === 200) {
+                if (response) {
                     const accessToken = response.headers['Access-Token'];
                     const refreshToken = response.headers['Refresh-Token'];
+                    localStorage.setItem(LOCAL_STORAGE_KEYS.ACCESS_TOKEN, accessToken);
+                    localStorage.setItem(LOCAL_STORAGE_KEYS.REFRESH_TOKEN, refreshToken);
 
-                    if (accessToken && refreshToken) {
-                        localStorage.setItem(LOCAL_STORAGE_KEYS.ACCESS_TOKEN, accessToken);
-                        localStorage.setItem(LOCAL_STORAGE_KEYS.REFRESH_TOKEN, refreshToken);
+                    if (response.status === 200) {
                         router.push('/');
-                    } else {
-                        setError('로그인을 시도하는 중 오류가 발생했습니다.');
+                    } else if (response.status === 404) {
+                        router.push('/auth/welcome');
+                        console.log('404 response: 카카오 정보', response)
                     }
-                } else if (response.status === 404) {
 
-                    // 웰컴 페이지로 이동
-                    router.push('/auth/welcome');
                 } else {
                     setError('로그인을 시도하는 중 오류가 발생했습니다.');
                 }
@@ -56,11 +55,9 @@ const Page = () => {
             <p>{error}</p>
 
             <StyledLink href="/auth/login">로그인 페이지로 돌아가기</StyledLink>
-
         </Wrapper>
     );
 }
-
 
 const Wrapper = styled.div`
     display: flex;
@@ -89,6 +86,5 @@ const StyledLink = styled(Link)`
     border-radius: 50%;
     padding: 15px 30px;  
 `;
-
 
 export default Page;
