@@ -1,6 +1,5 @@
 package com.developaw.harupuppy.domain.user.api;
 
-import com.developaw.harupuppy.domain.user.application.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
