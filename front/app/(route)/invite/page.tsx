@@ -7,12 +7,18 @@ import ContainerLayout from '@/app/components/layout/layout';
 import TopNavigation from '@/app/components/navigation/TopNavigation';
 
 const InvitePage = () => {
+    const handleShareKakao = () => {
+        window.Kakao.Share.sendCustom({
+            templateId: 102321,
+        });
+    }
+    
    return (
     <ContainerLayout>
         <TopNavigation/>
         <InvitePageWrap>
             <strong>강아지를 같이 돌볼 메이트를 초대해주세요!</strong>
-            <InviteButtonWrap>
+            <InviteButtonWrap onClick={handleShareKakao}>
             <Image
                 priority
                 src={kakaoLogo}
@@ -23,8 +29,7 @@ const InvitePage = () => {
             카카오톡으로 공유하기
             </InviteButtonWrap>
         </InvitePageWrap>
-    </ContainerLayout>
-       
+    </ContainerLayout> 
    )
 };
 
