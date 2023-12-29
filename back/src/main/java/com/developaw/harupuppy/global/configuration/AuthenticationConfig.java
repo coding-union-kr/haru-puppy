@@ -1,6 +1,8 @@
 package com.developaw.harupuppy.global.configuration;
 
+import com.developaw.harupuppy.domain.user.application.UserService;
 import com.developaw.harupuppy.global.configuration.filter.AuthenticationFilter;
+import com.developaw.harupuppy.global.utils.JwtTokenUtils;
 import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,22 +21,19 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-@RequiredArgsConstructor
+
 @EnableWebSecurity
 @Slf4j
+@RequiredArgsConstructor
 @Configuration
 public class AuthenticationConfig {
-    private final AuthenticationFilter authenticationFilter;
     private final CorsConfigurationSource corsConfigurationSource;
+    private final UserService userService;
+    private final JwtTokenUtils jwtTokenUtils;
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring().requestMatchers("/api/users/**", "/auth/**");
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
     }
 
     @Bean
@@ -49,7 +48,7 @@ public class AuthenticationConfig {
                         .requestMatchers("/api/users/**", "/auth/**").permitAll()
                         .anyRequest()
                         .authenticated())
-                .addFilterBefore(authenticationFilter,
+                .addFilterBefore(new AuthenticationFilter(userService, jwtTokenUtils),
                         UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
