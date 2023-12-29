@@ -3,82 +3,66 @@ import React from 'react';
 import styled from 'styled-components';
 
 interface IUser {
-  user_id: number;
-  user_img?: string;
-  nickname?: string;
-  rank: number;
+  username?: string;
+  profileImg?: string;
+  walkCount: number;
 }
 
 interface IWalkRank {
-  ranking: IUser[];
+  users: IUser[];
 }
 
-
-const WalkRank = ({ ranking }: IWalkRank) => {
+const WalkRank = ({ users }: IWalkRank) => {
   return (
-    <>
-      <Wrapper>
-        <Title>주간 산책 메이트 랭킹</Title>
-        <ChartWrapper>
-          {ranking?.map((user, index) => (
-            <BoxWrapper key={index}>
-              <UserContainer walkCount={user.rank}>
-                {user.user_img ? <UserProfileImage><Image src={user.user_img} alt='프로필 이미지' width={65} height={65} /></UserProfileImage>
-                  : <UserProfileImage />}
-                <Nickname>{user.nickname}</Nickname>
-                <WalkCount>{user.rank}회</WalkCount>
-              </UserContainer>
-              <Bar walkCount={user.rank} />
-            </BoxWrapper>
-          ))}
-        </ChartWrapper>
-      </Wrapper>
-    </>
+    <Wrapper>
+      {users?.map((user, index) => (
+        <BoxWrapper key={index}>
+          <UserContainer>
+            {user.profileImg ? <UserProfileImage><Image src={user.profileImg} alt='프로필 이미지' /></UserProfileImage>
+              : <UserProfileImage />}
+            <Nickname>{user.username}</Nickname>
+            <WalkCount>{user.walkCount}회</WalkCount>
+          </UserContainer>
+          <Bar walkCount={user.walkCount} />
+        </BoxWrapper>
+      ))}
+    </Wrapper>
   );
 };
 
 
 const Wrapper = styled.div`
   display: flex;
-  flex-direction: column;  
-`
-
-const ChartWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
-  width: 370px;
-  bottom: 0px;
+  justify-content: space-between;
+  width: 300px;
+  height: 500px;
 `;
 
-const Title = styled.span`
-  font-size: 20px;
-  text-align: start;
-  margin-bottom: 20px;
-`;
 const BoxWrapper = styled.div`
   width: 100px;
+  height: 250px;
   display: flex;
   margin-right: 12px;
   flex-direction: column;
   position: relative;
-  
 `;
 
-const UserContainer = styled.div<{ walkCount: number }>`
+const UserContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   margin: 0 10px;
-  height: 100%;
-  padding-bottom: ${({ walkCount }) => walkCount * 30}px;
 `;
-
 
 const Bar = styled.div<{ walkCount: number }>`
   width: 80px;
-  height: ${({ walkCount }) => walkCount * 25}px;
-  background-color: ${({ theme, walkCount }) => `rgba(0, 0, 0, ${walkCount / 15})`};
+  height: ${({ walkCount }) => walkCount * 20}px;
+  background-color: ${({ theme, walkCount }) => {
+    const maxWalkCount = 13;
+    const intensity = walkCount / maxWalkCount;
+    const grayShade = Math.round(255 - intensity * 255);
+    return `rgb(${grayShade}, ${grayShade}, ${grayShade})`;
+  }};
   border-radius: 10px;
   position: absolute;
   bottom: 0;

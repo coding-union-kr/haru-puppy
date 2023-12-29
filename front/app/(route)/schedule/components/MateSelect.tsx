@@ -2,55 +2,30 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import PeopleOutlineRoundedIcon from '@mui/icons-material/PeopleOutlineRounded';
 import MateProfile from '@/app/components/profile/MateProfile';
-import { Imates } from './ScheduleAdd';
-
 
 interface IMateSelectProps {
-  onValueChange: (value: Imates[]) => void;
-  mates: Imates[] | null;
-}
+    onValueChange: (value: Array<{ userId: string }>) => void;
+  }
 
-const MateSelect = ({ onValueChange, mates }: IMateSelectProps) => {
-  const [selectedMates, setSelectedMates] = useState<string[]>([]);
+const MateSelect = ({onValueChange }: IMateSelectProps) => {
+    const [selectedValue, setSelectedValue] = useState<Array<{ userId: string }>>([]);
 
-  const handleMateClick = (userId: string) => {
-    const isSelected = selectedMates.includes(userId);
-    const newSelectedMates = isSelected
-      ? selectedMates.filter((mateId) => mateId !== userId)
-      : [...selectedMates, userId];
-
-    setSelectedMates(newSelectedMates);
-    const selectedMateObjects = newSelectedMates.map((mateId) => ({ user_id: mateId }));
-
-    onValueChange(selectedMateObjects);
-  };
-
+    const handleSelect = (value: { userId: string }) => {
+        setSelectedValue(prevSelectedValue => [...prevSelectedValue, value]);
+        onValueChange([...selectedValue, value]);
+    };
+        
   return (
     <MateSelectWrap>
       <label htmlFor='schedule-type'>
-        <span><PeopleOutlineRoundedIcon /></span>
+        <span><PeopleOutlineRoundedIcon/></span>
         담당 선택
       </label>
-      <MateProfileWrapper>
-        {mates?.map((mate) => (
-          <MateProfile
-            key={mate.user_id}
-            mate={mate}
-            isClicked={selectedMates.includes(mate.user_id)}
-            onClick={() => handleMateClick(mate.user_id)}
-            size='40'
-          />
-        ))}
-      </MateProfileWrapper>
+    <MateProfile/>
     </MateSelectWrap>
-  )
+    )
 };
 
-
-const MateProfileWrapper = styled.div`
-  display: flex;
-  justify-content: center;
-`
 const MateSelectWrap = styled.div`
 position: relative; 
 width: 300px;

@@ -1,42 +1,32 @@
-import { Imates } from '@/app/(route)/schedule/components/ScheduleAdd';
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
-import Image from 'next/image';
 
-interface IMateProfileProps {
-  isClicked?: boolean;
-  onClick?: () => void;
-  mate: Imates
-  isEditClick?: boolean;
-  size?: string;
+interface MateProfileProps {
+    clickable?: boolean;
 }
 
+const MateProfile = ({ clickable = true }: MateProfileProps) => {
+    const [isProfileClicked, setProfileClicked] = useState(false);
 
-const MateProfile = ({ isClicked, onClick, mate, isEditClick, size }: IMateProfileProps) => {
-
-  const onMateDelete = () => {
-    console.log('mate 삭제')
-  }
-
-  return (
-    <Wrapper>
-      <ProfileContainer>
-        <Profile isClicked={isClicked} onClick={onClick} size={size} />
-        {isClicked &&
-          <Image src='/svgs/mate_check.svg' alt='mate-check' width={20} height={20} />
+    const onProfileClick = () => {
+        if (clickable) {
+            console.log('메이트 프로필 클릭');
+            setProfileClicked(!isProfileClicked);
         }
-        {isEditClick &&
-          <Image src='/svgs/home_edit_close_btn.svg' alt='mate-check' width={30} height={30} onClick={onMateDelete} style={{ cursor: 'pointer' }} />
-        }
-      </ProfileContainer>
-      <Info size={size}>
-        <NickName>{mate.nickname}</NickName>
-        <Name>{mate.role}</Name>
-      </Info>
-    </Wrapper>
-  );
+    };
+
+    return (
+        <Wrapper>
+            <ProfileContainer>
+                <Profile onClick={onProfileClick} isClicked={isProfileClicked} clickable={clickable} />
+            </ProfileContainer>
+            <Info>
+                <NickName>닉네임</NickName>
+                <Name>엄마</Name>
+            </Info>
+        </Wrapper>
+    );
 };
-
 
 const Wrapper = styled.div`
   width: 80px;
@@ -48,36 +38,25 @@ const Wrapper = styled.div`
 `;
 
 const ProfileContainer = styled.div`
-position: relative;
   height: 40px;
-  & > img {
-    position: absolute;
-    top: 20%;
-    left: 85%;
-    transform: translate(-50%, -50%);
-    z-index: 2;
-  }
 `;
 
-const Profile = styled.div<{ isClicked: boolean | undefined; size: string | undefined }>`
-  width: ${({ size }) => `${size}px`};
-  height: ${({ size }) => `${size}px`};
+const Profile = styled.div<{ isClicked: boolean; clickable: boolean }>`
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   background-color: ${({ theme }) => theme.colors.light};
   position: relative;
+  cursor: ${({ clickable }) => (clickable ? 'pointer' : 'default')};
   box-sizing: border-box;
   border: ${({ isClicked }) => (isClicked ? '2px solid #06acf4' : 'none')};
-  cursor: pointer;
 `;
 
-const Info = styled.div<{ size?: string }>`
+const Info = styled.div`
   display: flex;
-  height: 40px;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  /* margin-top: ${({ size }) => (size === '60' ? '20px' : '0')} */
-  ${({ size }) => size === '60' && 'margin-top: 20px;'}
   p {
     display: inline-block;
     margin: 3px;
