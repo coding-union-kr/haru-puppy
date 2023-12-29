@@ -38,6 +38,8 @@ const TopNavigation = () => {
         return '강아지 프로필';
       case '/profile/my':
         return '내 프로필';
+      case '/invite':
+        return '메이트 초대하기';
       case '/setting':
         return '설정';
     }
