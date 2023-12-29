@@ -24,6 +24,6 @@ public class AuthController {
     public ApiResponse<String> login(@PathVariable("provider") String provider,
                                                @RequestParam("code") String code,
                                                HttpServletResponse response) {
-        return ApiResponse.ok(Status.CREATE,  oAuthService.login(provider, code, response));
+        return ApiResponse.ok(Status.CREATE, oAuthService.login(provider, code, response));
     }
 }
