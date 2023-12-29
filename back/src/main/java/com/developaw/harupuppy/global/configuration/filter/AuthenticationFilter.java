@@ -1,7 +1,7 @@
 package com.developaw.harupuppy.global.configuration.filter;
 
 import com.developaw.harupuppy.domain.user.application.UserService;
-import com.developaw.harupuppy.domain.user.dto.UserDetail;
+import com.developaw.harupuppy.domain.user.domain.UserDetail;
 import com.developaw.harupuppy.global.common.exception.CustomException;
 import com.developaw.harupuppy.global.common.response.Response.ErrorCode;
 import com.developaw.harupuppy.global.utils.JwtTokenUtils;
@@ -16,13 +16,25 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 @RequiredArgsConstructor
 @Slf4j
+@Component
 public class AuthenticationFilter extends OncePerRequestFilter {
     private final String AUTHORIZATION_HEADER = "Authorization";
     private final UserService userService;
+    private final JwtTokenUtils jwtTokenUtils;
+
+    private static final List<String> PERMIT_URLS =
+            List.of("/", "/h2", "/auth/login/kakao", "/api/users/register", "/api/users/invitation");
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        return PERMIT_URLS.stream()
+                .anyMatch(exclude -> exclude.equalsIgnoreCase(request.getServletPath()));
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -34,11 +46,11 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         }
 
         final String token = header.split(" ")[1].trim();
-        if (JwtTokenUtils.isExpired(token)) {
+        if (jwtTokenUtils.isExpired(token)) {
             throw new CustomException(ErrorCode.EXPIRED_TOKEN);
         }
 
-        String email = JwtTokenUtils.resolveToken(token);
+        String email = jwtTokenUtils.resolveToken(token);
         UserDetail user = userService.loadUserByEmail(email);
 
         UsernamePasswordAuthenticationToken authenticationToken =
