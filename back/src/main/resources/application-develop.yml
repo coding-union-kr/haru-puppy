@@ -4,6 +4,10 @@ spring:
     url: jdbc:mysql://${MYSQL_DATABASE_HOST}:${MYSQL_DATABASE_PORT}/${MYSQL_DATABASE_NAME}?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
     username: ${MYSQL_DATABASE_USERNAME}
     password: ${MYSQL_DATABASE_PASSWORD}
+  redis:
+    session:
+      host: ${SESSION_HOST}
+      port: ${SESSION_PORT}
   jpa:
     database: MYSQL
     hibernate:

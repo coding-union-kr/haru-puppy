@@ -1,10 +1,8 @@
 package com.developaw.harupuppy.domain.user.application;
 
-import com.developaw.harupuppy.domain.user.dto.TokenDto;
+import com.developaw.harupuppy.domain.user.dto.response.LoginResponse;
 import com.developaw.harupuppy.domain.user.dto.response.OAuthTokenResponse;
 import com.developaw.harupuppy.domain.user.repository.UserRepository;
-import com.developaw.harupuppy.global.utils.JwtTokenUtils;
-import jakarta.servlet.http.HttpServletResponse;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Map;
@@ -25,27 +23,22 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Transactional(readOnly = true)
 @Slf4j
 public class OAuthService {
-    static final String ACCESS_TOKEN = "Access-Token";
-    static final String REFRESH_TOKEN = "Refresh-Token";
     private final InMemoryClientRegistrationRepository inMemoryRepository;
     private final UserRepository userRepository;
-    private final JwtTokenUtils jwtTokenUtils;
 
     @Transactional
-    public String login(String providerName, String code, HttpServletResponse response) {
+    public LoginResponse login(String providerName, String code) {
         ClientRegistration provider = inMemoryRepository.findByRegistrationId(providerName);
         OAuthTokenResponse oAuthToken = getAccessToken(provider, code);
         Map<String, Object> userAttributes = getUserInfo(provider, oAuthToken);
         String userEmail = (String) userAttributes.get("email");
-
+        boolean isAlreadyRegistered = false;
         if (userRepository.existsByEmail(userEmail)) {
             userEmail = userRepository.findByEmail(userEmail).get().getEmail();
-            TokenDto token = jwtTokenUtils.generateToken(userEmail);
-            response.setHeader(ACCESS_TOKEN, token.accessToken());
-            response.setHeader(REFRESH_TOKEN, token.refreshToken());
+            isAlreadyRegistered = true;
         }
 
-        return userEmail;
+        return new LoginResponse(userEmail, isAlreadyRegistered);
     }
 
     private OAuthTokenResponse getAccessToken(ClientRegistration provider, String code) {
