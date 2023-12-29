@@ -30,4 +30,7 @@ public class DateUtils {
         LocalTime localTime = LocalTime.parse(time, timeFormatter);
         return LocalDateTime.of(localDate, localTime);
     }
+    public static LocalDate parseDate(String date) {
+        return LocalDate.parse(date, dateFormatter);
+    }
 }
