@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import Image from 'next/image';
 import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
 
-export interface IUserProfileProps {
+interface IUserProfileProps {
     user?: {
         profileImg?: string;
     };
@@ -21,7 +21,6 @@ const UserProfile = ({ user }: IUserProfileProps) => {
             {user && user.profileImg ? (
                 <>
                     <Image
-
                         src={user.profileImg}
                         alt="User Profile"
                         layout="fill"
@@ -29,13 +28,13 @@ const UserProfile = ({ user }: IUserProfileProps) => {
                         objectPosition="center"
                     />
                     <Edit>
-                        <CreateOutlinedIcon />
+                        <CreateOutlinedIcon style={{ color: '4A4A4A' }} />
                     </Edit>
                 </>
             ) : (
                 <>
                     <Edit onClick={onEditClick}>
-                        <CreateOutlinedIcon />
+                        <CreateOutlinedIcon style={{ color: '4A4A4A' }} />
                     </Edit>
                 </>
             )}
@@ -71,6 +70,12 @@ const Edit = styled.div`
     }
 `;
 
+const DefaultImage = styled.img`
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+`;
 
 export default UserProfile;
 

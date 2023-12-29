@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
 import 'react-datepicker/dist/react-datepicker.css';
 import DatePicker from 'react-datepicker';
@@ -6,78 +6,45 @@ import styled from 'styled-components';
 import CalendarMonthRoundedIcon from '@mui/icons-material/CalendarMonthRounded';
 
 
-export enum DateDropdownLabel {
-  Birthday = '생일',
-  ScheduleDay = '날짜',
-}
-
-
-export const sizeWidthMap: Record<DateDropdownLabel, string> = {
-  [DateDropdownLabel.Birthday]: '340px',
-  [DateDropdownLabel.ScheduleDay]: '300px',
-};
-
 interface IDateDropdownProps {
-  onValueChange: (date: Date) => void;
-  label?: DateDropdownLabel;
-  isRequired?: boolean;
-  size?: DateDropdownLabel;
-}
+    onValueChange: (date: Date) => void;
+  }
 
-const DateDropdown = ({ onValueChange, label, isRequired, size }: IDateDropdownProps) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const dropdownRef = useRef<HTMLDivElement>(null);
+const DateDropdown = ({onValueChange }: IDateDropdownProps) => {
+    const [isOpen, setIsOpen] = useState(false);
+    const [selectedDate, setSelectedDate] = useState(new Date()); 
 
-  const width = size ? sizeWidthMap[size] : '300px';
-
-  const handleDateSelect = (date: Date) => {
-    setSelectedDate(date);
-    onValueChange(date);
-    setIsOpen(false);
-  };
-
-  const handleClickOutside = (event: MouseEvent) => {
-    if (event.target instanceof Node) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsOpen(false);
-      }
-    }
-  };
-
-    useEffect(() => {
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-    }, []);
-
+    const handleDateSelect = (date: Date) => {
+        setSelectedDate(date); 
+        onValueChange(date);
+        setIsOpen(false); 
+      };
+      
   return (
-    <DateSelectWrap ref={dropdownRef} size={size} width={width}>
+    <DateSelectWrap>
       <label htmlFor='schedule-date'>
-        <span><CalendarMonthRoundedIcon /></span>
-        {label}
+        <span><CalendarMonthRoundedIcon/></span>
+        날짜
       </label>
       <div onClick={() => setIsOpen(!isOpen)}>
-        {selectedDate.toLocaleDateString()}
-        <Image
+      {selectedDate.toLocaleDateString()}
+        <Image 
           src='/svgs/cover-box.svg'
-          alt='드롭다운 열기'
-          width={20}
+          alt='드롭다운 열기' 
+          width={20} 
           height={20} />
       </div>
       <DateDropdownWrap>
 
-        {isOpen && <StyledDatePicker selected={selectedDate} onChange={handleDateSelect} inline className='react-datepicker-custom-b' />}
-      </DateDropdownWrap>
+      {isOpen && <StyledDatePicker selected={selectedDate} onChange={handleDateSelect} inline className='react-datepicker-custom-b'/>}
+    </DateDropdownWrap>
     </DateSelectWrap>
-  )
+    )
 };
 
-const DateSelectWrap = styled.div<{ size?: string; width: string }>`
+const DateSelectWrap = styled.div`
 position: relative; 
-margin: 0 auto;
-width: ${({ width }) => width};
+width: 300px;
 display: flex;
 flex-direction: column;
 cursor: pointer;
