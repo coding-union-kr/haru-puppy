@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/auth")
 @Slf4j
 public class AuthController {
-    private final OAuthService oAuthService;
     private final UserFacadeService userFacadeService;
 
     @GetMapping("/login/{provider}")
