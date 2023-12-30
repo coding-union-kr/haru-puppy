@@ -20,24 +20,24 @@ const Page = () => {
             try {
                 const response = await axios.get(
                     `${BACKEND_REDIRECT_URL}/api/auth/login?code=${code}`,
-                    { withCredentials: true }
                 );
 
                 if (response) {
-                    const accessToken = response.headers['Access-Token'];
-                    const refreshToken = response.headers['Refresh-Token'];
-                    localStorage.setItem(LOCAL_STORAGE_KEYS.ACCESS_TOKEN, accessToken);
-                    localStorage.setItem(LOCAL_STORAGE_KEYS.REFRESH_TOKEN, refreshToken);
-
-                    if (response.status === 200) {
-                        router.push('/');
-                    } else if (response.status === 404) {
+                    if (response.data.isAlreadyRegistered === false) {
+                        // 기존 유저 아닐경우
                         router.push('/auth/welcome');
-                        console.log('404 response: 카카오 정보', response)
-                    }
+                        console.log('user email:', response.data.email)
+                    } else {
+                        // 기존 유저일경우
+                        const accessToken = response.headers['Access-Token'];
+                        const refreshToken = response.headers['Refresh-Token'];
+                        localStorage.setItem(LOCAL_STORAGE_KEYS.ACCESS_TOKEN, accessToken);
+                        localStorage.setItem(LOCAL_STORAGE_KEYS.REFRESH_TOKEN, refreshToken);
 
+                        router.push('/');
+                    }
                 } else {
-                    setError('로그인을 시도하는 중 오류가 발생했습니다.');
+                    setError('응답이 없습니다.');
                 }
             } catch (error) {
                 setError('로그인을 시도하는 중 오류가 발생했습니다.');
@@ -48,6 +48,8 @@ const Page = () => {
             handleLogin();
         }
     }, [code, router]);
+
+
 
     return (
         <Wrapper>
