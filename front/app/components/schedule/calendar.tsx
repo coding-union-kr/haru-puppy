@@ -53,6 +53,8 @@ const Calendar = () => {
   const [scheduleData, setScheduleData] = useState<ScheduleResponse | null>(null);
   const [selectedDateTasks, setSelectedDateTasks] = useState<ScheduleItem[]>([]);
   const [markedDates, setMarkedDates] = useState<Date[]>([new Date('2023-12-01'), new Date('2023-12-05'), new Date('2023-12-10')]);
+  const month = getMonth(date) + 1;
+  const year = getYear(date);
 
   const [showDatePicker, setShowDatePicker] = useState(false);
 
@@ -60,8 +62,6 @@ const Calendar = () => {
 
   useEffect(() => {
     const fetchScheduleData = async () => {
-      const year = getYear(date);
-      const month = getMonth(date) + 1;
 
       try {
         const response = await fetch(`/api/schedule/month/${year}/${month}`);
@@ -149,23 +149,32 @@ const Calendar = () => {
           )}
         />
       ) : (
-        <WeekCalendar>
-          {Array.from({ length: 7 }).map((_, index) => {
-            const day = addDays(startOfWeek, index);
-            const dayOfWeek = format(day, 'EEEE').charAt(0);
-            // console.log('day', day);
-            return (
-              <div
-                key={index}
-                onClick={() => handleDateClick(day)}
-                className={`weekDay ${format(day, 'd') === format(date, 'd') ? 'selectedDay' : ''}`}
-              >
-                <div className='dayOfWeek'>{dayOfWeek}</div>
-                {format(day, 'd')}
-              </div>
-            );
-          })}
-        </WeekCalendar>
+        <>
+          <WeekCalendar>
+            <Month><span>{month}월</span></Month>
+            <DayWrapper>
+              {Array.from({ length: 7 }).map((_, index) => {
+                const day = addDays(startOfWeek, index);
+                const dayOfWeek = format(day, 'EEEE').charAt(0);
+                // console.log('day', day);
+                return (
+                  <>
+                    <div
+                      key={index}
+                      onClick={() => handleDateClick(day)}
+                      className={`weekDay ${format(day, 'd') === format(date, 'd') ? 'selectedDay' : ''}`}
+                    >
+
+                      <Day className='dayOfWeek'>{dayOfWeek}</Day>
+                      {format(day, 'd')}
+
+                    </div>
+                  </>
+                );
+              })}
+            </DayWrapper>
+          </WeekCalendar>
+        </>
       )}
       <ExpandMoreIcon onClick={() => setShowDatePicker(!showDatePicker)} />
       <TodoCard todoList={selectedDateTasks} />
@@ -178,8 +187,7 @@ display: flex;
 flex-direction:column;
   justify-content: center;
   align-items: center;
-  
-  
+  margin-top:100px;
 `;
 
 const Dot = styled.div`
@@ -232,47 +240,61 @@ const CustomHeaderContainer = styled.div`
 `;
 
 
+const DayWrapper = styled.div`
+  display: flex;
+`
+
 const WeekCalendar = styled.div`
   display: flex;
-  justify-content: space-between;
-  margin-bottom: 10px;
-  width: 350px;
-  height: 60px;
-border: 1px solid #5b5b5b;
-border-radius: 12px;
-padding: 10px 0px;;
+  flex-direction: column;
+  width: 340px;
+  height: 155px;
+  border: 1px solid #DFDFDF;
+  border-radius: 20px;
+  padding: 0px 10px;
   div {
+    align-items: center;
+  justify-content: center;
     width: 100%;
     text-align: center;
-    padding: 10px;
     cursor: pointer;
     position: relative;
-    padding-top: 30px;
+    padding-top: 35px;
+    padding-bottom: 5px;
     border-radius: 12px;
-    justify-content: center;
-    align-items: center;
+    height: 20px;
+    
+    /* justify-content: center; */
     &.selectedDay {
       background-color: ${({ theme }) => theme.colors.main}; 
       color: white;
     }
-
     &.unselectedDay:hover {
       background-color: #f0f0f0;
+      /* height: 25px; */
     }
 
     .dayOfWeek {
       position: absolute;
-      bottom: 50%;
+      bottom: 45%;
       left: 50%;
       transform: translateX(-50%);
       color: #5b5b5b;
       font-size: 14px;
-      margin-bottom: 5px;
-      padding: 5px;
+      /* height: 20px; */
+      /* margin: 5px 0px; */
+      /* padding-top: 15px; */
     }
   }
 `;
 
+
+const Day = styled.div`
+`
+
+const Month = styled.div`
+  height: 10px;
+`
 
 const Button = styled.button`
     width: 34px;
