@@ -2,6 +2,7 @@ package com.developaw.harupuppy.domain.user.domain;
 
 import com.developaw.harupuppy.domain.dog.domain.Dog;
 import com.developaw.harupuppy.domain.home.domain.Home;
+import com.developaw.harupuppy.domain.user.dto.UserUpdateRequest;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -60,13 +61,21 @@ public class User {
     private Home home;
 
     @Builder
-    public User(String email, String userImg, String nickname, UserRole userRole) {
+    public User(String email, String userImg, String nickname, UserRole userRole, Dog dog) {
         this.email = email;
         this.userImg = userImg;
         this.nickname = nickname;
         this.userRole = userRole;
+        this.dog = dog;
         this.isDeleted = false;
         this.allowNotification = true;
+    }
+
+    public void update (UserUpdateRequest updateRequest){
+        this.userId = updateRequest.userId();
+        this.userImg = updateRequest.userImg();
+        this.nickname = updateRequest.nickname();
+        this.userRole = updateRequest.userRole();
     }
 
     public void setHome(Home home){
