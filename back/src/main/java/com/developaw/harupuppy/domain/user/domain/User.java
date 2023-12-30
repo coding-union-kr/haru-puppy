@@ -1,6 +1,7 @@
 package com.developaw.harupuppy.domain.user.domain;
 
 import com.developaw.harupuppy.domain.dog.domain.Dog;
+import com.developaw.harupuppy.global.utils.KoreanNickname;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -14,17 +15,17 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
+import org.hibernate.validator.constraints.Length;
 
 @Entity
 @Getter
 @Table(name = "USERS")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@NonNull
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,9 +36,12 @@ public class User {
     @Column(unique = true)
     private String email;
 
+    private String password;
+
     @Column(name = "img_url")
     private String imgUrl;
 
+    @KoreanNickname
     private String nickname;
 
     @Enumerated(EnumType.STRING)
@@ -59,20 +63,23 @@ public class User {
     private Home home;
 
     @Builder
-    public User(String email, String userImg, String nickname, UserRole userRole) {
+    public User(String email, String password, String userImg, String nickname, UserRole userRole, Home home, Dog dog) {
         this.email = email;
+        this.password = password;
         this.imgUrl = userImg;
         this.nickname = nickname;
         this.userRole = userRole;
+        this.home = home;
+        this.dog = dog;
         this.isDeleted = false;
         this.allowNotification = true;
     }
 
-    public void setHome(Home home){
+    public void setHome(Home home) {
         this.home = home;
     }
 
-    public void setDog(Dog dog){
+    public void setDog(Dog dog) {
         this.dog = dog;
     }
 
