@@ -81,6 +81,7 @@ const TopNavigationWrap = styled.nav<{ showBtns: boolean }>`
     width: 390px; 
     height: 48px;
     border-bottom: 0.5px solid ${({ theme }) => theme.colors.black60};
+    background-color: #ffffff;
 
     & > strong {
         font-size: 16px;
