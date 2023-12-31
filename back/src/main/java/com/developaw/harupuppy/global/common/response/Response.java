@@ -10,7 +10,6 @@ public class Response {
     public enum ErrorCode {
         NOT_FOUND_USER(HttpStatus.NOT_FOUND, "가입된 유저가 아닙니다"),
         INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다"),
-        EXPIRED_TOKEN(HttpStatus.UNAUTHORIZED, "토큰이 만료되었습니다"),
 
         NOT_FOUND_SCHEDULE(HttpStatus.NOT_FOUND, "해당 내용으로 저장된 스케줄이 없습니다"),
 

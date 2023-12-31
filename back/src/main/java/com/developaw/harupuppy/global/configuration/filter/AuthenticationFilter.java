@@ -47,7 +47,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 
         final String token = header.split(" ")[1].trim();
         if (jwtTokenUtils.isExpired(token)) {
-            throw new CustomException(ErrorCode.EXPIRED_TOKEN);
+            throw new CustomException(ErrorCode.INVALID_TOKEN);
         }
 
         String email = jwtTokenUtils.resolveToken(token);
