@@ -26,8 +26,8 @@ const Page = () => {
                         console.log('user email:', response.data.email)
                     } else {
                         // 기존 유저일경우
-                        const accessToken = response.headers['Access-Token'];
-                        const refreshToken = response.headers['Refresh-Token'];
+                        const accessToken = response.data.accessToken
+                        const refreshToken = response.data.refreshToken
                         localStorage.setItem(LOCAL_STORAGE_KEYS.ACCESS_TOKEN, accessToken);
                         localStorage.setItem(LOCAL_STORAGE_KEYS.REFRESH_TOKEN, refreshToken);
                         router.push('/');
