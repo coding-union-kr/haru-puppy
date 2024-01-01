@@ -21,7 +21,7 @@ const TopNavigation = () => {
   };
 
   const pathname = usePathname();
-  const getTitle = (pathname: string) => {
+  const getTitle = (pathname: string | null) => {
     switch (pathname) {
       case '/':
       default:
