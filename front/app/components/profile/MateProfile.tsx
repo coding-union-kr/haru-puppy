@@ -7,12 +7,11 @@ interface IMateProfileProps {
   isClicked?: boolean;
   onClick?: () => void;
   mate: Imates
-  isEditClick?: boolean;
   size?: string;
 }
 
 
-const MateProfile = ({ isClicked, onClick, mate, isEditClick, size }: IMateProfileProps) => {
+const MateProfile = ({ isClicked, onClick, mate, size }: IMateProfileProps) => {
 
   const onMateDelete = () => {
     console.log('mate 삭제')
@@ -24,9 +23,6 @@ const MateProfile = ({ isClicked, onClick, mate, isEditClick, size }: IMateProfi
         <Profile isClicked={isClicked} onClick={onClick} size={size} />
         {isClicked &&
           <Image src='/svgs/mate_check.svg' alt='mate-check' width={20} height={20} />
-        }
-        {isEditClick &&
-          <Image src='/svgs/home_edit_close_btn.svg' alt='mate-check' width={30} height={30} onClick={onMateDelete} style={{ cursor: 'pointer' }} />
         }
       </ProfileContainer>
       <Info size={size}>
