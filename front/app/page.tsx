@@ -6,6 +6,9 @@ import WalkRank from "./components/chart/WalkRank";
 import TodoCard from "./components/card/TodoCard";
 import ReportCard from "./components/card/ReportCard";
 import MateList from "./components/home/MateList";
+import ContainerLayout from "./components/layout/layout";
+import TopNavigation from "./components/navigation/TopNavigation";
+import BottomNavigation from "./components/navigation/BottomNavigation";
 
 
 export const dummyMatesData = [
@@ -64,12 +67,16 @@ export default function Home() {
 
   return (
     <main>
-      <Wrapper>
-        <UserProfile />
-        <MateList mates={dummyMatesData} />
-        <ReportCard dummyReports={dummyReports} />
-        <WalkRank ranking={dummyRanking} />
-      </Wrapper>
+      <ContainerLayout>
+        <TopNavigation />
+        <Wrapper>
+          <UserProfile />
+          <MateList mates={dummyMatesData} />
+          <ReportCard dummyReports={dummyReports} />
+          <WalkRank ranking={dummyRanking} />
+        </Wrapper>
+        <BottomNavigation />
+      </ContainerLayout>
     </main>
   )
 
@@ -77,13 +84,15 @@ export default function Home() {
 
 
 const Wrapper = styled.div`
+  flex: 1; 
+  overflow-y: auto; 
   display: flex;
   padding: 100px 20px;
-  flex-direction:column;
-  justify-content:center;
-  align-items:center;
-  margin: 0 auto;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   gap: 50px;
-`
+  margin-top: 300px;
+`;
 
 
