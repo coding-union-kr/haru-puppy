@@ -55,9 +55,11 @@ const UpperWrapper = styled.div`
     display: flex;
     justify-content: space-between;
     width: 100%; 
+    margin-right: 50px;
     margin-bottom: 20px;
     > p  {
         font-size: 20px;
+
     }
     > div {
         cursor: pointer;
