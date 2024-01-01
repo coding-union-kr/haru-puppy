@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect} from 'react';
 ;
-import { scheduleTypeOptions } from '../../../config/scheduleTypeOptions';
+import { scheduleTypeOptions } from '../../../constants/scheduleTypeOptions';
 import Image from 'next/image';
 import styled from 'styled-components';
 import TaskAltRoundedIcon from '@mui/icons-material/TaskAltRounded';
