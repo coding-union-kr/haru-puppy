@@ -11,7 +11,9 @@ import TodoCard from '../card/TodoCard';
 import { AnimatePresence, motion } from 'framer-motion';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { ko } from 'date-fns/locale';
-
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
+import WeekCalendar from './WeekCalendar';
 
 export interface ScheduleItem {
   scheduleId: number;
@@ -48,8 +50,6 @@ const MONTHS = [
   '12월',
 ];
 
-const KOREAN_DAY_NAMES = ['일', '월', '화', '수', '목', '금', '토'];
-
 
 const Calendar = () => {
   const [date, setDate] = useState(new Date());
@@ -60,9 +60,6 @@ const Calendar = () => {
   const year = getYear(date);
 
   const [showDatePicker, setShowDatePicker] = useState(false);
-
-  const startOfWeek = subDays(date, date.getDay());
-
 
 
   useEffect(() => {
@@ -129,41 +126,44 @@ const Calendar = () => {
           //   exit={{ height: 0 }}
           //   transition={{ duration: 0.3 }}
           // >
+          <>
+            <DatePicker
+              renderDayContents={renderDayContents}
+              locale={ko}
+              selected={date}
+              onChange={(newDate: Date) => {
+                setDate(newDate);
+                handleDateClick(newDate);
+              }}
+              inline
+              dayClassName={(d) => (d.getDate() === date!.getDate() ? 'selectedDay' : 'unselectedDay')}
+              calendarClassName={'calenderWrapper'}
+              closeOnScroll={true}
+              renderCustomHeader={({ date, changeYear, decreaseMonth, increaseMonth, prevMonthButtonDisabled, nextMonthButtonDisabled }) => (
+                <CustomHeaderContainer>
+                  <Button type='button' onClick={decreaseMonth} disabled={prevMonthButtonDisabled}>
+                    <ChevronLeftIcon />
+                  </Button>
+                  <div>
+                    <select value={getYear(date)} onChange={({ target: { value } }) => changeYear(+value)}>
+                      {YEARS.map((option) => (
+                        <option key={option} value={option}>
+                          {option}
+                        </option>
+                      ))}
+                    </select>
+                    <span>{MONTHS[getMonth(date)]}</span>
+                  </div>
 
-          <DatePicker
-            renderDayContents={renderDayContents}
-            locale={ko}
-            selected={date}
-            onChange={(newDate: Date) => {
-              setDate(newDate);
-              handleDateClick(newDate);
-            }}
-            inline
-            dayClassName={(d) => (d.getDate() === date!.getDate() ? 'selectedDay' : 'unselectedDay')}
-            calendarClassName={'calenderWrapper'}
-            closeOnScroll={true}
-            renderCustomHeader={({ date, changeYear, decreaseMonth, increaseMonth, prevMonthButtonDisabled, nextMonthButtonDisabled }) => (
-              <CustomHeaderContainer>
-                <Button type='button' onClick={decreaseMonth} disabled={prevMonthButtonDisabled}>
-                  <ChevronLeftIcon />
-                </Button>
-                <div>
-                  <select value={getYear(date)} onChange={({ target: { value } }) => changeYear(+value)}>
-                    {YEARS.map((option) => (
-                      <option key={option} value={option}>
-                        {option}
-                      </option>
-                    ))}
-                  </select>
-                  <span>{MONTHS[getMonth(date)]}</span>
-                </div>
+                  <Button type='button' onClick={increaseMonth} disabled={nextMonthButtonDisabled}>
+                    <ChevronRightIcon />
+                  </Button>
+                </CustomHeaderContainer>
+              )}
+            />
+            <ArrowDropUpIcon onClick={() => setShowDatePicker(!showDatePicker)} fontSize='large' color='action' />
 
-                <Button type='button' onClick={increaseMonth} disabled={nextMonthButtonDisabled}>
-                  <ChevronRightIcon />
-                </Button>
-              </CustomHeaderContainer>
-            )}
-          />
+          </>
           // </motion.div>
 
         ) : (
@@ -176,40 +176,15 @@ const Calendar = () => {
               transition={{ duration: 0.3 }}
             > */}
 
-            <WeekCalendar>
-              <Month><span>{month}월</span></Month>
-              <DayWrapper>
-                {Array.from({ length: 7 }).map((_, index) => {
-                  const day = addDays(startOfWeek, index);
-                  const dayOfWeek = KOREAN_DAY_NAMES[index];
-                  return (
-                    <>
-                      <div
-                        key={index}
-                        onClick={() => handleDateClick(day)}
-                        className={`weekDay ${format(day, 'd') === format(date, 'd') ? 'selectedDay' : ''}`}
-                      >
-
-                        <div className='dayOfWeek'>{dayOfWeek}</div>
-                        {format(day, 'd')}
-
-                      </div>
-                    </>
-                  );
-                })}
-              </DayWrapper>
-            </WeekCalendar>
+            <WeekCalendar date={date} handleDateClick={handleDateClick} />
+            <ArrowDropDownIcon onClick={() => setShowDatePicker(!showDatePicker)} fontSize='large' color='action' />
             {/* </motion.div> */}
-
-
           </>
         )}
         {/* </AnimatePresence> */}
 
 
-        <ExpandMoreIcon onClick={() => setShowDatePicker(!showDatePicker)} />
       </Wrapper >
-
       <TodoCard todoList={selectedDateTasks} />
     </>
   );
@@ -222,8 +197,6 @@ flex-direction:column;
   align-items: center;
   margin-top:100px;
   background-color: #FFFFFF;
-
-
 `;
 
 const Dot = styled.div`
@@ -275,63 +248,6 @@ const CustomHeaderContainer = styled.div`
   }
 `;
 
-
-const DayWrapper = styled.div`
-  display: flex;
-`
-
-const WeekCalendar = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 340px;
-  height: 155px;
-  border: 1px solid #DFDFDF;
-  border-radius: 20px;
-  padding: 0px 10px;
-  div {
-    align-items: center;
-  justify-content: center;
-    width: 100%;
-    text-align: center;
-    cursor: pointer;
-    position: relative;
-    padding-top: 35px;
-    padding-bottom: 5px;
-    border-radius: 12px;
-    height: 20px;
-    
-    /* justify-content: center; */
-    &.selectedDay {
-      background-color: ${({ theme }) => theme.colors.main}; 
-      color: white;
-    }
-    &.unselectedDay:hover {
-      background-color: #f0f0f0;
-      /* height: 25px; */
-    }
-
-    .dayOfWeek {
-      position: absolute;
-      bottom: 45%;
-      left: 50%;
-      transform: translateX(-50%);
-      color: ${({ theme }) => theme.colors.black80};
-      font-size: 15px;
-      /* height: 20px; */
-      /* margin: 5px 0px; */
-      /* padding-top: 15px; */
-    }
-  }
-`;
-
-const Month = styled.div`
-  height: 10px;
-  top: -10px;
-  span {
-    font-size: 20px;
-    color: ${({ theme }) => theme.colors.black90}
-  }
-`
 
 const Button = styled.button`
     width: 34px;

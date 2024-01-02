@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { ScheduleItem } from '../schedule/calendar';
+import { ScheduleItem } from '../schedule/FullCalendar';
 import Image from 'next/image';
 
 interface ITodoCardProps {
@@ -86,6 +86,7 @@ const Wrapper = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
 `;
 
 const TodoListWrapper = styled.div`
