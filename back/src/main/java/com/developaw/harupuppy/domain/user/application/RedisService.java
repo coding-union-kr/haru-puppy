@@ -29,10 +29,6 @@ public class RedisService {
         return Optional.ofNullable(value);
     }
 
-    public boolean existRefreshToken(String email) {
-        return getValues(email).isPresent();
-    }
-
     public void deleteValue(String key) {
         redisTemplate.delete(key);
     }
