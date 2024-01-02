@@ -2,10 +2,13 @@ package com.developaw.harupuppy.domain.user.application;
 
 import com.developaw.harupuppy.domain.user.dto.response.OAuthLoginResponse;
 import com.developaw.harupuppy.domain.user.dto.response.OAuthTokenResponse;
+import com.developaw.harupuppy.domain.user.dto.response.UserDetailResponse;
 import com.developaw.harupuppy.domain.user.repository.UserRepository;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
@@ -31,14 +34,17 @@ public class OAuthService {
         ClientRegistration provider = inMemoryRepository.findByRegistrationId(providerName);
         OAuthTokenResponse oAuthToken = getAccessToken(provider, code);
         Map<String, Object> userAttributes = getUserInfo(provider, oAuthToken);
-        String userEmail = (String) userAttributes.get("email");
-        boolean isAlreadyRegistered = false;
-        if (userRepository.existsByEmail(userEmail)) {
-            userEmail = userRepository.findByEmail(userEmail).get().getEmail();
-            isAlreadyRegistered = true;
-        }
 
-        return new OAuthLoginResponse(userEmail, isAlreadyRegistered);
+        String userEmail = (String) userAttributes.get("email");
+        AtomicBoolean isAlreadyRegistered = new AtomicBoolean(false);
+        AtomicReference<UserDetailResponse> registeredUser = new AtomicReference<>(null);
+
+        userRepository.findByEmail(userEmail).ifPresent(user -> {
+            registeredUser.set(UserDetailResponse.of(user));
+            isAlreadyRegistered.set(true);
+        });
+
+        return new OAuthLoginResponse(userEmail, isAlreadyRegistered.get(), registeredUser.get());
     }
 
     private OAuthTokenResponse getAccessToken(ClientRegistration provider, String code) {

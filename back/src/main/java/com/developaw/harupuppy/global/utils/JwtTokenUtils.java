@@ -1,6 +1,7 @@
 package com.developaw.harupuppy.global.utils;
 
 import com.developaw.harupuppy.domain.user.dto.TokenDto;
+import com.developaw.harupuppy.domain.user.dto.response.UserDetailResponse;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -18,9 +19,10 @@ public class JwtTokenUtils {
     @Value("${jwt.access-expired-time-ms}")
     private Long accessExpiredTimeMs;
 
-    public TokenDto generateToken(String email) {
+    public TokenDto generateToken(UserDetailResponse response) {
         Claims claims = Jwts.claims();
-        claims.put("email", email);
+        claims.put("email", response.email());
+        claims.put("nickName", response.nickName());
 
         String accessToken = Jwts.builder()
                 .setClaims(claims)

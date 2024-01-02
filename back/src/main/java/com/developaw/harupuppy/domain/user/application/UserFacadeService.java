@@ -22,7 +22,7 @@ public class UserFacadeService {
         OAuthLoginResponse response = oAuthService.login(provider, code);
         String email = response.email();
         if (response.isAlreadyRegistered()) {
-            TokenDto token = jwtTokenUtils.generateToken(email);
+            TokenDto token = jwtTokenUtils.generateToken(response.registeredUser());
             redisService.setValue(email, token.refreshToken(), Duration.ofMillis(refreshExpiredTimeMs));
             return new LoginResponse(response, token.accessToken(), token.refreshToken());
         }
