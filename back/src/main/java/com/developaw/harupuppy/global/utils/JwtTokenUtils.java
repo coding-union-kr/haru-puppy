@@ -5,6 +5,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import java.util.Date;
+import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -16,23 +17,19 @@ public class JwtTokenUtils {
     private String secretKey;
     @Value("${jwt.access-expired-time-ms}")
     private Long accessExpiredTimeMs;
-    @Value("${jwt.refresh-expired-time-ms}")
-    private Long refreshExpiredTimeMs;
 
     public TokenDto generateToken(String email) {
+        Claims claims = Jwts.claims();
+        claims.put("email", email);
+
         String accessToken = Jwts.builder()
-                .setSubject(email)
+                .setClaims(claims)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + accessExpiredTimeMs))
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
 
-        String refreshToken = Jwts.builder()
-                .setSubject(email)
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + refreshExpiredTimeMs))
-                .signWith(SignatureAlgorithm.HS256, secretKey)
-                .compact();
+        String refreshToken = UUID.randomUUID().toString();
 
         return new TokenDto(accessToken, refreshToken);
     }
@@ -43,7 +40,7 @@ public class JwtTokenUtils {
     }
 
     public String resolveToken(String token) {
-        return extractClaims(token).getSubject();
+        return extractClaims(token).get("email", String.class);
     }
 
     private Claims extractClaims(String token) {
@@ -52,5 +49,4 @@ public class JwtTokenUtils {
                 .parseClaimsJws(token)
                 .getBody();
     }
-
 }
