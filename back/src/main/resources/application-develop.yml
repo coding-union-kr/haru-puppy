@@ -36,5 +36,5 @@ spring:
 
 jwt:
   secret-key: 2023mySecretKeyOfHarupuppyApplicationByDevelopawFromCodingUnion
-  access-expired-time-ms: 86400000 #1일
-  refresh-expired-time-ms: 604800000 #7일
+  access-expired-time-ms: 604800000 #1일
+  refresh-expired-time-ms: 2592000000 #30일
