@@ -8,8 +8,9 @@ import styled from 'styled-components';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import TodoCard from '../card/TodoCard';
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { ko } from 'date-fns/locale';
 
 
 export interface ScheduleItem {
@@ -47,6 +48,8 @@ const MONTHS = [
   '12월',
 ];
 
+const KOREAN_DAY_NAMES = ['일', '월', '화', '수', '목', '금', '토'];
+
 
 const Calendar = () => {
   const [date, setDate] = useState(new Date());
@@ -59,6 +62,8 @@ const Calendar = () => {
   const [showDatePicker, setShowDatePicker] = useState(false);
 
   const startOfWeek = subDays(date, date.getDay());
+
+
 
   useEffect(() => {
     const fetchScheduleData = async () => {
@@ -113,72 +118,100 @@ const Calendar = () => {
   };
 
   return (
-    <Wrapper>
-      {showDatePicker ? (
-        <DatePicker
-          renderDayContents={renderDayContents}
-          selected={date}
-          onChange={(newDate: Date) => {
-            setDate(newDate);
-            handleDateClick(newDate);
-          }}
-          inline
-          dayClassName={(d) => (d.getDate() === date!.getDate() ? 'selectedDay' : 'unselectedDay')}
-          calendarClassName={'calenderWrapper'}
-          closeOnScroll={true}
-          renderCustomHeader={({ date, changeYear, decreaseMonth, increaseMonth, prevMonthButtonDisabled, nextMonthButtonDisabled }) => (
-            <CustomHeaderContainer>
-              <Button type='button' onClick={decreaseMonth} disabled={prevMonthButtonDisabled}>
-                <ChevronLeftIcon />
-              </Button>
-              <div>
-                <select value={getYear(date)} onChange={({ target: { value } }) => changeYear(+value)}>
-                  {YEARS.map((option) => (
-                    <option key={option} value={option}>
-                      {option}
-                    </option>
-                  ))}
-                </select>
-                <span>{MONTHS[getMonth(date)]}</span>
-              </div>
+    <>
+      <Wrapper>
+        {/* <AnimatePresence mode='wait'> */}
+        {showDatePicker ? (
+          // <motion.div
+          //   key="datepicker"
+          //   initial={{ height: 0 }}
+          //   animate={{ height: 'auto' }}
+          //   exit={{ height: 0 }}
+          //   transition={{ duration: 0.3 }}
+          // >
 
-              <Button type='button' onClick={increaseMonth} disabled={nextMonthButtonDisabled}>
-                <ChevronRightIcon />
-              </Button>
-            </CustomHeaderContainer>
-          )}
-        />
-      ) : (
-        <>
-          <WeekCalendar>
-            <Month><span>{month}월</span></Month>
-            <DayWrapper>
-              {Array.from({ length: 7 }).map((_, index) => {
-                const day = addDays(startOfWeek, index);
-                const dayOfWeek = format(day, 'EEEE').charAt(0);
-                // console.log('day', day);
-                return (
-                  <>
-                    <div
-                      key={index}
-                      onClick={() => handleDateClick(day)}
-                      className={`weekDay ${format(day, 'd') === format(date, 'd') ? 'selectedDay' : ''}`}
-                    >
+          <DatePicker
+            renderDayContents={renderDayContents}
+            locale={ko}
+            selected={date}
+            onChange={(newDate: Date) => {
+              setDate(newDate);
+              handleDateClick(newDate);
+            }}
+            inline
+            dayClassName={(d) => (d.getDate() === date!.getDate() ? 'selectedDay' : 'unselectedDay')}
+            calendarClassName={'calenderWrapper'}
+            closeOnScroll={true}
+            renderCustomHeader={({ date, changeYear, decreaseMonth, increaseMonth, prevMonthButtonDisabled, nextMonthButtonDisabled }) => (
+              <CustomHeaderContainer>
+                <Button type='button' onClick={decreaseMonth} disabled={prevMonthButtonDisabled}>
+                  <ChevronLeftIcon />
+                </Button>
+                <div>
+                  <select value={getYear(date)} onChange={({ target: { value } }) => changeYear(+value)}>
+                    {YEARS.map((option) => (
+                      <option key={option} value={option}>
+                        {option}
+                      </option>
+                    ))}
+                  </select>
+                  <span>{MONTHS[getMonth(date)]}</span>
+                </div>
 
-                      <Day className='dayOfWeek'>{dayOfWeek}</Day>
-                      {format(day, 'd')}
+                <Button type='button' onClick={increaseMonth} disabled={nextMonthButtonDisabled}>
+                  <ChevronRightIcon />
+                </Button>
+              </CustomHeaderContainer>
+            )}
+          />
+          // </motion.div>
 
-                    </div>
-                  </>
-                );
-              })}
-            </DayWrapper>
-          </WeekCalendar>
-        </>
-      )}
-      <ExpandMoreIcon onClick={() => setShowDatePicker(!showDatePicker)} />
+        ) : (
+          <>
+            {/* <motion.div
+              key="weekcalendar"
+              initial={{ height: 0 }}
+              animate={{ height: 'auto' }}
+              exit={{ height: 0 }}
+              transition={{ duration: 0.3 }}
+            > */}
+
+            <WeekCalendar>
+              <Month><span>{month}월</span></Month>
+              <DayWrapper>
+                {Array.from({ length: 7 }).map((_, index) => {
+                  const day = addDays(startOfWeek, index);
+                  const dayOfWeek = KOREAN_DAY_NAMES[index];
+                  return (
+                    <>
+                      <div
+                        key={index}
+                        onClick={() => handleDateClick(day)}
+                        className={`weekDay ${format(day, 'd') === format(date, 'd') ? 'selectedDay' : ''}`}
+                      >
+
+                        <div className='dayOfWeek'>{dayOfWeek}</div>
+                        {format(day, 'd')}
+
+                      </div>
+                    </>
+                  );
+                })}
+              </DayWrapper>
+            </WeekCalendar>
+            {/* </motion.div> */}
+
+
+          </>
+        )}
+        {/* </AnimatePresence> */}
+
+
+        <ExpandMoreIcon onClick={() => setShowDatePicker(!showDatePicker)} />
+      </Wrapper >
+
       <TodoCard todoList={selectedDateTasks} />
-    </Wrapper>
+    </>
   );
 };
 
@@ -188,6 +221,9 @@ flex-direction:column;
   justify-content: center;
   align-items: center;
   margin-top:100px;
+  background-color: #FFFFFF;
+
+
 `;
 
 const Dot = styled.div`
@@ -205,7 +241,7 @@ const CustomHeaderContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #FCFCFC;
+  background-color: #FFFFFF;
   height: 100%;
   margin-top: 8px;
   padding: 5px;
@@ -227,7 +263,7 @@ const CustomHeaderContainer = styled.div`
     }
 
     & > select {
-      background-color: #FCFCFC;
+      background-color: #FFFFFF;
       color: #5b5b5b;
       border: none;
       margin-right: 12px;
@@ -279,8 +315,8 @@ const WeekCalendar = styled.div`
       bottom: 45%;
       left: 50%;
       transform: translateX(-50%);
-      color: #5b5b5b;
-      font-size: 14px;
+      color: ${({ theme }) => theme.colors.black80};
+      font-size: 15px;
       /* height: 20px; */
       /* margin: 5px 0px; */
       /* padding-top: 15px; */
@@ -288,12 +324,13 @@ const WeekCalendar = styled.div`
   }
 `;
 
-
-const Day = styled.div`
-`
-
 const Month = styled.div`
   height: 10px;
+  top: -10px;
+  span {
+    font-size: 20px;
+    color: ${({ theme }) => theme.colors.black90}
+  }
 `
 
 const Button = styled.button`

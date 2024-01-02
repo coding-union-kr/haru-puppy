@@ -56,7 +56,7 @@ body {
 		}
 
 		.react-datepicker__header {
-			background-color: #FCFCFC;
+			background-color: #FFFFFF;
 			color: white;
 			border-bottom: none;
 			border-radius: 20px;
@@ -81,7 +81,7 @@ body {
 	}
 
 	.calenderWrapper {
-		background-color: #FCFCFC;
+		background-color: #FFFFFF;
 	}
 }
 
