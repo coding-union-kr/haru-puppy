@@ -45,7 +45,7 @@ public class UserService {
                 encoder.encode(request.userRequest().password()), home, dog);
         UserDetailResponse userDetail = UserDetailResponse.of(userRepository.save(user));
 
-        return UserCreateResponse.of(userDetail, homeDetail, dogDetail);
+        return UserCreateResponse.of(userDetail, homeDetail, dogDetail, null);
     }
 
     @Transactional
@@ -56,7 +56,7 @@ public class UserService {
         User invitedUser = UserCreateRequest.fromDto(request, encoder.encode(request.password()), home, dog);
         userRepository.save(invitedUser);
         return UserCreateResponse.of(UserDetailResponse.of(invitedUser), HomeDetailResponse.of(home),
-                DogDetailResponse.of(dog));
+                DogDetailResponse.of(dog), null);
     }
 
     @Transactional

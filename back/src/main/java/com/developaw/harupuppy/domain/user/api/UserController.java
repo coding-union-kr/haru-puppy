@@ -24,15 +24,13 @@ public class UserController {
     private final UserFacadeService facadeService;
 
     @PostMapping("/register")
-    public ApiResponse<UserCreateResponse> create(@NotNull @RequestBody @Valid HomeCreateRequest request,
-                                                  HttpServletResponse response) {
-        return ApiResponse.ok(Status.CREATE, facadeService.create(request, response));
+    public ApiResponse<UserCreateResponse> create(@NotNull @RequestBody @Valid HomeCreateRequest request) {
+        return ApiResponse.ok(Status.CREATE, facadeService.create(request));
     }
 
     @PostMapping("/invitation/{homeId}")
     public ApiResponse<UserCreateResponse> create(@NotNull @RequestBody @Valid UserCreateRequest request,
-                                                  @NotBlank @PathVariable("homeId") String homeId,
-                                                  HttpServletResponse response) {
-        return ApiResponse.ok(Status.CREATE, facadeService.create(request, homeId, response));
+                                                  @NotBlank @PathVariable("homeId") String homeId) {
+        return ApiResponse.ok(Status.CREATE, facadeService.create(request, homeId));
     }
 }

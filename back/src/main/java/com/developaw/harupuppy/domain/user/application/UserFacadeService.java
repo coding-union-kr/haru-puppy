@@ -7,7 +7,6 @@ import com.developaw.harupuppy.domain.user.dto.response.LoginResponse;
 import com.developaw.harupuppy.domain.user.dto.response.OAuthLoginResponse;
 import com.developaw.harupuppy.domain.user.dto.response.UserCreateResponse;
 import com.developaw.harupuppy.global.utils.JwtTokenUtils;
-import jakarta.servlet.http.HttpServletResponse;
 import java.time.Duration;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,14 +35,22 @@ public class UserFacadeService {
     }
 
     @Transactional
-    public UserCreateResponse create(HomeCreateRequest request, HttpServletResponse response) {
+    public UserCreateResponse create(HomeCreateRequest request) {
         UserCreateResponse userDetail = userService.create(request);
+        String email = userDetail.getUserResponse().email();
+        TokenDto token = jwtTokenUtils.generateToken(email);
+        redisService.setValue(email, token.refreshToken(), Duration.ofMillis(refreshExpiredTimeMs));
+        userDetail.setToken(token);
         return userDetail;
     }
 
     @Transactional
-    public UserCreateResponse create(UserCreateRequest request, String homeId, HttpServletResponse response) {
+    public UserCreateResponse create(UserCreateRequest request, String homeId) {
         UserCreateResponse userDetail = userService.create(request, homeId);
+        String email = userDetail.getUserResponse().email();
+        TokenDto token = jwtTokenUtils.generateToken(email);
+        redisService.setValue(email, token.refreshToken(), Duration.ofMillis(refreshExpiredTimeMs));
+        userDetail.setToken(token);
         return userDetail;
     }
 }
