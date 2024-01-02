@@ -1,6 +1,6 @@
 package com.developaw.harupuppy.domain.dog.domain;
 
-import com.developaw.harupuppy.domain.user.domain.Home;
+import com.developaw.harupuppy.domain.home.domain.Home;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -34,8 +34,8 @@ public class Dog {
     @Size(min = 1, max = 5)
     private String name;
 
-    @Column(name = "img_url")
-    private String imgUrl;
+    @Column(name = "img")
+    private String profilePicture;
 
     @Enumerated(EnumType.STRING)
     private DogGender gender;
@@ -50,9 +50,9 @@ public class Dog {
 
     @Builder
     public Dog(
-            String name, String imgUrl, DogGender gender, LocalDate birthday, Double weight, Home home) {
+            String name, String profilePicture, DogGender gender, LocalDate birthday, Double weight, Home home) {
         this.name = name;
-        this.imgUrl = imgUrl;
+        this.profilePicture = profilePicture;
         this.gender = gender;
         this.birthday = birthday;
         this.weight = weight;

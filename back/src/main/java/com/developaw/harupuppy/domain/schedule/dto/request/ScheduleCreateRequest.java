@@ -5,7 +5,6 @@ import com.developaw.harupuppy.domain.schedule.domain.RepeatType;
 import com.developaw.harupuppy.domain.schedule.domain.Schedule;
 import com.developaw.harupuppy.domain.schedule.domain.ScheduleType;
 import com.developaw.harupuppy.domain.user.dto.UserScheduleDto;
-import com.developaw.harupuppy.global.utils.DateUtils;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
@@ -27,7 +26,7 @@ public record ScheduleCreateRequest(
     public static Schedule fromDto(ScheduleCreateRequest dto, String homeId, String repeatId) {
         validateDateTime(dto.scheduleDate, dto.scheduleTime);
         return Schedule.builder()
-                .scheduleDateTime(DateUtils.parseDateTime(dto.scheduleDate(), dto.scheduleTime()))
+                .scheduleDateTime(Schedule.parseDateTime(dto.scheduleDate(), dto.scheduleTime()))
                 .scheduleType(dto.scheduleType())
                 .homeId(homeId)
                 .mates(new ArrayList<>())
@@ -41,7 +40,7 @@ public record ScheduleCreateRequest(
     public static Schedule fromDto(ScheduleCreateRequest dto, String homeId) {
         validateDateTime(dto.scheduleDate, dto.scheduleTime);
         return Schedule.builder()
-                .scheduleDateTime(DateUtils.parseDateTime(dto.scheduleDate(), dto.scheduleTime()))
+                .scheduleDateTime(Schedule.parseDateTime(dto.scheduleDate(), dto.scheduleTime()))
                 .scheduleType(dto.scheduleType())
                 .homeId(homeId)
                 .mates(new ArrayList<>())
