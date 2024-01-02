@@ -1,6 +1,5 @@
 package com.developaw.harupuppy.domain.user.api;
 
-import com.developaw.harupuppy.domain.user.application.OAuthService;
 import com.developaw.harupuppy.domain.user.application.UserFacadeService;
 import com.developaw.harupuppy.domain.user.dto.response.LoginResponse;
 import com.developaw.harupuppy.global.common.response.ApiResponse;
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/auth")
 @Slf4j
 public class AuthController {
-    private final OAuthService oAuthService;
     private final UserFacadeService userFacadeService;
 
     @GetMapping("/login/{provider}")

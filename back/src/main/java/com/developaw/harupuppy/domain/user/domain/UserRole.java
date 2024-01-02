@@ -1,5 +1,6 @@
 package com.developaw.harupuppy.domain.user.domain;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -15,4 +16,9 @@ public enum UserRole {
     YOUNGER("동생");
 
     private final String desc;
+
+    @JsonCreator
+    public UserRole fromString(String value){
+        return UserRole.valueOf(value.toUpperCase());
+    }
 }

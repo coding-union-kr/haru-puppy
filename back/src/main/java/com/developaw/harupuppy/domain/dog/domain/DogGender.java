@@ -1,5 +1,6 @@
 package com.developaw.harupuppy.domain.dog.domain;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -10,4 +11,9 @@ public enum DogGender {
     FEMALE("여아");
 
     private final String desc;
+
+    @JsonCreator
+    public DogGender fromString(String value) {
+        return DogGender.valueOf(value.toUpperCase());
+    }
 }

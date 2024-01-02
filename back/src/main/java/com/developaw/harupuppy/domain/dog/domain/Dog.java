@@ -34,8 +34,8 @@ public class Dog {
     @Size(min = 1, max = 5)
     private String name;
 
-    @Column(name = "img")
-    private String profilePicture;
+    @Column(name = "img_url")
+    private String imgUrl;
 
     @Enumerated(EnumType.STRING)
     private DogGender gender;
@@ -50,9 +50,9 @@ public class Dog {
 
     @Builder
     public Dog(
-            String name, String profilePicture, DogGender gender, LocalDate birthday, Double weight, Home home) {
+            String name, String imgUrl, DogGender gender, LocalDate birthday, Double weight, Home home) {
         this.name = name;
-        this.profilePicture = profilePicture;
+        this.imgUrl = imgUrl;
         this.gender = gender;
         this.birthday = birthday;
         this.weight = weight;

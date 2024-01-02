@@ -17,6 +17,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 @RequiredArgsConstructor
@@ -26,14 +27,15 @@ public class AuthenticationFilter extends OncePerRequestFilter {
     private final String AUTHORIZATION_HEADER = "Authorization";
     private final UserService userService;
     private final JwtTokenUtils jwtTokenUtils;
+    private final AntPathMatcher pathMatcher = new AntPathMatcher();
 
     private static final List<String> PERMIT_URLS =
-            List.of("/", "/h2", "/auth/login/kakao", "/api/users/register", "/api/users/invitation");
+            List.of("/", "/h2", "/auth/login/*", "/api/users/register", "/api/users/invitation/*");
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         return PERMIT_URLS.stream()
-                .anyMatch(exclude -> exclude.equalsIgnoreCase(request.getServletPath()));
+                .anyMatch(pattern -> pathMatcher.match(pattern, request.getServletPath()));
     }
 
     @Override

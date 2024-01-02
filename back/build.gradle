@@ -11,6 +11,10 @@ java {
     sourceCompatibility = '17'
 }
 
+compileJava {
+    options.compilerArgs += ["-parameters"]
+}
+
 configurations {
     compileOnly {
         extendsFrom annotationProcessor
@@ -47,6 +51,7 @@ dependencies {
     runtimeOnly 'com.h2database:h2'
 
     testImplementation 'org.mockito:mockito-inline:3.11.2'
+    annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
