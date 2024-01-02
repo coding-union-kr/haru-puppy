@@ -1,6 +1,6 @@
 package com.developaw.harupuppy.domain.activity.domain;
 
-import com.developaw.harupuppy.domain.home.domain.Home;
+import com.developaw.harupuppy.domain.user.domain.Home;
 import com.developaw.harupuppy.domain.schedule.domain.ScheduleType;
 import com.developaw.harupuppy.domain.user.domain.User;
 import jakarta.persistence.Column;

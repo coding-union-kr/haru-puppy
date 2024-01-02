@@ -1,7 +1,6 @@
 package com.developaw.harupuppy.domain.user.domain;
 
 import com.developaw.harupuppy.domain.dog.domain.Dog;
-import com.developaw.harupuppy.domain.home.domain.Home;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -36,8 +35,8 @@ public class User {
     @Column(unique = true)
     private String email;
 
-    @Column(name = "user_img")
-    private String userImg;
+    @Column(name = "img_url")
+    private String imgUrl;
 
     private String nickname;
 
@@ -62,7 +61,7 @@ public class User {
     @Builder
     public User(String email, String userImg, String nickname, UserRole userRole) {
         this.email = email;
-        this.userImg = userImg;
+        this.imgUrl = userImg;
         this.nickname = nickname;
         this.userRole = userRole;
         this.isDeleted = false;

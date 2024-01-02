@@ -4,9 +4,37 @@ spring:
     url: jdbc:mysql://${MYSQL_DATABASE_HOST}:${MYSQL_DATABASE_PORT}/${MYSQL_DATABASE_NAME}?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
     username: ${MYSQL_DATABASE_USERNAME}
     password: ${MYSQL_DATABASE_PASSWORD}
+  redis:
+    session:
+      host: ${SESSION_HOST}
+      port: ${SESSION_PORT}
   jpa:
     database: MYSQL
     hibernate:
       ddl-auto: update
     show-sql: true
     database-platform: org.hibernate.dialect.MySQL8Dialect
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            client-id: ${OAUTH_KAKAO_REST_API_KEY}
+            client-secret: ${OAUTH_KAKAO_SECRET}
+            redirect-uri: "http://localhost:3000/auth/callback/kakao"
+            scope:
+              - account_email
+            authorization-grant-type: authorization_code
+            client-authentication-method: client_secret_post
+            client-name: kakao
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: id
+
+jwt:
+  secret-key: 2023mySecretKeyOfHarupuppyApplicationByDevelopawFromCodingUnion
+  access-expired-time-ms: 604800000 #1일
+  refresh-expired-time-ms: 2592000000 #30일

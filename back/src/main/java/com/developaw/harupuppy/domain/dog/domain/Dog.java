@@ -1,6 +1,6 @@
 package com.developaw.harupuppy.domain.dog.domain;
 
-import com.developaw.harupuppy.domain.home.domain.Home;
+import com.developaw.harupuppy.domain.user.domain.Home;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
