@@ -50,8 +50,8 @@ public class AuthenticationFilter extends OncePerRequestFilter {
             throw new CustomException(ErrorCode.INVALID_TOKEN);
         }
 
-        String email = jwtTokenUtils.resolveToken(token);
-        UserDetail user = userService.loadUserByEmail(email);
+        Long userId = jwtTokenUtils.resolveToken(token);
+        UserDetail user = userService.loadByUserId(userId);
 
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());

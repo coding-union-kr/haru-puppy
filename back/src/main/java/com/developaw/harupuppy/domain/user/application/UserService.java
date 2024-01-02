@@ -20,8 +20,8 @@ public class UserService {
     }
 
     @Transactional
-    public UserDetail loadUserByEmail(String email) {
-        User registedUser = userRepository.findByEmail(email)
+    public UserDetail loadByUserId(Long userId) {
+        User registedUser = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER));
         return UserDetail.of(registedUser);
     }

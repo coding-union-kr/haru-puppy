@@ -21,6 +21,7 @@ public class JwtTokenUtils {
 
     public TokenDto generateToken(UserDetailResponse response) {
         Claims claims = Jwts.claims();
+        claims.put("userId", response.userId());
         claims.put("email", response.email());
         claims.put("nickName", response.nickName());
 
@@ -41,8 +42,8 @@ public class JwtTokenUtils {
         return expiredDate.before(new Date());
     }
 
-    public String resolveToken(String token) {
-        return extractClaims(token).get("email", String.class);
+    public Long resolveToken(String token) {
+        return extractClaims(token).get("userId", Long.class);
     }
 
     private Claims extractClaims(String token) {
