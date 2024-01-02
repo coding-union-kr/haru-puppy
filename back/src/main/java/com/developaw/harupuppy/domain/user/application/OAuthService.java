@@ -1,6 +1,6 @@
 package com.developaw.harupuppy.domain.user.application;
 
-import com.developaw.harupuppy.domain.user.dto.response.LoginResponse;
+import com.developaw.harupuppy.domain.user.dto.response.OAuthLoginResponse;
 import com.developaw.harupuppy.domain.user.dto.response.OAuthTokenResponse;
 import com.developaw.harupuppy.domain.user.repository.UserRepository;
 import java.nio.charset.StandardCharsets;
@@ -27,7 +27,7 @@ public class OAuthService {
     private final UserRepository userRepository;
 
     @Transactional
-    public LoginResponse login(String providerName, String code) {
+    public OAuthLoginResponse login(String providerName, String code) {
         ClientRegistration provider = inMemoryRepository.findByRegistrationId(providerName);
         OAuthTokenResponse oAuthToken = getAccessToken(provider, code);
         Map<String, Object> userAttributes = getUserInfo(provider, oAuthToken);
@@ -38,7 +38,7 @@ public class OAuthService {
             isAlreadyRegistered = true;
         }
 
-        return new LoginResponse(userEmail, isAlreadyRegistered);
+        return new OAuthLoginResponse(userEmail, isAlreadyRegistered);
     }
 
     private OAuthTokenResponse getAccessToken(ClientRegistration provider, String code) {
@@ -46,7 +46,6 @@ public class OAuthService {
                 .post()
                 .uri(provider.getProviderDetails().getTokenUri())
                 .headers(header -> {
-                    header.setBasicAuth(provider.getClientId(), provider.getClientSecret());
                     header.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
                     header.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
                     header.setAcceptCharset(Collections.singletonList(StandardCharsets.UTF_8));
