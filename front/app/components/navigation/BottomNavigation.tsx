@@ -21,6 +21,7 @@ const BottomNavigationWrap = styled.nav`
     bottom: 0;
     left: 50%;
     transform: translateX(-50%);
+    background-color: #FFFFFF;
     width: 100%;
     max-width: 390px; 
     border-top: 0.5px solid ${({ theme }) => theme.colors.black60};

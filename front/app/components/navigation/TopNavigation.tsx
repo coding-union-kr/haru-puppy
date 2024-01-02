@@ -21,7 +21,7 @@ const TopNavigation = () => {
   };
 
   const pathname = usePathname();
-  const getTitle = (pathname: string) => {
+  const getTitle = (pathname: string | null) => {
     switch (pathname) {
       case '/':
       default:
@@ -73,6 +73,8 @@ const TopNavigation = () => {
 const TopNavigationWrap = styled.nav<{ showBtns: boolean }>`
     position: fixed;
     top: 0;
+    z-index: 100;
+    background-color: #FFFFFF;
     left: 50%;
     transform: translateX(-50%);
     display: flex;

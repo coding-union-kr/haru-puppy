@@ -1,5 +1,4 @@
 'use client'
-
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -13,8 +12,6 @@ const Page = () => {
     const params = useSearchParams();
     const code = params?.get('code');
     const [error, setError] = useState<string>();
-
-
     useEffect(() => {
         const handleLogin = async () => {
             try {
@@ -23,26 +20,26 @@ const Page = () => {
                 );
 
                 if (response) {
-                    const accessToken = response.headers['Access-Token'];
-                    const refreshToken = response.headers['Refresh-Token'];
-                    localStorage.setItem(LOCAL_STORAGE_KEYS.ACCESS_TOKEN, accessToken);
-                    localStorage.setItem(LOCAL_STORAGE_KEYS.REFRESH_TOKEN, refreshToken);
-
-                    if (response.status === 200) {
-                        router.push('/');
-                    } else if (response.status === 404) {
+                    if (response.data.isAlreadyRegistered === false) {
+                        // 기존 유저 아닐경우
                         router.push('/auth/welcome');
-                        console.log('404 response: 카카오 정보', response)
+                        console.log('user email:', response.data.email)
+                    } else {
+                        // 기존 유저일경우
+                        const accessToken = response.data.accessToken
+                        const refreshToken = response.data.refreshToken
+                        localStorage.setItem(LOCAL_STORAGE_KEYS.ACCESS_TOKEN, accessToken);
+                        localStorage.setItem(LOCAL_STORAGE_KEYS.REFRESH_TOKEN, refreshToken);
+                        router.push('/');
                     }
-
                 } else {
-                    setError('로그인을 시도하는 중 오류가 발생했습니다.');
+
+                    setError('응답이 없습니다.');
                 }
             } catch (error) {
                 setError('로그인을 시도하는 중 오류가 발생했습니다.');
             }
         };
-
         if (code) {
             handleLogin();
         }
@@ -52,12 +49,10 @@ const Page = () => {
         <Wrapper>
             <Image width={300} height={300} src='/svgs/dog_profile.svg' alt='dog_profile' />
             <p>{error}</p>
-
             <StyledLink href="/auth/login">로그인 페이지로 돌아가기</StyledLink>
         </Wrapper>
     );
 }
-
 const Wrapper = styled.div`
     display: flex;
     margin: 50px 0px;
@@ -66,7 +61,6 @@ const Wrapper = styled.div`
     align-items: center;
     width: 100%;
     height: 100%;
-
     svg {
         color: ${({ theme }) => theme.colors.light}
     }
@@ -78,12 +72,10 @@ const Wrapper = styled.div`
         color: ${({ theme }) => theme.colors.black80}; 
     } 
 `;
-
 const StyledLink = styled(Link)`
     text-decoration: none;
     color: ${({ theme }) => theme.colors.main};
     border-radius: 50%;
     padding: 15px 30px;  
 `;
-
 export default Page;
