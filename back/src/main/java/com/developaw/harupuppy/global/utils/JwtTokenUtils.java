@@ -23,7 +23,7 @@ public class JwtTokenUtils {
         Claims claims = Jwts.claims();
         claims.put("userId", response.userId());
         claims.put("email", response.email());
-        claims.put("nickName", response.nickName());
+        claims.put("nickName", response.nickname());
 
         String accessToken = Jwts.builder()
                 .setClaims(claims)

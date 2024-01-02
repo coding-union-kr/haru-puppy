@@ -8,6 +8,9 @@ spring:
     session:
       host: ${SESSION_HOST}
       port: ${SESSION_PORT}
+      password: ${SESSION_PASSWORD}
+      ssl:
+        enabled: true
   jpa:
     database: MYSQL
     hibernate:
