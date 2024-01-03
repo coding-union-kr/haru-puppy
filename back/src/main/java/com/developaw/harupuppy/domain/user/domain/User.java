@@ -21,10 +21,11 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 
 @Entity
 @Getter
-@Table(name = "USERS")
+@Table(name = "`USERS`")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @NonNull
 public class User {
@@ -61,19 +62,19 @@ public class User {
     private Home home;
 
     @Builder
-    public User(String email, String userImg, String nickname, UserRole userRole, Dog dog) {
+    public User(String email, String userImg, String nickname, UserRole userRole, Dog dog, Home home) {
         this.email = email;
         this.userImg = userImg;
         this.nickname = nickname;
         this.userRole = userRole;
         this.dog = dog;
+        this.home = home;
         this.isDeleted = false;
         this.allowNotification = true;
     }
 
     public void update (UserUpdateRequest updateRequest){
-        this.userId = updateRequest.userId();
-        this.userImg = updateRequest.userImg();
+//        this.userImg = updateRequest.userImg();
         this.nickname = updateRequest.nickname();
         this.userRole = updateRequest.userRole();
     }
