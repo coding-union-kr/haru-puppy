@@ -30,7 +30,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
     private final AntPathMatcher pathMatcher = new AntPathMatcher();
 
     private static final List<String> PERMIT_URLS =
-            List.of("/", "/h2", "/auth/login/*", "/api/users/register", "/api/users/invitation/*");
+            List.of("/", "/h2", "/auth/login/*", "/auth/reissue", "/api/users/register", "/api/users/invitation/*");
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
@@ -49,10 +49,10 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 
         final String token = header.split(" ")[1].trim();
         if (jwtTokenUtils.isExpired(token)) {
-            throw new CustomException(ErrorCode.INVALID_TOKEN);
+            throw new CustomException(ErrorCode.EXPIRED_TOKEN);
         }
 
-        Long userId = jwtTokenUtils.resolveToken(token);
+        Long userId = jwtTokenUtils.resolveUserId(token);
         UserDetail user = userService.loadByUserId(userId);
 
         UsernamePasswordAuthenticationToken authenticationToken =
