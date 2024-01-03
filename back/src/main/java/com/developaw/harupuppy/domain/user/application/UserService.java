@@ -22,7 +22,7 @@ public class UserService {
     private final UserRepository userRepository;
 
     @Transactional
-    public UserResponse updateUserInformation (Long userId, UserUpdateRequest request){
+    public UserResponse updateUserInformation (UserUpdateRequest request){
         User user = userRepository.findUserByUserId(request.userId())
                 .orElseThrow(() -> new CustomException(Response.ErrorCode.NOT_FOUND_USER));
         user.update(request);
