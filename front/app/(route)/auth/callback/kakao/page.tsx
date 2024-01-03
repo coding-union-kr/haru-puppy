@@ -7,34 +7,48 @@ import styled from 'styled-components';
 import Image from 'next/image';
 import Link from "next/link";
 
+
 const Page = () => {
     const router = useRouter();
     const params = useSearchParams();
     const code = params?.get('code');
     const [error, setError] = useState<string>();
+
     useEffect(() => {
         const handleLogin = async () => {
             try {
-                const response = await axios.get(
+                const res = await axios.post(
                     `${BACKEND_REDIRECT_URL}?code=${code}`,
+                    {
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    }
                 );
 
-                if (response) {
-                    if (response.data.isAlreadyRegistered === false) {
+                if (res) {
+                    const responseData = res.data.response;
+
+                    if (responseData.isAlreadyRegistered === false) {
+                        const email = responseData.email
                         // 기존 유저 아닐경우
-                        router.push('/auth/welcome');
-                        console.log('user email:', response.data.email)
+                        router.push(
+                            `/auth/welcome/?email=${email}`
+                        );
+                        console.log('new user:', responseData);
                     } else {
-                        // 기존 유저일경우
-                        const accessToken = response.data.accessToken
-                        const refreshToken = response.data.refreshToken
+                        // 기존 유저일 경우
+                        const accessToken = res.data.accessToken;
+                        const refreshToken = res.data.refreshToken;
+
                         localStorage.setItem(LOCAL_STORAGE_KEYS.ACCESS_TOKEN, accessToken);
                         localStorage.setItem(LOCAL_STORAGE_KEYS.REFRESH_TOKEN, refreshToken);
+
                         router.push('/');
+                        console.log('유저 정보:', responseData)
                     }
                 } else {
-
-                    setError('응답이 없습니다.');
+                    setError('서버 응답이 올바르지 않습니다.');
                 }
             } catch (error) {
                 setError('로그인을 시도하는 중 오류가 발생했습니다.');
