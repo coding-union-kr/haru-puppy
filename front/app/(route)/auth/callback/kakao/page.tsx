@@ -7,6 +7,12 @@ import styled from 'styled-components';
 import Image from 'next/image';
 import Link from "next/link";
 
+
+interface ResponseData {
+    isAlreadyRegistered: boolean;
+    email: string;
+}
+
 const Page = () => {
     const router = useRouter();
     const params = useSearchParams();
@@ -29,9 +35,12 @@ const Page = () => {
                     const responseData = res.data.response;
 
                     if (responseData.isAlreadyRegistered === false) {
+                        const email = responseData.email
                         // 기존 유저 아닐경우
-                        router.push('/auth/welcome');
-                        console.log('유저 이메일:', responseData.email);
+                        router.push(
+                            `/auth/welcome/?email=${email}`
+                        );
+                        console.log('new user:', responseData);
                     } else {
                         // 기존 유저일 경우
                         const accessToken = res.data.accessToken;
