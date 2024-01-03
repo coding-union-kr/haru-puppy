@@ -73,12 +73,11 @@ public class UserFacadeService {
 
     @Transactional
     public TokenDto reissue(String refreshToken){
-        refreshToken = validateToken(refreshToken);
-        Long userId = jwtTokenUtils.resolveUserId(refreshToken);
-        String key = jwtTokenUtils.resolveTokenKey(refreshToken);
-        log.info("resolve Token : %d and %s", userId, key);
+        final String validToken = validateToken(refreshToken);
+        Long userId = jwtTokenUtils.resolveUserId(validToken);
+        String key = jwtTokenUtils.resolveTokenKey(validToken);
 
-        if(!redisService.getValues(key).equals(refreshToken)) {
+        if(!redisService.getValues(key).map(value -> value.equals(validToken)).orElse(false)) {
             throw new CustomException(ErrorCode.INVALID_TOKEN);
         }
 
@@ -91,10 +90,13 @@ public class UserFacadeService {
     private String validateToken(String refreshToken){
         if(!refreshToken.startsWith("Bearer ")){
             throw new CustomException(ErrorCode.INVALID_TOKEN);
-        }else if(jwtTokenUtils.isExpired(refreshToken)){
-            throw new CustomException(ErrorCode.EXPIRED_TOKEN);
-        }else{
-            return refreshToken.split(" ")[1];
         }
+
+        refreshToken = refreshToken.split(" ")[1];
+        if(jwtTokenUtils.isExpired(refreshToken)) {
+            throw new CustomException(ErrorCode.EXPIRED_TOKEN);
+        }
+
+        return refreshToken;
     }
 }
