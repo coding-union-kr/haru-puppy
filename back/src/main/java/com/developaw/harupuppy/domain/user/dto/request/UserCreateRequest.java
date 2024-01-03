@@ -9,15 +9,13 @@ import jakarta.validation.constraints.NotNull;
 
 public record UserCreateRequest(
         @NotBlank String email,
-        @NotBlank String password,
         @NotBlank String nickName,
         @NotBlank String imgUrl,
         @NotNull UserRole userRole
 ) {
-    public static User fromDto(UserCreateRequest request, String encodedPassword, Home home, Dog dog){
+    public static User fromDto(UserCreateRequest request, Home home, Dog dog){
         return User.builder()
                 .email(request.email)
-                .password(encodedPassword)
                 .nickname(request.nickName)
                 .userImg(request.imgUrl)
                 .userRole(request.userRole)
