@@ -32,9 +32,8 @@ public class UserFacadeService {
     @Transactional
     public LoginResponse login(String provider, String code) {
         OAuthLoginResponse response = oAuthService.login(provider, code);
-        String email = response.email();
         if (response.isAlreadyRegistered()) {
-            TokenDto token = createTokenAndSave(response.registeredUser(), email);
+            TokenDto token = createTokenAndSave(response.registeredUser());
             return new LoginResponse(response, token.accessToken(), token.refreshToken());
         }
         return LoginResponse.of(response);
@@ -43,8 +42,7 @@ public class UserFacadeService {
     @Transactional
     public UserCreateResponse create(HomeCreateRequest request) {
         UserCreateResponse userDetail = userService.create(request);
-        String email = userDetail.getUserResponse().email();
-        TokenDto token = createTokenAndSave(userDetail.getUserResponse(), email);
+        TokenDto token = createTokenAndSave(userDetail.getUserResponse());
         userDetail.setToken(token);
         return userDetail;
     }
@@ -52,16 +50,15 @@ public class UserFacadeService {
     @Transactional
     public UserCreateResponse create(UserCreateRequest request, String homeId) {
         UserCreateResponse userDetail = userService.create(request, homeId);
-        String email = userDetail.getUserResponse().email();
-        TokenDto token = createTokenAndSave(userDetail.getUserResponse(), email);
+        TokenDto token = createTokenAndSave(userDetail.getUserResponse());
         userDetail.setToken(token);
         return userDetail;
     }
 
     @Transactional
-    public TokenDto createTokenAndSave(UserDetailResponse response, String email) {
+    public TokenDto createTokenAndSave(UserDetailResponse response) {
         TokenDto token = jwtTokenUtils.generateToken(response);
-        redisService.setValue(token.refreshToken(), email, Duration.ofMillis(refreshExpiredTimeMs));
+        redisService.setValue(token.tokenKey(), token.refreshToken(), Duration.ofMillis(refreshExpiredTimeMs));
         return token;
     }
 
@@ -86,8 +83,7 @@ public class UserFacadeService {
         }
 
         UserDetail userDetail = userService.loadByUserId(userId);
-        TokenDto newToken = jwtTokenUtils.generateToken(UserDetailResponse.of(userDetail));
-        redisService.setValue(newToken.tokenKey(), newToken.refreshToken(), Duration.ofMillis(refreshExpiredTimeMs));
+        TokenDto newToken = createTokenAndSave(UserDetailResponse.of(userDetail));
         redisService.deleteValue(key);
         return newToken;
     }
