@@ -43,7 +43,7 @@ public class JwtTokenUtils {
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
 
-        return new TokenDto(accessToken, refreshToken, getKey(userId, sessionId));
+        return new TokenDto(getKey(userId, sessionId), accessToken, refreshToken);
     }
 
     public boolean isExpired(String token) {
