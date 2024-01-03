@@ -60,6 +60,13 @@ public class UserService {
     }
 
     @Transactional
+    public String delete(Long userId){
+        User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER));
+        userRepository.delete(user);
+        return user.getEmail();
+    }
+
+    @Transactional
     public UserDetail loadByUserId(Long userId) {
         User registedUser = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER));
