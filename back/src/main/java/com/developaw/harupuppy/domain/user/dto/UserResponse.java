@@ -6,7 +6,6 @@ import com.developaw.harupuppy.domain.user.domain.UserRole;
 public record UserResponse(
         Long userId,
         String email,
-        String userImg,
         String nickname,
         UserRole userRole,
         boolean isDeleted,
@@ -17,7 +16,6 @@ public record UserResponse(
         return new UserResponse(
                 user.getUserId(),
                 user.getEmail(),
-                user.getUserImg(),
                 user.getNickname(),
                 user.getUserRole(),
                 user.isDeleted(),
