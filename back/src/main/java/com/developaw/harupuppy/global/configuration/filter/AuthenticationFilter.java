@@ -30,7 +30,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
     private final AntPathMatcher pathMatcher = new AntPathMatcher();
 
     private static final List<String> PERMIT_URLS =
-            List.of("/", "/h2", "/auth/login/*", "/auth/reissue", "/api/users/register", "/api/users/invitation/*");
+            List.of("/", "/h2", "/auth/**", "/api/users/register", "/api/users/invitation/*");
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {

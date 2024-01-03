@@ -29,6 +29,13 @@ public class AuthController {
         return ApiResponse.ok(Status.CREATE, userFacadeService.login(provider, code));
     }
 
+    @PostMapping("/logout")
+    public ApiResponse<Void> logout(HttpServletRequest request){
+        String accessToken = request.getHeader("Authorization");
+        userFacadeService.logout(accessToken);
+        return ApiResponse.ok(Status.CREATE);
+    }
+
     @PostMapping("/reissue")
     public ApiResponse<TokenDto> reissue(HttpServletRequest request) {
         String refreshToken = request.getHeader("Authorization");
