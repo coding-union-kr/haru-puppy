@@ -73,4 +73,32 @@ public class UserFacadeService {
         String email = userService.delete(userId);
         redisService.deleteValue(email);
     }
+
+    @Transactional
+    public TokenDto reissue(String refreshToken){
+        refreshToken = validateToken(refreshToken);
+        Long userId = jwtTokenUtils.resolveUserId(refreshToken);
+        String key = jwtTokenUtils.resolveTokenKey(refreshToken);
+        log.info("resolve Token : %d and %s", userId, key);
+
+        if(!redisService.getValues(key).equals(refreshToken)) {
+            throw new CustomException(ErrorCode.INVALID_TOKEN);
+        }
+
+        UserDetail userDetail = userService.loadByUserId(userId);
+        TokenDto newToken = jwtTokenUtils.generateToken(UserDetailResponse.of(userDetail));
+        redisService.setValue(newToken.tokenKey(), newToken.refreshToken(), Duration.ofMillis(refreshExpiredTimeMs));
+        redisService.deleteValue(key);
+        return newToken;
+    }
+
+    private String validateToken(String refreshToken){
+        if(!refreshToken.startsWith("Bearer ")){
+            throw new CustomException(ErrorCode.INVALID_TOKEN);
+        }else if(jwtTokenUtils.isExpired(refreshToken)){
+            throw new CustomException(ErrorCode.EXPIRED_TOKEN);
+        }else{
+            return refreshToken.split(" ")[1];
+        }
+    }
 }
