@@ -8,11 +8,6 @@ import Image from 'next/image';
 import Link from "next/link";
 
 
-interface ResponseData {
-    isAlreadyRegistered: boolean;
-    email: string;
-}
-
 const Page = () => {
     const router = useRouter();
     const params = useSearchParams();
