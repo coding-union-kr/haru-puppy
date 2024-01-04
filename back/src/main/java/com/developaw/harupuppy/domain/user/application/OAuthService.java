@@ -77,7 +77,7 @@ public class OAuthService {
         return WebClient.create()
                 .get()
                 .uri(provider.getProviderDetails().getUserInfoEndpoint().getUri())
-                .headers(header -> header.setBearerAuth(token.accessToken()))
+                .headers(header -> header.setBearerAuth(String.valueOf(token.accessToken())))
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<Map<String, Object>>() {
                 })
