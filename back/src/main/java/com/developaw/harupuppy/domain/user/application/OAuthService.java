@@ -55,9 +55,7 @@ public class OAuthService {
                 .post()
                 .uri(provider.getProviderDetails().getTokenUri())
                 .headers(header -> {
-                    header.setBasicAuth(provider.getClientId(), provider.getClientSecret());
                     header.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-                    header.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
                     header.setAcceptCharset(Collections.singletonList(StandardCharsets.UTF_8));
                 })
                 .bodyValue(getTokenRequest(provider, code))
@@ -77,10 +75,15 @@ public class OAuthService {
     }
 
     private Map<String, Object> getUserInfo(ClientRegistration provider, OAuthTokenResponse token) {
+        log.info("uri to get userInfo: {}", provider.getProviderDetails().getUserInfoEndpoint().getUri());
         return WebClient.create()
                 .get()
                 .uri(provider.getProviderDetails().getUserInfoEndpoint().getUri())
-                .headers(header -> header.setBearerAuth(String.valueOf(token.accessToken())))
+                .headers(header -> {
+                    header.setBasicAuth(String.valueOf(token.accessToken()));
+                    header.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+                    header.setAcceptCharset(Collections.singletonList(StandardCharsets.UTF_8));
+                })
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<Map<String, Object>>() {
                 })
