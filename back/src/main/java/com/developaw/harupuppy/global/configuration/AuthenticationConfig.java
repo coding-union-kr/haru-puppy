@@ -44,7 +44,7 @@ public class AuthenticationConfig {
                         (sessionManagement) ->
                                 sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeRequests((authorizeRequests) -> authorizeRequests
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .requestMatchers(HttpMethod.OPTIONS).permitAll()
                         .requestMatchers("/api/users/**", "/auth/**").permitAll()
                         .anyRequest()
                         .authenticated())
