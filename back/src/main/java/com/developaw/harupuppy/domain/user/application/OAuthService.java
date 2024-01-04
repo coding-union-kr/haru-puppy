@@ -36,8 +36,9 @@ public class OAuthService {
         log.info("accessToken : {}", oAuthToken.accessToken());
 
         Map<String, Object> userAttributes = getUserInfo(provider, oAuthToken);
-        String userEmail = (String) userAttributes.get("email");
+        String userEmail = (String)((Map<?, ?>)(userAttributes.get("kakao_account"))).get("email");
         log.info("kakao email : {}", userEmail);
+
         AtomicBoolean isAlreadyRegistered = new AtomicBoolean(false);
         AtomicReference<UserDetailResponse> registeredUser = new AtomicReference<>(null);
 
@@ -75,15 +76,10 @@ public class OAuthService {
     }
 
     private Map<String, Object> getUserInfo(ClientRegistration provider, OAuthTokenResponse token) {
-        log.info("uri to get userInfo: {}", provider.getProviderDetails().getUserInfoEndpoint().getUri());
         return WebClient.create()
                 .get()
                 .uri(provider.getProviderDetails().getUserInfoEndpoint().getUri())
-                .headers(header -> {
-                    header.setBearerAuth(String.valueOf(token.accessToken()));
-                    header.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-                    header.setAcceptCharset(Collections.singletonList(StandardCharsets.UTF_8));
-                })
+                .headers(header -> header.setBearerAuth(token.accessToken()))
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<Map<String, Object>>() {
                 })
