@@ -36,15 +36,9 @@ public class OAuthService {
         log.info("accessToken : {}", oAuthToken.accessToken());
 
         Map<String, Object> userAttributes = getUserInfo(provider, oAuthToken);
-        for (Map.Entry<String, Object> entry : userAttributes.entrySet()) {
-            String key = entry.getKey();
-            Object value = entry.getValue();
-
-            System.out.println("Key: " + key + ", Value: " + value);
-        }
-
-        String userEmail = (String) userAttributes.get("email");
+        String userEmail = (String)((Map<?, ?>)(userAttributes.get("kakao_account"))).get("email");
         log.info("kakao email : {}", userEmail);
+
         AtomicBoolean isAlreadyRegistered = new AtomicBoolean(false);
         AtomicReference<UserDetailResponse> registeredUser = new AtomicReference<>(null);
 
