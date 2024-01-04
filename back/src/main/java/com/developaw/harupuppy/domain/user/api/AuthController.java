@@ -23,6 +23,7 @@ public class AuthController {
     @GetMapping("/login/{provider}")
     public ApiResponse<LoginResponse> login(@PathVariable("provider") String provider,
                                             @RequestParam("code") String code) {
+        log.info("code : {}", code);
         return ApiResponse.ok(Status.CREATE, userFacadeService.login(provider, code));
     }
 }

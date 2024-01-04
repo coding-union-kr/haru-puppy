@@ -52,6 +52,7 @@ public class OAuthService {
                 .post()
                 .uri(provider.getProviderDetails().getTokenUri())
                 .headers(header -> {
+                    header.setBasicAuth(provider.getClientId(), provider.getClientSecret());
                     header.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
                     header.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
                     header.setAcceptCharset(Collections.singletonList(StandardCharsets.UTF_8));
