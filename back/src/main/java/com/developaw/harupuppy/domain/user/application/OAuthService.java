@@ -80,7 +80,7 @@ public class OAuthService {
                 .get()
                 .uri(provider.getProviderDetails().getUserInfoEndpoint().getUri())
                 .headers(header -> {
-                    header.setBasicAuth(String.valueOf(token.accessToken()));
+                    header.setBearerAuth(String.valueOf(token.accessToken()));
                     header.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
                     header.setAcceptCharset(Collections.singletonList(StandardCharsets.UTF_8));
                 })
