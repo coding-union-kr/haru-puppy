@@ -20,11 +20,11 @@ const Page = () => {
             try {
                 const res = await axios.post(
                     `${BACKEND_REDIRECT_URL}?code=${code}`,
-                    {
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                    }
+                    // {
+                    //     headers: {
+                    //         'Content-Type': 'application/json',
+                    //     },
+                    // }
                 );
 
     const { isLoading } = useQuery(['login'], () => fetcher(code), {
