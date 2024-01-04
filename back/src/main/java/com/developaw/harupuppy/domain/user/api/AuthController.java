@@ -11,19 +11,24 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/auth")
 @Slf4j
+@CrossOrigin(origins = "*", exposedHeaders = {"Content-Disposition"})
 public class AuthController {
     private final UserFacadeService userFacadeService;
 
-    @GetMapping("/login/{provider}")
-    public ApiResponse<LoginResponse> login(@PathVariable("provider") String provider,
-                                            @RequestParam("code") String code) {
-        log.info("code : {}", code);
-        return ApiResponse.ok(Status.CREATE, userFacadeService.login(provider, code));
-    }
+   @GetMapping("/login/{provider}")
+public ApiResponse<LoginResponse> login(@PathVariable("provider") String provider,
+                                        @RequestParam("code") String code) {
+    log.info("code : {}", code);
+    LoginResponse response = userFacadeService.login(provider, code);
+    log.info("response : {} ", response.response().email());
+    return ApiResponse.ok(Status.CREATE, response);
+}
+
 }
