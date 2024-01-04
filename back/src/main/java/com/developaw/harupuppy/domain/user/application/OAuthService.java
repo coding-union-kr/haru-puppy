@@ -33,9 +33,11 @@ public class OAuthService {
     public OAuthLoginResponse login(String providerName, String code) {
         ClientRegistration provider = inMemoryRepository.findByRegistrationId(providerName);
         OAuthTokenResponse oAuthToken = getAccessToken(provider, code);
-        Map<String, Object> userAttributes = getUserInfo(provider, oAuthToken);
+        log.info("accessToken : {}", oAuthToken.accessToken());
 
+        Map<String, Object> userAttributes = getUserInfo(provider, oAuthToken);
         String userEmail = (String) userAttributes.get("email");
+        log.info("kakao email : {}", userEmail);
         AtomicBoolean isAlreadyRegistered = new AtomicBoolean(false);
         AtomicReference<UserDetailResponse> registeredUser = new AtomicReference<>(null);
 
@@ -44,6 +46,7 @@ public class OAuthService {
             isAlreadyRegistered.set(true);
         });
 
+        log.info("null check : {}, {}", isAlreadyRegistered.get(), registeredUser.get());
         return new OAuthLoginResponse(userEmail, isAlreadyRegistered.get(), registeredUser.get());
     }
 
