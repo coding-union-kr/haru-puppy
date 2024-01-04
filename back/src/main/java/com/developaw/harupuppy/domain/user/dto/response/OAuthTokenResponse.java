@@ -5,7 +5,7 @@ import lombok.Builder;
 
 public record OAuthTokenResponse(
         @JsonProperty("access_token") String accessToken,
-        @JsonProperty("token_type") String tokenType,
-        String scope
+        String scope,
+        @JsonProperty("token_type") String tokenType
 ) {
 }
