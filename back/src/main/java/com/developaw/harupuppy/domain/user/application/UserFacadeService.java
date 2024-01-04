@@ -34,7 +34,6 @@ public class UserFacadeService {
             TokenDto token = createTokenAndSave(response.registeredUser(), email);
             return new LoginResponse(response, token.accessToken(), token.refreshToken());
         }
-        log.info("email : {}", email);
         return LoginResponse.of(response);
     }
 

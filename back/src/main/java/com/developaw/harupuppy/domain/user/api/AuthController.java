@@ -6,6 +6,7 @@ import com.developaw.harupuppy.global.common.response.ApiResponse;
 import com.developaw.harupuppy.global.common.response.Response.Status;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,13 +18,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/auth")
 @Slf4j
+@CrossOrigin(origins = "*", exposedHeaders = {"Content-Disposition"})
 public class AuthController {
     private final UserFacadeService userFacadeService;
 
     @GetMapping("/login/{provider}")
     public ApiResponse<LoginResponse> login(@PathVariable("provider") String provider,
                                             @RequestParam("code") String code) {
-        log.info("code : {}", code);
-        return ApiResponse.ok(Status.CREATE, userFacadeService.login(provider, code));
+        LoginResponse response = userFacadeService.login(provider, code);
+        return ApiResponse.ok(Status.CREATE, response);
     }
 }
