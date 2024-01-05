@@ -101,7 +101,7 @@ const DogRegisterPage = () => {
             const homeId = res.data.data.homeResponse.homeId;
 
             localStorage.setItem(LOCAL_STORAGE_KEYS.ACCESS_TOKEN, accessToken);
-            // localStorage.setItem(LOCAL_STORAGE_KEYS.HOME_ID, homeId);
+            localStorage.setItem(LOCAL_STORAGE_KEYS.HOME_ID, homeId);
             console.log(accessToken);
             if (accessToken) {
                 localStorage.setItem('token', accessToken);
