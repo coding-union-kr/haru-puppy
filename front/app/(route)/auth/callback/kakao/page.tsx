@@ -15,17 +15,11 @@ const Page = () => {
     const code = params?.get('code') || null;
     const [error, setError] = useState<string>();
 
-    useEffect(() => {
-        const handleLogin = async () => {
-            try {
-                const res = await axios.post(
-                    `${BACKEND_REDIRECT_URL}?code=${code}`,
-                    // {
-                    //     headers: {
-                    //         'Content-Type': 'application/json',
-                    //     },
-                    // }
-                );
+    const fetcher = async (code: string | null) => {
+        if (!code) return null;
+        const res = await axios.get(`${BACKEND_REDIRECT_URL}?code=${code}`);
+        return res.data.data;
+    };
 
     const { isLoading } = useQuery(['login'], () => fetcher(code), {
         enabled: !!code,
