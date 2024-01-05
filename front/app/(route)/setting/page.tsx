@@ -7,6 +7,9 @@ import UpperUserProfile from './components/UpperUserProfile'
 import ToggleSwitch from '@/app/components/toggle/ToggleSwitch'
 import { useMutation, useQueryClient } from 'react-query'
 import axios from 'axios'
+import ContainerLayout from '@/app/components/layout/layout'
+import TopNavigation from '@/app/components/navigation/TopNavigation'
+import { BottomNavigation } from '@mui/material'
 
 
 const UserDummy = {
@@ -62,17 +65,21 @@ const page = () => {
     }
 
     return (
-        <Wrapper>
-            <UpperUserProfile user={UserDummy} />
-            <MenuWrapper>
-                <NavMenu title='알림 설정' >
-                    <ToggleSwitch onToggle={handelToggle} isToggled={isToggled} />
-                </NavMenu>
-                <NavMenu title='로그아웃' />
-                <NavMenu title='회원 탈퇴' />
-                <NavMenu title='메이트 초대하기' />
-            </MenuWrapper>
-        </Wrapper>
+        <>
+            <TopNavigation />
+            <Wrapper>
+                <UpperUserProfile user={UserDummy} />
+                <MenuWrapper>
+                    <NavMenu title='알림 설정' >
+                        <ToggleSwitch onToggle={handelToggle} isToggled={isToggled} />
+                    </NavMenu>
+                    <NavMenu title='로그아웃' />
+                    <NavMenu title='회원 탈퇴' />
+                    <NavMenu title='메이트 초대하기' />
+                </MenuWrapper>
+            </Wrapper>
+            <BottomNavigation />
+        </>
     )
 }
 
@@ -88,7 +95,7 @@ const Wrapper = styled.div`
     flex-direction: column;
     justify-items: center;
     align-items: center;
-    margin: 0 auto;
+   margin-top: 50px;
 `
 export default page
 
