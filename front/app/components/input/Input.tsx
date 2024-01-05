@@ -89,7 +89,7 @@ const Input = ({ inputType, onInputValue }: IInputProps) => {
           setInputValue(roundedValue); 
           onInputValue(parseFloat(roundedValue)); 
         }
-    } else if (!isEmpty) {
+    } else {
         onInputValue(value); 
     }
   };
