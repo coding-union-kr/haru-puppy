@@ -11,14 +11,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.CrossOrigin;
 
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/auth")
 @Slf4j
-@CrossOrigin(origins = "*", exposedHeaders = {"Content-Disposition"})
 public class AuthController {
     private final UserFacadeService userFacadeService;
 
