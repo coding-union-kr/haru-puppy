@@ -59,6 +59,7 @@ const InfoWrapper = styled.div`
     display: flex;
     justify-content: space-between;
     width: 70%;
+    cursor: pointer;
 `;
 
 const Info = styled.div`
