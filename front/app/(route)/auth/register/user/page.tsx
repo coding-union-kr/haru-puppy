@@ -61,7 +61,6 @@ const UserRegisterPage = () => {
         <ProfileImg profileType={ProfileType.User} onValueChange={(value)=> handleSignupForm('imgUrl', value)}/>
         <Input inputType={InputType.NickName} onInputValue={(value) => handleSignupForm('nickName', value)}/>
         <RoleDropdown   
-        // selectedValue={formData.userRole ? roleLabels[formData.userRole] : ''} 
         onValueChange={(value) => handleSignupForm('userRole', value)} />
         <Button onClick={handleSubmit} disabled={isFormIncomplete}>저장하기</Button>
         </UserProfileFormWrap>
