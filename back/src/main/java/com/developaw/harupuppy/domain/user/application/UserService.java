@@ -17,7 +17,6 @@ import com.developaw.harupuppy.domain.user.repository.UserRepository;
 import com.developaw.harupuppy.global.common.exception.CustomException;
 import com.developaw.harupuppy.global.common.response.Response.ErrorCode;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,7 +27,6 @@ public class UserService {
     private final UserRepository userRepository;
     private final HomeRepository homeRepository;
     private final DogRepository dogRepository;
-    private final BCryptPasswordEncoder encoder;
 
     @Transactional
     public UserCreateResponse create(HomeCreateRequest request) {
@@ -41,8 +39,7 @@ public class UserService {
                 .build();
         HomeDetailResponse homeDetail = HomeDetailResponse.of(homeRepository.save(home));
 
-        User user = UserCreateRequest.fromDto(request.userRequest(),
-                encoder.encode(request.userRequest().password()), home, dog);
+        User user = UserCreateRequest.fromDto(request.userRequest(), home, dog);
         UserDetailResponse userDetail = UserDetailResponse.of(userRepository.save(user));
 
         return UserCreateResponse.of(userDetail, homeDetail, dogDetail, null);
@@ -53,10 +50,17 @@ public class UserService {
         Home home = homeRepository.findByHomeId(homeId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_HOME));
         Dog dog = home.getDog();
-        User invitedUser = UserCreateRequest.fromDto(request, encoder.encode(request.password()), home, dog);
+        User invitedUser = UserCreateRequest.fromDto(request, home, dog);
         userRepository.save(invitedUser);
         return UserCreateResponse.of(UserDetailResponse.of(invitedUser), HomeDetailResponse.of(home),
                 DogDetailResponse.of(dog), null);
+    }
+
+    @Transactional
+    public String delete(Long userId){
+        User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER));
+        userRepository.delete(user);
+        return user.getEmail();
     }
 
     @Transactional

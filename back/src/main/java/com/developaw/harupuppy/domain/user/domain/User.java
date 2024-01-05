@@ -2,7 +2,6 @@ package com.developaw.harupuppy.domain.user.domain;
 
 import com.developaw.harupuppy.domain.dog.domain.Dog;
 import com.developaw.harupuppy.global.utils.KoreanNickname;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -15,17 +14,19 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.Length;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 @Entity
 @Getter
 @Table(name = "USERS")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SQLDelete(sql = "UPDATE users SET is_deleted = true WHERE user_id = ?")
+@Where(clause = "is_deleted = false")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,8 +36,6 @@ public class User {
     @Email
     @Column(unique = true)
     private String email;
-
-    private String password;
 
     @Column(name = "img_url")
     private String imgUrl;
@@ -54,18 +53,17 @@ public class User {
     @Column(name = "allow_notification", columnDefinition = "TINYINT(1)")
     private boolean allowNotification;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dog_id")
     private Dog dog;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "home_id")
     private Home home;
 
     @Builder
-    public User(String email, String password, String userImg, String nickname, UserRole userRole, Home home, Dog dog) {
+    public User(String email, String userImg, String nickname, UserRole userRole, Home home, Dog dog) {
         this.email = email;
-        this.password = password;
         this.imgUrl = userImg;
         this.nickname = nickname;
         this.userRole = userRole;
@@ -81,9 +79,5 @@ public class User {
 
     public void setDog(Dog dog) {
         this.dog = dog;
-    }
-
-    public void delete() {
-        this.isDeleted = true;
     }
 }
