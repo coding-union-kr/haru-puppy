@@ -2,15 +2,17 @@
 
 import Button from '@/app/components/button/Button'
 import React from 'react'
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import styled from 'styled-components';
 import Image from 'next/image';
 
 
 const page = () => {
     const router = useRouter()
+    const searchParams = useSearchParams();
+    const email = searchParams.get('email');
     const onBtnClick = () => {
-        router.push('/auth/userprofile')
+        router.push(`/auth/register/user?email=${email}`)
     }
     return (
         <Wrapper>
