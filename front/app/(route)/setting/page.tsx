@@ -10,6 +10,9 @@ import axios from 'axios'
 import ContainerLayout from '@/app/components/layout/layout'
 import TopNavigation from '@/app/components/navigation/TopNavigation'
 import { BottomNavigation } from '@mui/material'
+import { LOCAL_STORAGE_KEYS } from '@/app/constants/auth'
+import { useRouter } from 'next/navigation'
+import Modal from '@/app/components/modal/modal'
 
 
 const UserDummy = {
@@ -20,7 +23,11 @@ const UserDummy = {
 
 const page = () => {
     const [isToggled, setIsToggled] = useState(false);
+    const [isLogoutModalOpen, setLogoutIsModalOpen] = useState(false);
+
     const queryClient = useQueryClient();
+    const router = useRouter();
+
 
     //알림 설정 fetcher 함수
     const fetchNotification = async (active: boolean, accessToken: string | null) => {
@@ -64,6 +71,16 @@ const page = () => {
         mutate(toggled);
     }
 
+
+    const handleMateInvite = () => {
+        router.push('/invite')
+    }
+
+
+    const toggleModal = () => {
+        setLogoutIsModalOpen(!isLogoutModalOpen)
+    }
+
     return (
         <>
             <TopNavigation />
@@ -73,9 +90,17 @@ const page = () => {
                     <NavMenu title='알림 설정' >
                         <ToggleSwitch onToggle={handelToggle} isToggled={isToggled} />
                     </NavMenu>
-                    <NavMenu title='로그아웃' />
+                    <NavMenu title='로그아웃' onClick={toggleModal} />
+                    {isLogoutModalOpen && (
+                        <Modal
+                            children="로그아웃하시겠습니까?"
+                            btn1="취소"
+                            btn2="로그아웃"
+                            onClose={toggleModal}
+                        />
+                    )}
                     <NavMenu title='회원 탈퇴' />
-                    <NavMenu title='메이트 초대하기' />
+                    <NavMenu title='메이트 초대하기' onClick={handleMateInvite} />
                 </MenuWrapper>
             </Wrapper>
             <BottomNavigation />
