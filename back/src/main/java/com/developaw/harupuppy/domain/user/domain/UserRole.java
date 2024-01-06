@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 public enum UserRole {
     DAD("아빠"),
     MOM("엄마"),
-    UNNI("언니"),
+    UNNIE("언니"),
     OPPA("오빠"),
     NUNA("누나"),
     HYEONG("형"),

@@ -65,4 +65,13 @@ public class UserService {
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER));
         return UserDetail.of(registedUser);
     }
+    
+    @Transactional
+    public UserResponse updateUserInformation (UserUpdateRequest request){
+        User user = userRepository.findUserByUserId(request.userId())
+                .orElseThrow(() -> new CustomException(Response.ErrorCode.NOT_FOUND_USER));
+        user.update(request);
+        return UserResponse.of(user);
+    }
 }
+
