@@ -9,9 +9,12 @@ public class Response {
     @RequiredArgsConstructor
     public enum ErrorCode {
         NOT_FOUND_USER(HttpStatus.NOT_FOUND, "가입된 유저가 아닙니다"),
+        
         INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다"),
 
         NOT_FOUND_SCHEDULE(HttpStatus.NOT_FOUND, "해당 내용으로 저장된 스케줄이 없습니다"),
+
+        BAD_REQUEST(HttpStatus.BAD_REQUEST, "비어 있는 곳이 있습니다"),
 
         NOT_FOUND_HOME(HttpStatus.NOT_FOUND, "해당 내용으로 저장된 스케줄이 없습니다"),
 

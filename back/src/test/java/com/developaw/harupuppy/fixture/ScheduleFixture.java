@@ -122,7 +122,7 @@ public class ScheduleFixture {
                         .email("unni@test.com")
                         .nickname("언니")
                         .userImg("src")
-                        .userRole(UserRole.UNNI)
+                        .userRole(UserRole.UNNIE)
                         .build(),
                 User.builder()
                         .email("mom@test.com")
