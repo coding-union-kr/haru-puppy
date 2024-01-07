@@ -5,6 +5,7 @@ import com.developaw.harupuppy.global.common.response.Response.ErrorCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -23,5 +24,12 @@ public class ExceptionControllerAdvice {
         log.error("Error occurs {}", e.toString());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(ApiResponse.error(ErrorCode.INTERNAL_SERVER_ERROR));
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<?> validationExceptionHandler(MethodArgumentNotValidException e) {
+        log.error("Error occurs {}", e.toString());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(ApiResponse.error(ErrorCode.BAD_REQUEST));
     }
 }
