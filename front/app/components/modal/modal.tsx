@@ -20,11 +20,7 @@ const Modal = ({ children, btn1, btn2, onClose }: IModalProps) => {
 
     const handleBtn2Click = () => {
         console.log("btn2 클릭");
-        if (btn2 === '로그아웃') {
-            localStorage.removeItem(LOCAL_STORAGE_KEYS.ACCESS_TOKEN);
-            localStorage.removeItem(LOCAL_STORAGE_KEYS.REFRESH_TOKEN);
-            router.push('/auth/login');
-        }
+
         onClose();
     };
 
@@ -50,6 +46,7 @@ const ModalOverlay = styled.div`
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5); 
+    z-index: 100;
     display: flex;
     justify-content: center;
     align-items: center;
