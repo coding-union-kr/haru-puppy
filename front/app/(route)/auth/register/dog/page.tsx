@@ -30,7 +30,7 @@ const DogRegisterPage = () => {
         dogRequest: {
             name: '',
             gender: '',
-            birthday: '',
+            birthday: dayjs().format('YYYY-MM-DD'),
             weight: 0,
             imgUrl: 'src://',
         }, 
@@ -49,7 +49,6 @@ const DogRegisterPage = () => {
         }
     }, [router]);
 
-    console.log(requestData);
 
     //필수입력 상태값   
     const [requiredField, setRequiredField] = useState<{ name: boolean; gender: boolean; weight: boolean }>({
@@ -71,6 +70,7 @@ const DogRegisterPage = () => {
 
         setRequestData(prev => {
             const updatedHomeName = name === 'name' ? `${value}네 집` : prev.homeName;
+            
             return {
                 ...prev,
                 dogRequest: {
@@ -93,7 +93,10 @@ const DogRegisterPage = () => {
     //필수 입력란 체크 boolean
     const areAllFieldsFilled = requiredField.name && requiredField.gender && requiredField.weight;
 
-    const postApi = (data: IRequestData) => axios.post('http://localhost:8080/api/users/register', data);
+    const postApi = (data: IRequestData) => {
+        console.log('API 요청 몇번 가냐', data);
+        return axios.post('http://localhost:8080/api/users/register', data);
+    };
     const mutation = useMutation(postApi, {
         onSuccess: (res) => {
             console.log('응답 데이터',res);
