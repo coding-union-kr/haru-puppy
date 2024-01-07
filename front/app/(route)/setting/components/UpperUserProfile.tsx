@@ -20,8 +20,7 @@ const UpperUserProfile = ({ user }: IUpperUserProfile) => {
 
     const router = useRouter()
     const onUserProfileClick = () => {
-        //임시 url
-        router.push('/')
+        router.push('/setting/userprofile')
     }
     return (
         <Wrapper onClick={onUserProfileClick}>
@@ -67,19 +66,22 @@ const Info = styled.div`
     justify-content: space-between;
     align-items: center;
     width: 100%;
+
     & > div:first-child {
         display: flex;
         flex-direction: column;
         span:nth-child(1) {
+            display: inline-block;
             font-size: 24px;
             font-weight: ${({ theme }) => theme.typo.regular};
             color: ${({ theme }) => theme.colors.black90}; 
-            margin-bottom: 4px;
+            margin-bottom: 8px;
         }
 
         span:nth-child(2) {
+            display: inline-block;
             font-size: 14px;
-            color: ${({ theme }) => theme.colors.black70} 
+            color: ${({ theme }) => theme.colors.black70};
         }
     }
 

@@ -43,6 +43,8 @@ const TopNavigation = () => {
       case '/setting':
         return '설정';
       case '/auth/userprofile':
+        return '내 프로필';
+      case '/setting/userprofile':
         return '내 프로필'
     }
   };
