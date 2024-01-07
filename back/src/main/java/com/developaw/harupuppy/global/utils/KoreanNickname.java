@@ -13,7 +13,7 @@ import java.lang.annotation.Target;
 @Documented
 @Constraint(validatedBy = KoreanNickNameValidator.class)
 public @interface KoreanNickname {
-    String message() default "닉네임은 한글 8자리로만 설정할 수 있습니다";
+    String message() default "닉네임은 최대 한글 8자리까지 설정할 수 있습니다";
 
     Class<?>[] groups() default {};
 
