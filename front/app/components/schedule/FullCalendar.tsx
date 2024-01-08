@@ -8,8 +8,6 @@ import styled from 'styled-components';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import TodoCard from '../card/TodoCard';
-import { AnimatePresence, motion } from 'framer-motion';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { ko } from 'date-fns/locale';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
