@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import MateProfile from '../profile/MateProfile'
+import MateProfile from '../../../components/profile/MateProfile'
 import { Imates } from '@/app/(route)/schedule/components/ScheduleAdd';
 import styled from 'styled-components';
 import Image from 'next/image';
