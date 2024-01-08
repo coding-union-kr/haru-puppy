@@ -1,14 +1,14 @@
 "use client"
 import { useState, useEffect } from 'react';
-import { useRouter, useSearchParams} from 'next/navigation';
-import { IUser } from '../../../../interfaces/User';
+import { useRouter, useSearchParams } from 'next/navigation';
 import ProfileImg, { ProfileType } from '@/app/components/profile/ProfileImg';
 import Input, { InputType } from "@/app/components/input/Input";
 import Button from "@/app/components/button/Button";
 import styled from "styled-components";
 import ContainerLayout from '@/app/components/layout/layout';
-import RoleDropdown from '../../../profile/my/components/RoleDropdown';
 import TopNavigation from '@/app/components/navigation/TopNavigation';
+import { IUser } from '@/app/_types/user/User';
+import RoleDropdown from '@/app/components/profile/RoleDropdown';
 
 
 const UserRegisterPage = () => {
@@ -22,7 +22,7 @@ const UserRegisterPage = () => {
     });
 
     useEffect(() => {
-        const email = searchParams.get('email');
+        const email = searchParams?.get('email');
         if (email) {
             setFormData(prevFormData => ({ ...prevFormData, email }));
         }
@@ -33,7 +33,7 @@ const UserRegisterPage = () => {
     const handleSignupForm = (name: string, value: any) => {
         const newFormData = { ...formData, [name]: value };
         setFormData(newFormData);
-    
+
         const formIncomplete = newFormData.nickName === '' || newFormData.userRole === '';
         setIsFormIncomplete(formIncomplete);
         console.log(newFormData);
@@ -43,8 +43,8 @@ const UserRegisterPage = () => {
     const router = useRouter();
     const handleSubmit = () => {
         const userRequestData = {
-            email: formData.email,  
-            password: formData.password, 
+            email: formData.email,
+            password: formData.password,
             nickName: formData.nickName,
             imgUrl: formData.imgUrl,
             userRole: formData.userRole
@@ -56,14 +56,14 @@ const UserRegisterPage = () => {
 
     return (
         <ContainerLayout>
-        <TopNavigation/>
-        <UserProfileFormWrap>
-        <ProfileImg profileType={ProfileType.User} onValueChange={(value)=> handleSignupForm('imgUrl', value)}/>
-        <Input inputType={InputType.NickName} onInputValue={(value) => handleSignupForm('nickName', value)}/>
-        <RoleDropdown   
-        onValueChange={(value) => handleSignupForm('userRole', value)} />
-        <Button onClick={handleSubmit} disabled={isFormIncomplete}>저장하기</Button>
-        </UserProfileFormWrap>
+            <TopNavigation />
+            <UserProfileFormWrap>
+                <ProfileImg profileType={ProfileType.User} onValueChange={(value) => handleSignupForm('imgUrl', value)} />
+                <Input inputType={InputType.NickName} onInputValue={(value) => handleSignupForm('nickName', value)} />
+                <RoleDropdown
+                    onValueChange={(value) => handleSignupForm('userRole', value)} />
+                <Button onClick={handleSubmit} disabled={isFormIncomplete}>저장하기</Button>
+            </UserProfileFormWrap>
         </ContainerLayout>
     )
 };

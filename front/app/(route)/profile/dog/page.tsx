@@ -2,9 +2,9 @@
 
 import React, { useState } from 'react'
 import GenderSelect from './components/GenderSelect'
-import DateDropdown, { DateDropdownLabel } from '../../schedule/components/DateDropdown';
+import DateDropdown, { DateDropdownLabel } from '../../../components/profile/DateDropdown';
 import dayjs from 'dayjs';
-import ProfileImg, {ProfileType} from '@/app/components/profile/ProfileImg';
+import ProfileImg, { ProfileType } from '@/app/components/profile/ProfileImg';
 import Input, { InputType } from '@/app/components/input/Input';
 import styled from 'styled-components';
 import Button from '@/app/components/button/Button';
@@ -68,11 +68,11 @@ const DogProfilePage = () => {
         console.log('signUp 성공')
     };
 
-    return ( 
+    return (
         <ContainerLayout>
-            <TopNavigation/>
+            <TopNavigation />
             <ComponentsWrapper>
-            <ProfileImg profileType={ProfileType.Dog} onValueChange={(value)=> handleSelectChange('img', value)}/>
+                <ProfileImg profileType={ProfileType.Dog} onValueChange={(value) => handleSelectChange('img', value)} />
                 <Input
                     inputType={InputType.DogName}
                     onInputValue={(value) => handleSelectChange('name', value)}

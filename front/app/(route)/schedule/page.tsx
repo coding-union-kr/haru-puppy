@@ -1,7 +1,7 @@
 "use client"
 
 import ContainerLayout from '@/app/components/layout/layout';
-import Calendar, { ScheduleItem } from '@/app/components/schedule/FullCalendar'
+import Calendar from '@/app/components/schedule/FullCalendar'
 import Image from 'next/image';
 import React, { useState } from 'react'
 import styled from 'styled-components';

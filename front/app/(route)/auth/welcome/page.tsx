@@ -10,7 +10,7 @@ import Image from 'next/image';
 const page = () => {
     const router = useRouter()
     const searchParams = useSearchParams();
-    const email = searchParams.get('email');
+    const email = searchParams?.get('email');
     const onBtnClick = () => {
         router.push(`/auth/register/user?email=${email}`)
     }

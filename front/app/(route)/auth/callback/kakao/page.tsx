@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { BACKEND_REDIRECT_URL, LOCAL_STORAGE_KEYS } from '@/app/constants/auth';
+import { BACKEND_REDIRECT_URL, LOCAL_STORAGE_KEYS } from '@/app/constants/api';
 import styled from 'styled-components';
 import Image from 'next/image';
 import Link from "next/link";

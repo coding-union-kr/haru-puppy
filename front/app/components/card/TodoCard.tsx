@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { ScheduleItem } from '../schedule/FullCalendar';
 import Image from 'next/image';
+import { ScheduleItem } from '@/app/_types/schedule/Schedule';
 
 interface ITodoCardProps {
   todoList: ScheduleItem[];

@@ -8,25 +8,11 @@ import styled from 'styled-components';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import TodoCard from '../card/TodoCard';
-import { AnimatePresence, motion } from 'framer-motion';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { ko } from 'date-fns/locale';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import WeekCalendar from './WeekCalendar';
-
-export interface ScheduleItem {
-  scheduleId: number;
-  scheduleType: string;
-  mates: {
-    userId: number, user_img: string
-  }[];
-  scheduleDate?: string;
-  reservedDate?: string;
-  time: string;
-  repeatId?: string | null;
-  active: boolean;
-}
+import { ScheduleItem } from '@/app/_types/schedule/Schedule';
 
 export interface ScheduleResponse {
   schedule: ScheduleItem[];
