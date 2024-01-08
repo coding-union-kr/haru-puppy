@@ -7,7 +7,7 @@ import RepeatDropdown from './RepeatDropdown';
 import Button from "@/app/components/button/Button";
 import styled from "styled-components";
 import TimeDropdown from './TimeDropdown';
-import DateDropdown, { DateDropdownLabel } from './DateDropdown';
+import DateDropdown, { DateDropdownLabel } from '../../../components/profile/DateDropdown';
 import ScheduleTypeDropdown from './ScheduleTypeDropdown';
 import MateSelect from './MateSelect';
 import { dummyMatesData } from '@/app/page';

@@ -4,11 +4,10 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios';
 import { useMutation } from 'react-query';
 import { useRouter } from 'next/navigation';
-import DateDropdown, { DateDropdownLabel } from '../../../schedule/components/DateDropdown';
-import { LOCAL_STORAGE_KEYS } from '@/app/constants/auth';
+import DateDropdown, { DateDropdownLabel } from '../../../../components/profile/DateDropdown';
+import { LOCAL_STORAGE_KEYS } from '@/app/constants/api';
 import dayjs from 'dayjs';
 import ProfileImg, { ProfileType } from '@/app/components/profile/ProfileImg';
-import GenderSelect from '../../../profile/dog/components/GenderSelect';
 import Input, { InputType } from '@/app/components/input/Input';
 import styled from 'styled-components';
 import Button from '@/app/components/button/Button';
@@ -16,6 +15,7 @@ import ContainerLayout from '@/app/components/layout/layout';
 import TopNavigation from '@/app/components/navigation/TopNavigation';
 import { IUser } from '@/app/_types/user/User';
 import { IDog } from '@/app/_types/user/Dog';
+import GenderSelect from '@/app/components/profile/GenderSelect';
 
 
 
