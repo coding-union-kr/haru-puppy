@@ -1,14 +1,14 @@
 "use client"
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { IUser } from '../../../../interfaces/user/User';
 import ProfileImg, { ProfileType } from '@/app/components/profile/ProfileImg';
 import Input, { InputType } from "@/app/components/input/Input";
 import Button from "@/app/components/button/Button";
 import styled from "styled-components";
 import ContainerLayout from '@/app/components/layout/layout';
-import RoleDropdown from '../../../profile/my/components/RoleDropdown';
 import TopNavigation from '@/app/components/navigation/TopNavigation';
+import { IUser } from '@/app/_types/user/User';
+import RoleDropdown from '@/app/components/profile/RoleDropdown';
 
 
 const UserRegisterPage = () => {
@@ -22,7 +22,7 @@ const UserRegisterPage = () => {
     });
 
     useEffect(() => {
-        const email = searchParams.get('email');
+        const email = searchParams?.get('email');
         if (email) {
             setFormData(prevFormData => ({ ...prevFormData, email }));
         }
