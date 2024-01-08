@@ -16,7 +16,7 @@ import MemoTextArea from '@/app/components/input/MemoTextArea';
 
 export interface IScheduleAddProps {
     isOpen: boolean;
-    onClose?: () => void;
+    onToggle: () => void;
 }
 
 export interface Imates {
@@ -36,10 +36,10 @@ export interface IFormData {
     memo: string;
 }
 
-const ScheduleAdd = ({ isOpen, onClose }: IScheduleAddProps) => {
+const ScheduleAdd = ({ isOpen, onToggle }: IScheduleAddProps) => {
 
     const [formData, setFormData] = useState<IFormData>({
-        type: '',
+        type: '산책',
         mates: null,
         date: null,
         time: null,
@@ -94,7 +94,7 @@ const ScheduleAdd = ({ isOpen, onClose }: IScheduleAddProps) => {
                     <Button onClick={handleDelete} width="135px" height="32px">삭제</Button>
                 </ButtonGroupWrap>
             </FormWrap>
-            <CloseButton onClick={onClose}>
+            <CloseButton onClick={onToggle}>
                 <Image
                     src='/svgs/close_grey.svg'
                     alt='닫기'
@@ -106,21 +106,21 @@ const ScheduleAdd = ({ isOpen, onClose }: IScheduleAddProps) => {
 };
 
 const ScheduleAddWrap = styled.main<{ isOpen: boolean }>`
-     padding: 37px 0 61px;
-     width: 390px;
-     height: 712px;
-     border-top-left-radius:10px;
-     border-top-right-radius: 10px;
-     border: 1px solid #e6e6e6;
-     position: fixed;
+    padding: 37px 0 61px;
+    width: 390px;
+    height: 620px;
+    border-top-left-radius:10px;
+    border-top-right-radius: 10px;
+    border: 1px solid #e6e6e6;
+    position: fixed;
     bottom: 0;
-    left: 0;
-    right: 0;
+    left: 50%;
+    right: 50%;
     background: white;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
     transition: transform 0.3s ease-out;
-    transform: ${({ isOpen }) => (isOpen ? 'translateY(0)' : 'translateY(100%)')};
+    transform: ${({ isOpen }) => (isOpen ? 'translateX(-50%)' : 'translateX(-50%) translateY(100%)')};
     z-index: 1000;
 `
 const FormWrap = styled.form`

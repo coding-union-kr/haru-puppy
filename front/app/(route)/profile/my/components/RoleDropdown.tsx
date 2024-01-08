@@ -1,29 +1,39 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Image from 'next/image';
 
-interface IDateDropdownProps {
+interface IRoleDropdownProps {
     onValueChange: (value: string) => void;
   }
 
-const RoleDropdown = ({onValueChange }: IDateDropdownProps) => {
+const RoleDropdown = ({ onValueChange }: IRoleDropdownProps) => {
     const [isOpen, setIsOpen] = useState(false);
-    const [selectedValue, setSelectedValue] = useState('엄마'); 
-    const options = ['아빠', '엄마', '언니/누나', '오빠/형'];
+    const [selectedLabel, setSelectedLabel] = useState('아빠'); 
+    const options = [
+        { label: '아빠', value: 'DAD' },
+        { label: '엄마', value: 'MOM' },
+        { label: '언니/누나', value: 'UNNIE' },
+        { label: '오빠/형', value: 'OPPA' },
+        { label: '동생', value: 'YOUNGER' }
+    ];
 
-    const handleSelect = (value: string) => {
-        setSelectedValue(value); 
+    const handleSelect = (value: string, label: string) => {
         onValueChange(value);
+        setSelectedLabel(label);
         setIsOpen(false); 
       };
-      
-  return (
+
+    useEffect(() => {
+        onValueChange('DAD'); 
+    }, []);  
+
+   return (
     <RoleSelectWrap>
       <label htmlFor='role'>
         나는 우리 강아지의...
       </label>
       <div onClick={() => setIsOpen(!isOpen)}>
-        {selectedValue}
+        {selectedLabel}
         <Image 
           src='/svgs/cover-box.svg'
           alt='드롭다운 열기' 
@@ -33,8 +43,8 @@ const RoleDropdown = ({onValueChange }: IDateDropdownProps) => {
       {isOpen &&
             <RoleDropdownWrap>
                 {options.map(option => (
-                    <li key={option} onClick={() => handleSelect(option)}>
-                        {option}
+                    <li key={option.value} onClick={() => handleSelect(option.value, option.label)}>
+                         {option.label}
                     </li>
                 ))}
             </RoleDropdownWrap>}

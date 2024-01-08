@@ -4,10 +4,12 @@ import React, { useState } from 'react'
 import GenderSelect from './components/GenderSelect'
 import DateDropdown, { DateDropdownLabel } from '../../schedule/components/DateDropdown';
 import dayjs from 'dayjs';
+import ProfileImg, {ProfileType} from '@/app/components/profile/ProfileImg';
 import Input, { InputType } from '@/app/components/input/Input';
 import styled from 'styled-components';
 import Button from '@/app/components/button/Button';
-
+import ContainerLayout from '@/app/components/layout/layout';
+import TopNavigation from '@/app/components/navigation/TopNavigation';
 
 interface IDogProfile {
     dog_id: string;
@@ -18,8 +20,7 @@ interface IDogProfile {
     img: string;
 }
 
-
-const page = () => {
+const DogProfilePage = () => {
     const [formData, setFormData] = useState<IDogProfile>({
         dog_id: '',
         name: '',
@@ -67,10 +68,11 @@ const page = () => {
         console.log('signUp 성공')
     };
 
-
-    return (
-        <PageWrapper>
+    return ( 
+        <ContainerLayout>
+            <TopNavigation/>
             <ComponentsWrapper>
+            <ProfileImg profileType={ProfileType.Dog} onValueChange={(value)=> handleSelectChange('img', value)}/>
                 <Input
                     inputType={InputType.DogName}
                     onInputValue={(value) => handleSelectChange('name', value)}
@@ -87,17 +89,9 @@ const page = () => {
                     </Button>
                 </ButtonWrapper>
             </ComponentsWrapper>
-        </PageWrapper>
+        </ContainerLayout>
     )
 }
-
-
-const PageWrapper = styled.div`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;   
-`;
 
 const ButtonWrapper = styled.div`
     margin-top: 40px;
@@ -110,7 +104,11 @@ const ComponentsWrapper = styled.div`
     justify-content: center;
     align-items: center;
     width: 390px;
-
+    & > div:first-of-type {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 `
-
-export default page
+export default DogProfilePage;

@@ -3,22 +3,23 @@ import styled from "styled-components";
 
 interface INavMenu {
     title: string;
-    onClick: () => void;
+    onClick?: () => void;
+    children?: JSX.Element;
 }
 
-const NavMenu = ({title, onClick} : INavMenu) => {
+const NavMenu = ({title, onClick, children} : INavMenu) => {
    return (
     <NavMenuWrap onClick={onClick}>
         <div>
             <strong>{title}</strong>
-            <StyledArrowIcon/>
+            {children || <StyledArrowIcon/>} 
         </div>
     </NavMenuWrap>
    )
 };
 
 const NavMenuWrap = styled.nav`
-width: 324px;
+width: 340px;
 height: 30px;
 border-bottom: 1px solid ${({theme}) => theme.colors.black50};
 
@@ -27,6 +28,7 @@ border-bottom: 1px solid ${({theme}) => theme.colors.black50};
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    align-items: center;
     font-size: 16px;
     font-weight: ${({theme}) => theme.typo.regular};
     color: ${({theme}) => theme.colors.black90};

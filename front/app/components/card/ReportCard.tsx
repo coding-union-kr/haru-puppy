@@ -35,7 +35,14 @@ const ReportCard = ({ dummyReports }: IReportCard) => {
                         <Info>
                             {report.icon}
                             <Count>
-                                {report.count}<p>{report.unit}</p>
+                                {report.count !== null && report.count !== 0 ? (
+                                    <>
+                                        {report.count}
+                                        <p>{report.unit}</p>
+                                    </>
+                                ) : (
+                                    '-'
+                                )}
                             </Count>
                         </Info>
                     </Wrapper>
