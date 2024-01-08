@@ -14,19 +14,7 @@ import { ko } from 'date-fns/locale';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import WeekCalendar from './WeekCalendar';
-
-export interface ScheduleItem {
-  scheduleId: number;
-  scheduleType: string;
-  mates: {
-    userId: number, user_img: string
-  }[];
-  scheduleDate?: string;
-  reservedDate?: string;
-  time: string;
-  repeatId?: string | null;
-  active: boolean;
-}
+import { ScheduleItem } from '@/app/_types/schedule/Schedule';
 
 export interface ScheduleResponse {
   schedule: ScheduleItem[];

@@ -7,15 +7,16 @@ import { useRouter } from 'next/navigation';
 import DateDropdown, { DateDropdownLabel } from '../../../schedule/components/DateDropdown';
 import { LOCAL_STORAGE_KEYS } from '@/app/constants/auth';
 import dayjs from 'dayjs';
-import ProfileImg, {ProfileType} from '@/app/components/profile/ProfileImg';
+import ProfileImg, { ProfileType } from '@/app/components/profile/ProfileImg';
 import GenderSelect from '../../../profile/dog/components/GenderSelect';
 import Input, { InputType } from '@/app/components/input/Input';
 import styled from 'styled-components';
 import Button from '@/app/components/button/Button';
 import ContainerLayout from '@/app/components/layout/layout';
 import TopNavigation from '@/app/components/navigation/TopNavigation';
-import { IUser } from '../../../../interfaces/User';
-import { IDog } from '../../../../interfaces/Dog';
+import { IUser } from '@/app/_types/user/User';
+import { IDog } from '@/app/_types/user/Dog';
+
 
 
 const DogRegisterPage = () => {
@@ -33,7 +34,7 @@ const DogRegisterPage = () => {
             birthday: dayjs().format('YYYY-MM-DD'),
             weight: 0,
             imgUrl: 'src://',
-        }, 
+        },
         homeName: ''
     });
 
@@ -70,7 +71,7 @@ const DogRegisterPage = () => {
 
         setRequestData(prev => {
             const updatedHomeName = name === 'name' ? `${value}네 집` : prev.homeName;
-            
+
             return {
                 ...prev,
                 dogRequest: {
@@ -99,7 +100,7 @@ const DogRegisterPage = () => {
     };
     const mutation = useMutation(postApi, {
         onSuccess: (res) => {
-            console.log('응답 데이터',res);
+            console.log('응답 데이터', res);
             const accessToken = res.data.data.token.accessToken;
             const homeId = res.data.data.homeResponse.homeId;
 
@@ -124,17 +125,17 @@ const DogRegisterPage = () => {
         }
     };
 
-    return ( 
+    return (
         <ContainerLayout>
-            <TopNavigation/>
+            <TopNavigation />
             <ComponentsWrapper>
-            <ProfileImg profileType={ProfileType.Dog} onValueChange={(value)=> handleSelectChange('imgUrl', value)}/>
+                <ProfileImg profileType={ProfileType.Dog} onValueChange={(value) => handleSelectChange('imgUrl', value)} />
                 <Input
                     inputType={InputType.DogName}
                     onInputValue={(value) => handleSelectChange('name', value)}
                 />
                 <GenderSelect onValueChange={(value) => handleSelectChange('gender', value)} />
-                <DateDropdown onValueChange={(value) => handleSelectChange('birthday', value)} label={DateDropdownLabel.Birthday} isRequired={false} size={DateDropdownLabel.Birthday} />
+                <DateDropdown onValueChange={(value) => handleSelectChange('birthday', value)} label={DateDropdownLabel.Birthday} isRequired={false} />
                 <Input
                     inputType={InputType.Weight}
                     onInputValue={(value) => handleSelectChange('weight', value)}
