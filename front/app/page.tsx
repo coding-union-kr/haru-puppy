@@ -3,7 +3,6 @@ import { Pretendard } from "@/public/fonts/fonts";
 import styled from "styled-components";
 import UserProfile from "./components/home/UserProfile";
 import WalkRank from "./components/chart/WalkRank";
-import TodoCard from "./components/card/TodoCard";
 import ReportCard from "./components/card/ReportCard";
 import MateList from "./components/home/MateList";
 import ContainerLayout from "./components/layout/layout";

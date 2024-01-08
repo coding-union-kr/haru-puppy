@@ -56,17 +56,18 @@ body {
 		}
 
 		.react-datepicker__header {
-			background-color: #FCFCFC;
+			background-color: #FFFFFF;
 			color: white;
 			border-bottom: none;
 			border-radius: 20px;
 
 			.react-datepicker__day-names {
 				display: flex;
-				justify-content: center;
+				justify-content: space-between;
 				align-items: center;
 				margin-top: 5px;
 				height: 30px;
+				padding: 0 14px;
 
 				.react-datepicker__day-name {
 					color: #5b5b5b;
@@ -80,7 +81,7 @@ body {
 	}
 
 	.calenderWrapper {
-		background-color: #FCFCFC;
+		background-color: #FFFFFF;
 	}
 }
 
