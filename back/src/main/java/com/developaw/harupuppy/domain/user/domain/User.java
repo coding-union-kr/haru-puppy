@@ -3,7 +3,6 @@ package com.developaw.harupuppy.domain.user.domain;
 import com.developaw.harupuppy.domain.dog.domain.Dog;
 
 import com.developaw.harupuppy.global.utils.KoreanNickname;
-import com.developaw.harupuppy.domain.home.domain.Home;
 import com.developaw.harupuppy.domain.user.dto.UserUpdateRequest;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
