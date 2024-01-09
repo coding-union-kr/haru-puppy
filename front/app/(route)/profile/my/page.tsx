@@ -8,25 +8,24 @@ import ContainerLayout from '@/app/components/layout/layout';
 import TopNavigation from '@/app/components/navigation/TopNavigation';
 import RoleDropdown from '@/app/components/profile/RoleDropdown';
 
+interface FormData {
+    img?: File;
+    nickname: string;
+    role: string;
+}
 
 const MyProfilePage = () => {
-    interface FormData {
-        img?: File,
-        nickname: string;
-        role: string;
-    }
-
     const [formData, setFormData] = useState<FormData>({
         img: undefined,
         nickname: '',
-        role: '아빠',
+        role: '',
     });
+
     const handleSignupForm = (name: string, value: any) => {
         const newFormData = {
             ...formData,
             [name]: value
         };
-
         setFormData(newFormData);
         console.log('업데이트 된 formData:', newFormData);
     }
@@ -43,7 +42,7 @@ const MyProfilePage = () => {
                 <Button onClick={() => console.log('api요청 보내는 함수 만들기', formData)} disabled={isFormIncomplete}>저장하기</Button>
             </UserProfileFormWrap>
         </ContainerLayout>
-    )
+    );
 };
 
 const UserProfileFormWrap = styled.form`
@@ -51,7 +50,7 @@ const UserProfileFormWrap = styled.form`
     flex-direction: column;
     align-items: center;
     margin-top: 100px;
-    & > div{
+    & > div {
         margin-bottom: 45px;
     }
 

@@ -1,3 +1,5 @@
+import { LOCAL_STORAGE_KEYS } from "@/app/constants/auth";
+import { useRouter } from "next/navigation";
 import styled from "styled-components";
 
 interface IModalProps {
@@ -7,33 +9,34 @@ interface IModalProps {
     onClose: () => void;
 }
 
-const Modal= ({children, btn1, btn2, onClose} : IModalProps) => {
+const Modal = ({ children, btn1, btn2, onClose }: IModalProps) => {
+    const router = useRouter();
 
     const handleBtn1Click = () => {
         console.log("btn1 클릭");
-        
-        onClose(); 
+
+        onClose();
     };
 
     const handleBtn2Click = () => {
         console.log("btn2 클릭");
-        
-        onClose(); 
+
+        onClose();
     };
 
-   return (
-    <ModalOverlay onClick={onClose}>
-        <div onClick={e => e.stopPropagation()}>
-            <ModalWrap >
-                <strong>{children}</strong>
-                <ButtonGroup hasSecondButton={!!btn2}>
-                    <button onClick={handleBtn1Click}>{btn1}</button>
-                    {btn2 && <button onClick={handleBtn2Click}>{btn2}</button>}
-                </ButtonGroup>
-            </ModalWrap>
-        </div>
-    </ModalOverlay>
-   )
+    return (
+        <ModalOverlay onClick={onClose}>
+            <div onClick={e => e.stopPropagation()}>
+                <ModalWrap >
+                    <strong>{children}</strong>
+                    <ButtonGroup hasSecondButton={!!btn2}>
+                        <button onClick={handleBtn1Click}>{btn1}</button>
+                        {btn2 && <button onClick={handleBtn2Click}>{btn2}</button>}
+                    </ButtonGroup>
+                </ModalWrap>
+            </div>
+        </ModalOverlay>
+    )
 };
 
 const ModalOverlay = styled.div`
@@ -43,12 +46,13 @@ const ModalOverlay = styled.div`
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5); 
+    z-index: 100;
     display: flex;
     justify-content: center;
     align-items: center;
 `;
 
-const ModalWrap  = styled.div`
+const ModalWrap = styled.div`
     position: relative;
     display: flex;
     flex-direction: column;
@@ -68,7 +72,7 @@ const ModalWrap  = styled.div`
     }
 `
 
-const ButtonGroup = styled.div<{hasSecondButton: boolean}>`
+const ButtonGroup = styled.div<{ hasSecondButton: boolean }>`
     position: absolute;
      bottom: 25px;
 
@@ -92,5 +96,4 @@ const ButtonGroup = styled.div<{hasSecondButton: boolean}>`
     }
 
 `
-  export default Modal;
-  
+export default Modal;
