@@ -1,11 +1,10 @@
 "use client"
 import { Pretendard } from "@/public/fonts/fonts";
 import styled from "styled-components";
-import UserProfile from "./components/home/UserProfile";
-import WalkRank from "./components/chart/WalkRank";
-import TodoCard from "./components/card/TodoCard";
-import ReportCard from "./components/card/ReportCard";
-import MateList from "./components/home/MateList";
+import UserProfile from "./(route)/home/components/UserProfile";
+import WalkRank from "./(route)/home/components/WalkRank";
+import ReportCard from "./(route)/home/components/ReportCard";
+import MateList from "./(route)/home/components/MateList";
 import ContainerLayout from "./components/layout/layout";
 import TopNavigation from "./components/navigation/TopNavigation";
 import BottomNavigation from "./components/navigation/BottomNavigation";

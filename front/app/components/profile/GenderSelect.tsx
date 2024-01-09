@@ -7,7 +7,7 @@ interface DogGenderSelectorProps {
 
 const GenderSelect = ({ onValueChange }: DogGenderSelectorProps) => {
 
-    const genderOptions = ['male', 'female'];
+    const genderOptions = ['MALE', 'FEMALE'];
 
     const [selectedGender, setSelectedGender] = useState<string>('');
 
@@ -23,7 +23,7 @@ const GenderSelect = ({ onValueChange }: DogGenderSelectorProps) => {
             <GenderWrapper>
                 {genderOptions.map((gender) => (
                     <GenderButton key={gender} selected={selectedGender === gender} onClick={() => handleGenderClick(gender)}>
-                        {gender === 'female' ? '여아' : '남아'}
+                        {gender === 'FEMALE' ? '여아' : '남아'}
                     </GenderButton>
                 ))}
             </GenderWrapper>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { ScheduleItem } from '../schedule/calendar';
 import Image from 'next/image';
+import { ScheduleItem } from '@/app/_types/schedule/Schedule';
 
 interface ITodoCardProps {
   todoList: ScheduleItem[];
@@ -22,53 +22,70 @@ const TodoCard = ({ todoList }: ITodoCardProps) => {
 
   return (
     <Wrapper>
-      <TodoListWrapper>
-        <CardTitle>오늘</CardTitle>
-        {inactiveTodos.map((todo, index) => (
-          <TodoItem key={index}>
-            <Checkbox
-              type='checkbox'
-              checked={!todo.active}
-              onChange={() => handleCheckboxChange(todo.scheduleId)}
-            />
-            <TodoText active={!todo.active}>{todo.scheduleType}</TodoText>
-            <MateImgWrapper>
-              {todo.mates.map((mate, mateIndex) => (
-                <MateImg alt='메이트 이미지' key={mateIndex} index={mateIndex} src={mate.user_img} />
-              ))}
-            </MateImgWrapper>
-          </TodoItem>
-        ))}
-      </TodoListWrapper>
+      {activeTodos.length > 0 && (
+        <TodoListWrapper>
+          <CardTitle>완료</CardTitle>
+          {activeTodos.map((todo, index) => (
+            <TodoItem key={index}>
+              <Checkbox
+                type='checkbox'
+                checked
+                onChange={() => handleCheckboxChange(todo.scheduleId)}
+              />
+              <TodoText active={!todo.active}>{todo.scheduleType}</TodoText>
+              <MateImgWrapper>
+                {todo.mates.map((mate, mateIndex) => (
+                  <MateImg alt='메이트 이미지' key={mateIndex} index={mateIndex} src={mate.user_img} />
+                ))}
+              </MateImgWrapper>
+            </TodoItem>
+          ))}
+        </TodoListWrapper>
+      )}
 
-      <TodoListWrapper>
-        <CardTitle>완료</CardTitle>
-        {activeTodos.map((todo, index) => (
-          <TodoItem key={index}>
-            <Checkbox
-              type='checkbox'
-              checked
-              onChange={() => handleCheckboxChange(todo.scheduleId)}
-            />
-            <TodoText active={!todo.active}>{todo.scheduleType}</TodoText>
-            <MateImgWrapper>
-              {todo.mates.map((mate, mateIndex) => (
-                <MateImg alt='메이트 이미지' key={mateIndex} index={mateIndex} src={mate.user_img} />
-              ))}
-            </MateImgWrapper>
-          </TodoItem>
-        ))}
-      </TodoListWrapper>
+      {inactiveTodos.length > 0 && (
+        <TodoListWrapper>
+          <CardTitle>오늘</CardTitle>
+          {inactiveTodos.map((todo, index) => (
+            <TodoItem key={index}>
+              <Checkbox
+                type='checkbox'
+                checked={!todo.active}
+                onChange={() => handleCheckboxChange(todo.scheduleId)}
+              />
+              <TodoText active={!todo.active}>{todo.scheduleType}</TodoText>
+              <MateImgWrapper>
+                {todo.mates.map((mate, mateIndex) => (
+                  <MateImg alt='메이트 이미지' key={mateIndex} index={mateIndex} src={mate.user_img} />
+                ))}
+              </MateImgWrapper>
+            </TodoItem>
+          ))}
+        </TodoListWrapper>
+      )}
+
       <RegisteredMate></RegisteredMate>
+      {(activeTodos.length === 0 && inactiveTodos.length === 0) && (
+        <CenteredMessage>일정을 추가해주세요!</CenteredMessage>
+      )}
     </Wrapper>
   );
 };
 
+const CenteredMessage = styled.p`
+ display: flex;
+  font-size: 16px;
+  color: ${({ theme }) => theme.colors.black80};
+  margin-top: 50%;
+
+`;
 
 
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
 
 `;
 

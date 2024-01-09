@@ -6,7 +6,7 @@ import styled from "styled-components";
 import ContainerLayout from '@/app/components/layout/layout';
 import axios from 'axios'
 import { useRouter } from 'next/navigation';
-import { KAKAO_AUTH_URL } from '@/app/constants/auth';
+import { KAKAO_AUTH_URL } from '@/app/constants/api';
 
 const LoginPage = () => {
 

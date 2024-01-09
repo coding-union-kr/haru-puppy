@@ -1,17 +1,12 @@
-'use client'
-
-import React, { useState } from 'react';
+"use client"
+import { useState } from 'react';
 import ProfileImg, { ProfileType } from '@/app/components/profile/ProfileImg';
 import Input, { InputType } from "@/app/components/input/Input";
 import Button from "@/app/components/button/Button";
 import styled from "styled-components";
 import ContainerLayout from '@/app/components/layout/layout';
-import RoleDropdown from '../../profile/my/components/RoleDropdown';
-import axios from 'axios';
-import { useMutation, useQueryClient } from 'react-query';
-import { LOCAL_STORAGE_KEYS } from '@/app/constants/auth';
 import TopNavigation from '@/app/components/navigation/TopNavigation';
-import BottomNavigation from '@/app/components/navigation/BottomNavigation';
+import RoleDropdown from '@/app/components/profile/RoleDropdown';
 
 interface FormData {
     img?: File;
@@ -19,49 +14,23 @@ interface FormData {
     role: string;
 }
 
-
-const page = () => {
-    const queryClient = useQueryClient();
-
+const MyProfilePage = () => {
     const [formData, setFormData] = useState<FormData>({
         img: undefined,
         nickname: '',
         role: '',
     });
 
-    const handleSignupForm = (name: keyof FormData, value: any) => {
+    const handleSignupForm = (name: string, value: any) => {
         const newFormData = {
             ...formData,
             [name]: value
         };
-
         setFormData(newFormData);
-    };
+        console.log('업데이트 된 formData:', newFormData);
+    }
 
-    const saveUserFetcher = async (Data: FormData) => {
-        const accessToken = localStorage.getItem(LOCAL_STORAGE_KEYS.ACCESS_TOKEN)
-
-        const response = await axios.post('/api/users/profile', Data, {
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${accessToken}`
-            }
-        });
-
-        return response.data;
-    };
-
-    const { data, mutate: saveUser, isLoading } = useMutation(
-        () => saveUserFetcher(formData), {
-        onSuccess: () => {
-            //key값이 'userProfile' 데이터 최신 값으로 유지
-            queryClient.invalidateQueries('userProfile');
-            console.log('수정된 userData:', data)
-        },
-        onError: (error) => {
-            console.error('유저 프로필 수정 에러:', error);
-        },
-    });
+    const isFormIncomplete = formData.nickname === '' || formData.role === '';
 
     return (
         <ContainerLayout>
@@ -69,15 +38,12 @@ const page = () => {
             <UserProfileFormWrap>
                 <ProfileImg profileType={ProfileType.User} onValueChange={(value) => handleSignupForm('img', value)} />
                 <Input inputType={InputType.NickName} onInputValue={(value) => handleSignupForm('nickname', value)} />
-                <RoleDropdown selectedValue={formData.role} onValueChange={(value) => handleSignupForm('role', value)} />
-                <Button onClick={saveUser}>저장하기</Button>
+                <RoleDropdown onValueChange={(value) => handleSignupForm('role', value)} />
+                <Button onClick={() => console.log('api요청 보내는 함수 만들기', formData)} disabled={isFormIncomplete}>저장하기</Button>
             </UserProfileFormWrap>
-            <BottomNavigation />
         </ContainerLayout>
     );
 };
-
-
 
 const UserProfileFormWrap = styled.form`
     display: flex;
@@ -91,5 +57,6 @@ const UserProfileFormWrap = styled.form`
     & > button {
         margin-top: 150px;
     }
-`;
-export default page;
+`
+
+export default MyProfilePage;

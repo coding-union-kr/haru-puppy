@@ -1,7 +1,12 @@
 import Image from 'next/image'
 import React from 'react'
 import styled from 'styled-components';
-import { IUserProfileProps } from '../profile/UserProfile';
+
+export interface IUserProfileProps {
+  user?: {
+    profileImg?: string;
+  };
+}
 
 const UserProfile = ({ user }: IUserProfileProps) => {
   return (

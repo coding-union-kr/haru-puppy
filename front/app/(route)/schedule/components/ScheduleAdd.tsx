@@ -7,7 +7,7 @@ import RepeatDropdown from './RepeatDropdown';
 import Button from "@/app/components/button/Button";
 import styled from "styled-components";
 import TimeDropdown from './TimeDropdown';
-import DateDropdown, { DateDropdownLabel } from './DateDropdown';
+import DateDropdown, { DateDropdownLabel } from '../../../components/profile/DateDropdown';
 import ScheduleTypeDropdown from './ScheduleTypeDropdown';
 import MateSelect from './MateSelect';
 import { dummyMatesData } from '@/app/page';
@@ -88,7 +88,7 @@ const ScheduleAdd = ({ isOpen, onToggle }: IScheduleAddProps) => {
                 <TimeDropdown onValueChange={(value) => handleSelectChange('time', value)} />
                 <RepeatDropdown onValueChange={(value) => handleSelectChange('repeat', value)} />
                 <NotiDropdown onValueChange={(value) => handleSelectChange('noti', value)} />
-                <MemoTextArea onValueChange={(value) => handleSelectChange('memo', value)}/>
+                <MemoTextArea onValueChange={(value) => handleSelectChange('memo', value)} />
                 <ButtonGroupWrap>
                     <Button onClick={handleSave} width="135px" height="32px">저장</Button>
                     <Button onClick={handleDelete} width="135px" height="32px">삭제</Button>

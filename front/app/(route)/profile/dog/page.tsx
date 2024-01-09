@@ -1,15 +1,15 @@
 "use client"
 
 import React, { useState } from 'react'
-import GenderSelect from './components/GenderSelect'
-import DateDropdown, { DateDropdownLabel } from '../../schedule/components/DateDropdown';
+import DateDropdown, { DateDropdownLabel } from '../../../components/profile/DateDropdown';
 import dayjs from 'dayjs';
-import ProfileImg, {ProfileType} from '@/app/components/profile/ProfileImg';
+import ProfileImg, { ProfileType } from '@/app/components/profile/ProfileImg';
 import Input, { InputType } from '@/app/components/input/Input';
 import styled from 'styled-components';
 import Button from '@/app/components/button/Button';
 import ContainerLayout from '@/app/components/layout/layout';
 import TopNavigation from '@/app/components/navigation/TopNavigation';
+import GenderSelect from '@/app/components/profile/GenderSelect';
 
 interface IDogProfile {
     dog_id: string;
@@ -68,17 +68,17 @@ const DogProfilePage = () => {
         console.log('signUp 성공')
     };
 
-    return ( 
+    return (
         <ContainerLayout>
-            <TopNavigation/>
+            <TopNavigation />
             <ComponentsWrapper>
-            <ProfileImg profileType={ProfileType.Dog} onValueChange={(value)=> handleSelectChange('img', value)}/>
+                <ProfileImg profileType={ProfileType.Dog} onValueChange={(value) => handleSelectChange('img', value)} />
                 <Input
                     inputType={InputType.DogName}
                     onInputValue={(value) => handleSelectChange('name', value)}
                 />
                 <GenderSelect onValueChange={(value) => handleSelectChange('gender', value)} />
-                <DateDropdown onValueChange={(value) => handleSelectChange('birthday', value)} label={DateDropdownLabel.Birthday} isRequired={false} size={DateDropdownLabel.Birthday} />
+                <DateDropdown onValueChange={(value) => handleSelectChange('birthday', value)} label={DateDropdownLabel.Birthday} isRequired={false} />
                 <Input
                     inputType={InputType.Weight}
                     onInputValue={(value) => handleSelectChange('weight', value)}
@@ -112,3 +112,7 @@ const ComponentsWrapper = styled.div`
     }
 `
 export default DogProfilePage;
+
+
+
+

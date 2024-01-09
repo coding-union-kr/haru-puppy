@@ -20,6 +20,11 @@ const TopNavigation = () => {
     setHasNotification(false);
   };
 
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    setShowBtns(!!token);
+  }, []);
+
   const pathname = usePathname();
   const getTitle = (pathname: string | null) => {
     switch (pathname) {
@@ -38,6 +43,10 @@ const TopNavigation = () => {
         return '강아지 프로필';
       case '/profile/my':
         return '내 프로필';
+      case '/auth/register/user':
+        return '내 프로필';
+      case '/auth/register/dog':
+        return '강아지 프로필';
       case '/invite':
         return '메이트 초대하기';
       case '/setting':
