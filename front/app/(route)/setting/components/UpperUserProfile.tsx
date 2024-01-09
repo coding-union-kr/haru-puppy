@@ -20,7 +20,7 @@ const UpperUserProfile = ({ user }: IUpperUserProfile) => {
 
     const router = useRouter()
     const onUserProfileClick = () => {
-        router.push('/setting/userprofile')
+        router.push('/profile/my')
     }
     return (
         <Wrapper onClick={onUserProfileClick}>
