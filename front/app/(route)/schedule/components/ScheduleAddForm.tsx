@@ -2,19 +2,18 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import dayjs from 'dayjs';
-import NotiDropdown from './NotiDropdown';
-import RepeatDropdown from './RepeatDropdown';
 import Button from "@/app/components/button/Button";
 import styled from "styled-components";
-import TimeDropdown from './TimeDropdown';
-import DateDropdown, { DateDropdownLabel } from '../../../components/profile/DateDropdown';
-import ScheduleTypeDropdown from './ScheduleTypeDropdown';
 import MateSelect from './MateSelect';
 import { dummyMatesData } from '@/app/page';
-
 import MemoTextArea from '@/app/components/input/MemoTextArea';
+import ScheduleTypeSelect from './ScheduleTypeSelect';
+import DateSelect, { DateSelectLabel } from '@/app/components/profile/DateSelect';
+import TimeSelect from './TimeSelect';
+import RepeatSelect from './RepeatSelect';
+import NotiSelect from './NotiSelect';
 
-export interface IScheduleAddProps {
+export interface IScheduleAddFormProps {
     isOpen: boolean;
     onToggle: () => void;
 }
@@ -36,7 +35,7 @@ export interface IFormData {
     memo: string;
 }
 
-const ScheduleAdd = ({ isOpen, onToggle }: IScheduleAddProps) => {
+const ScheduleAddForm = ({ isOpen, onToggle }: IScheduleAddFormProps) => {
 
     const [formData, setFormData] = useState<IFormData>({
         type: '산책',
@@ -80,14 +79,16 @@ const ScheduleAdd = ({ isOpen, onToggle }: IScheduleAddProps) => {
     }
 
     return (
+        <>
+        {isOpen && <Overlay onClick={onToggle} />} 
         <ScheduleAddWrap isOpen={isOpen}>
             <FormWrap>
-                <ScheduleTypeDropdown onValueChange={(value) => handleSelectChange('type', value)} />
+                <ScheduleTypeSelect onValueChange={(value) => handleSelectChange('type', value)} />
                 <MateSelect onValueChange={(value) => handleSelectChange('mates', value)} mates={dummyMatesData} />
-                <DateDropdown onValueChange={(value) => handleSelectChange('date', value)} label={DateDropdownLabel.ScheduleDay} isRequired={true} />
-                <TimeDropdown onValueChange={(value) => handleSelectChange('time', value)} />
-                <RepeatDropdown onValueChange={(value) => handleSelectChange('repeat', value)} />
-                <NotiDropdown onValueChange={(value) => handleSelectChange('noti', value)} />
+                <DateSelect onValueChange={(value) => handleSelectChange('date', value)} label={DateSelectLabel.ScheduleDay} isRequired={true} />
+                <TimeSelect onValueChange={(value) => handleSelectChange('time', value)} />
+                <RepeatSelect onValueChange={(value) => handleSelectChange('repeat', value)} />
+                <NotiSelect onValueChange={(value) => handleSelectChange('noti', value)} />
                 <MemoTextArea onValueChange={(value) => handleSelectChange('memo', value)} />
                 <ButtonGroupWrap>
                     <Button onClick={handleSave} width="135px" height="32px">저장</Button>
@@ -102,8 +103,19 @@ const ScheduleAdd = ({ isOpen, onToggle }: IScheduleAddProps) => {
                     height={24} />
             </CloseButton>
         </ScheduleAddWrap>
+        </>
     )
 };
+
+const Overlay = styled.div`
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5); 
+    z-index: 999; 
+`;
 
 const ScheduleAddWrap = styled.main<{ isOpen: boolean }>`
     padding: 37px 0 61px;
@@ -145,4 +157,4 @@ const ButtonGroupWrap = styled.div`
         margin-right: 26px;
     }
 `
-export default ScheduleAdd;
+export default ScheduleAddForm;

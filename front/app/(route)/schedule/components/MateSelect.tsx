@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import PeopleOutlineRoundedIcon from '@mui/icons-material/PeopleOutlineRounded';
 import MateProfile from '@/app/components/profile/MateProfile';
-import { Imates } from './ScheduleAdd';
+import { Imates } from './ScheduleAddForm';
 
 
 interface IMateSelectProps {
