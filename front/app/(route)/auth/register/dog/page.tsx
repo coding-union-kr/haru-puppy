@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios';
 import { useMutation } from 'react-query';
 import { useRouter } from 'next/navigation';
-import DateDropdown, { DateDropdownLabel } from '../../../../components/profile/DateDropdown';
+import DateSelect, { DateSelectLabel } from '@/app/components/profile/DateSelect';
 import { LOCAL_STORAGE_KEYS } from '@/app/constants/api';
 import dayjs from 'dayjs';
 import ProfileImg, { ProfileType } from '@/app/components/profile/ProfileImg';
@@ -16,6 +16,7 @@ import TopNavigation from '@/app/components/navigation/TopNavigation';
 import { IUser } from '@/app/_types/user/User';
 import { IDog } from '@/app/_types/user/Dog';
 import GenderSelect from '@/app/components/profile/GenderSelect';
+
 
 
 
@@ -135,7 +136,7 @@ const DogRegisterPage = () => {
                     onInputValue={(value) => handleSelectChange('name', value)}
                 />
                 <GenderSelect onValueChange={(value) => handleSelectChange('gender', value)} />
-                <DateDropdown onValueChange={(value) => handleSelectChange('birthday', value)} label={DateDropdownLabel.Birthday} isRequired={false} />
+                <DateSelect onValueChange={(value) => handleSelectChange('birthday', value)} label={DateSelectLabel.Birthday} isRequired={false} />
                 <Input
                     inputType={InputType.Weight}
                     onInputValue={(value) => handleSelectChange('weight', value)}
