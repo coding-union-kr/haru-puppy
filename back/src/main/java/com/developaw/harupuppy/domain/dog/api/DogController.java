@@ -1,0 +1,26 @@
+package com.developaw.harupuppy.domain.dog.api;
+
+import com.developaw.harupuppy.domain.dog.application.DogService;
+import com.developaw.harupuppy.domain.dog.dto.DogUpdateRequest;
+import com.developaw.harupuppy.domain.user.dto.response.DogDetailResponse;
+import com.developaw.harupuppy.global.common.response.ApiResponse;
+import com.developaw.harupuppy.global.common.response.Response;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/home/dogs")
+@RequiredArgsConstructor
+@Validated
+public class DogController {
+    private final DogService dogService;
+
+    @PutMapping("/{dogId}")
+    public ApiResponse<DogDetailResponse> updateProfile (@NotBlank @PathVariable("dogId") Long dogId,
+                                                         @Valid @RequestBody DogUpdateRequest request) {
+        return ApiResponse.ok(Response.Status.UPDATE, dogService.updateDogInformation(dogId, request));
+    }
+}
