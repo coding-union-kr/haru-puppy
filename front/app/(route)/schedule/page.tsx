@@ -1,15 +1,21 @@
 "use client"
-
-import ContainerLayout from '@/app/components/layout/layout';
 import Calendar from '@/app/components/schedule/FullCalendar'
 import Image from 'next/image';
 import React, { useState } from 'react'
 import styled from 'styled-components';
+import ScheduleAddForm from './components/ScheduleAddForm';
 
 const page = () => {
+    const [isOpen, setIsOpen] = useState(false);
+    
     const onAddBtnClick = () => {
-        console.log('일정 추가 팝업')
+        setIsOpen(true);
     }
+
+    const onToggle = () => {
+        setIsOpen(!isOpen); 
+    };
+    
     return (
         <>
             <Wrapper>
@@ -18,7 +24,7 @@ const page = () => {
                     <Image src='/svgs/add_circle.svg' alt='add_circle' width={50} height={50} />
                 </AddBtnWrapper>
             </Wrapper>
-
+            <ScheduleAddForm isOpen={isOpen} onToggle={onToggle} />
         </>
     )
 
@@ -46,6 +52,7 @@ const AddBtnWrapper = styled.div`
     justify-content: center;
     align-items: center;
     left: 166px;
+    cursor: pointer;
 `
 
 export default page

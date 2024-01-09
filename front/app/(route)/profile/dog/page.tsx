@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState } from 'react'
-import DateDropdown, { DateDropdownLabel } from '../../../components/profile/DateDropdown';
+import DateSelect, { DateSelectLabel } from '@/app/components/profile/DateSelect';
 import dayjs from 'dayjs';
 import ProfileImg, { ProfileType } from '@/app/components/profile/ProfileImg';
 import Input, { InputType } from '@/app/components/input/Input';
@@ -10,6 +10,7 @@ import Button from '@/app/components/button/Button';
 import ContainerLayout from '@/app/components/layout/layout';
 import TopNavigation from '@/app/components/navigation/TopNavigation';
 import GenderSelect from '@/app/components/profile/GenderSelect';
+
 
 interface IDogProfile {
     dog_id: string;
@@ -78,7 +79,7 @@ const DogProfilePage = () => {
                     onInputValue={(value) => handleSelectChange('name', value)}
                 />
                 <GenderSelect onValueChange={(value) => handleSelectChange('gender', value)} />
-                <DateDropdown onValueChange={(value) => handleSelectChange('birthday', value)} label={DateDropdownLabel.Birthday} isRequired={false} />
+                <DateSelect onValueChange={(value) => handleSelectChange('birthday', value)} label={DateSelectLabel.Birthday} isRequired={false} />
                 <Input
                     inputType={InputType.Weight}
                     onInputValue={(value) => handleSelectChange('weight', value)}

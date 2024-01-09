@@ -6,11 +6,11 @@ import styled from 'styled-components';
 import TaskAltRoundedIcon from '@mui/icons-material/TaskAltRounded';
 
 
-interface IScheduleTypeDropdownProps {
+interface IScheduleTypeSelectProps {
     onValueChange: (value: string) => void;
   }
 
-const ScheduleTypeDropdown = ({ onValueChange }: IScheduleTypeDropdownProps) => {
+const ScheduleTypeSelect = ({ onValueChange }: IScheduleTypeSelectProps) => {
     const [isOpen, setIsOpen] = useState(false);
     const [selectedValue, setSelectedValue] = useState(scheduleTypeOptions[0]); 
     const dropdownRef = useRef<HTMLDivElement>(null);
@@ -168,4 +168,4 @@ const ScheduleTypeDropdownWrap = styled.div`
 } 
 `
 
-export default ScheduleTypeDropdown;
+export default ScheduleTypeSelect;

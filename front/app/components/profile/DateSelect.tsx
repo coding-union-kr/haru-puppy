@@ -6,23 +6,23 @@ import styled from 'styled-components';
 import CalendarMonthRoundedIcon from '@mui/icons-material/CalendarMonthRounded';
 
 
-export enum DateDropdownLabel {
+export enum DateSelectLabel {
   Birthday = '생일',
   ScheduleDay = '날짜',
 }
 
-interface IDateDropdownProps {
+interface IDateSelectProps {
   onValueChange: (date: Date) => void;
-  label?: DateDropdownLabel;
+  label?: DateSelectLabel;
   isRequired?: boolean;
 }
 
-const DateDropdown = ({ onValueChange, label, isRequired }: IDateDropdownProps) => {
+const DateSelect = ({ onValueChange, label, isRequired }: IDateSelectProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const width = label === DateDropdownLabel.Birthday ? '340px' : '300px'
+  const width = label === DateSelectLabel.Birthday ? '340px' : '300px'
 
   const handleDateSelect = (date: Date) => {
     setSelectedDate(date);
@@ -136,4 +136,4 @@ const StyledDatePicker = styled(DatePicker)`
 `;
 
 
-export default DateDropdown;
+export default DateSelect;

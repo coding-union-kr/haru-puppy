@@ -1,4 +1,4 @@
-import { Imates } from '@/app/(route)/schedule/components/ScheduleAdd';
+import { Imates } from '@/app/(route)/schedule/components/ScheduleAddForm';
 import React from 'react';
 import styled from 'styled-components';
 import Image from 'next/image';
