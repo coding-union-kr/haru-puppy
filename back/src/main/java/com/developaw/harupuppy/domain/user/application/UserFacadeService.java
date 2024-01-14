@@ -1,5 +1,6 @@
 package com.developaw.harupuppy.domain.user.application;
 
+import com.developaw.harupuppy.domain.user.domain.UserDetail;
 import com.developaw.harupuppy.domain.user.dto.TokenDto;
 import com.developaw.harupuppy.domain.user.dto.request.HomeCreateRequest;
 import com.developaw.harupuppy.domain.user.dto.request.UserCreateRequest;
@@ -7,6 +8,8 @@ import com.developaw.harupuppy.domain.user.dto.response.LoginResponse;
 import com.developaw.harupuppy.domain.user.dto.response.OAuthLoginResponse;
 import com.developaw.harupuppy.domain.user.dto.response.UserCreateResponse;
 import com.developaw.harupuppy.domain.user.dto.response.UserDetailResponse;
+import com.developaw.harupuppy.global.common.exception.CustomException;
+import com.developaw.harupuppy.global.common.response.Response.ErrorCode;
 import com.developaw.harupuppy.global.utils.JwtTokenUtils;
 import java.time.Duration;
 import lombok.RequiredArgsConstructor;
@@ -60,5 +63,14 @@ public class UserFacadeService {
         TokenDto token = jwtTokenUtils.generateToken(response);
         redisService.setValue(token.refreshToken(), email, Duration.ofMillis(refreshExpiredTimeMs));
         return token;
+    }
+
+    @Transactional
+    public void delete(Long userId, UserDetail requestUser){
+        if(userId != requestUser.getUserId()){
+            throw new CustomException(ErrorCode.NOT_ACCESS_RESOURCE);
+        }
+        String email = userService.delete(userId);
+        redisService.deleteValue(email);
     }
 }

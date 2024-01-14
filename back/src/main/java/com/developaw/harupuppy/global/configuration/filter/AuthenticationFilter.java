@@ -29,15 +29,6 @@ public class AuthenticationFilter extends OncePerRequestFilter {
     private final JwtTokenUtils jwtTokenUtils;
     private final AntPathMatcher pathMatcher = new AntPathMatcher();
 
-    private static final List<String> PERMIT_URLS =
-            List.of("/", "/h2", "/auth/login/*", "/api/users/register", "/api/users/invitation/*");
-
-    @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        return PERMIT_URLS.stream()
-                .anyMatch(pattern -> pathMatcher.match(pattern, request.getServletPath()));
-    }
-
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
@@ -49,10 +40,10 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 
         final String token = header.split(" ")[1].trim();
         if (jwtTokenUtils.isExpired(token)) {
-            throw new CustomException(ErrorCode.INVALID_TOKEN);
+            throw new CustomException(ErrorCode.EXPIRED_TOKEN);
         }
 
-        Long userId = jwtTokenUtils.resolveToken(token);
+        Long userId = jwtTokenUtils.resolveUserId(token);
         UserDetail user = userService.loadByUserId(userId);
 
         UsernamePasswordAuthenticationToken authenticationToken =

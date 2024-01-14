@@ -5,6 +5,8 @@ import com.developaw.harupuppy.domain.dog.repository.DogRepository;
 import com.developaw.harupuppy.domain.user.domain.Home;
 import com.developaw.harupuppy.domain.user.domain.User;
 import com.developaw.harupuppy.domain.user.domain.UserDetail;
+import com.developaw.harupuppy.domain.user.dto.UserResponse;
+import com.developaw.harupuppy.domain.user.dto.UserUpdateRequest;
 import com.developaw.harupuppy.domain.user.dto.request.DogCreateRequest;
 import com.developaw.harupuppy.domain.user.dto.request.HomeCreateRequest;
 import com.developaw.harupuppy.domain.user.dto.request.UserCreateRequest;
@@ -15,6 +17,7 @@ import com.developaw.harupuppy.domain.user.dto.response.UserDetailResponse;
 import com.developaw.harupuppy.domain.user.repository.HomeRepository;
 import com.developaw.harupuppy.domain.user.repository.UserRepository;
 import com.developaw.harupuppy.global.common.exception.CustomException;
+import com.developaw.harupuppy.global.common.response.Response;
 import com.developaw.harupuppy.global.common.response.Response.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -60,14 +63,21 @@ public class UserService {
     }
 
     @Transactional
+    public String delete(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER));
+        userRepository.delete(user);
+        return user.getEmail();
+    }
+
+    @Transactional
     public UserDetail loadByUserId(Long userId) {
         User registedUser = userRepository.findById(userId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER));
         return UserDetail.of(registedUser);
     }
-    
+
     @Transactional
-    public UserResponse updateUserInformation (UserUpdateRequest request){
+    public UserResponse updateUserInformation(UserUpdateRequest request) {
         User user = userRepository.findUserByUserId(request.userId())
                 .orElseThrow(() -> new CustomException(Response.ErrorCode.NOT_FOUND_USER));
         user.update(request);
