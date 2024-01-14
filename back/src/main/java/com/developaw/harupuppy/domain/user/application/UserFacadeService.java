@@ -87,6 +87,13 @@ public class UserFacadeService {
         return newToken;
     }
 
+    @Transactional
+    public void logout(String accessToken){
+        final String validToken = validateToken(accessToken);
+        String key = jwtTokenUtils.resolveTokenKey(validToken);
+        redisService.deleteValue(key);
+    }
+
     private String validateToken(String refreshToken){
         if(!refreshToken.startsWith("Bearer ")){
             throw new CustomException(ErrorCode.INVALID_TOKEN);
