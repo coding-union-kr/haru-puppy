@@ -1,10 +1,8 @@
 package com.developaw.harupuppy.domain.user.domain;
 
 import com.developaw.harupuppy.domain.dog.domain.Dog;
-
-import com.developaw.harupuppy.global.utils.KoreanNickname;
-import com.developaw.harupuppy.domain.home.domain.Home;
 import com.developaw.harupuppy.domain.user.dto.UserUpdateRequest;
+import com.developaw.harupuppy.global.utils.KoreanNickname;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -18,20 +16,19 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.extern.slf4j.Slf4j;
-import org.hibernate.validator.constraints.Length;
-
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 @Entity
 @Getter
-@Table(name = "`USERS`")
+@Table(name = "USERS")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@SQLDelete(sql = "UPDATE users SET is_deleted = true WHERE user_id = ?")
+@Where(clause = "is_deleted = false")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,8 +38,6 @@ public class User {
     @Email
     @Column(unique = true)
     private String email;
-
-    private String password;
 
     @Column(name = "img_url")
     private String imgUrl;
@@ -69,11 +64,8 @@ public class User {
     private Home home;
 
     @Builder
-
-
-    public User(String email, String password, String userImg, String nickname, UserRole userRole, Home home, Dog dog) {
+    public User(String email, String userImg, String nickname, UserRole userRole, Home home, Dog dog) {
         this.email = email;
-        this.password = password;
         this.imgUrl = userImg;
         this.nickname = nickname;
         this.userRole = userRole;
@@ -83,12 +75,12 @@ public class User {
         this.allowNotification = true;
     }
 
-    public void update (UserUpdateRequest updateRequest){
+    public void update(UserUpdateRequest updateRequest) {
         this.nickname = updateRequest.nickname();
         this.userRole = updateRequest.userRole();
     }
 
-    public void setHome(Home home){
+    public void setHome(Home home) {
         this.home = home;
     }
 
