@@ -17,7 +17,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -50,10 +49,9 @@ public class UserController {
         return ApiResponse.ok(Status.CREATE, facadeService.create(request, homeId));
     }
 
-    @DeleteMapping("/{userId}")
-    public ApiResponse<Void> delete(@PathVariable("userId") Long userId,
-                                    @AuthenticationPrincipal UserDetail requestUser) {
-        facadeService.delete(userId, requestUser);
+    @PostMapping("/withdraw")
+    public ApiResponse<Void> withdraw(@AuthenticationPrincipal UserDetail requestUser) {
+        facadeService.withdraw(requestUser);
         return ApiResponse.ok(Status.DELETE);
     }
 }

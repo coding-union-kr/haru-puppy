@@ -63,11 +63,8 @@ public class UserFacadeService {
     }
 
     @Transactional
-    public void delete(Long userId, UserDetail requestUser){
-        if(userId != requestUser.getUserId()){
-            throw new CustomException(ErrorCode.NOT_ACCESS_RESOURCE);
-        }
-        String email = userService.delete(userId);
+    public void withdraw(UserDetail requestUser){
+        String email = userService.withdraw(requestUser.getUserId());
         redisService.deleteValue(email);
     }
 
