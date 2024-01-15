@@ -7,11 +7,11 @@ import dayjs from 'dayjs';
 import AccessTimeRoundedIcon from '@mui/icons-material/AccessTimeRounded';
 import styled from 'styled-components';
 
-interface ITimeDropdownProps {
+interface ITimeSelectProps {
     onValueChange: (value: any) => void;
 }
 
-const TimeDropdown = ({ onValueChange }: ITimeDropdownProps) => {
+const TimeSelect = ({ onValueChange }: ITimeSelectProps) => {
     const [selectedValue, setSelectedValue] = useState('');  
 
     const handleSelect = (value: Date | null | string) => {
@@ -64,4 +64,4 @@ const StyledClock = styled(DigitalClock)`
 `;
 
 
-export default TimeDropdown;
+export default TimeSelect;
