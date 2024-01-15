@@ -18,12 +18,16 @@ public class JwtTokenUtils {
     private String secretKey;
     @Value("${jwt.access-expired-time-ms}")
     private Long accessExpiredTimeMs;
+    @Value("${jwt.refresh-expired-time-ms}")
+    private Long refreshExpiredTimeMs;
 
     public TokenDto generateToken(UserDetailResponse response) {
         Claims claims = Jwts.claims();
-        claims.put("userId", response.userId());
+        Long userId = response.userId();
+        String sessionId = UUID.randomUUID().toString();
+        claims.put("userId", userId);
         claims.put("email", response.email());
-        claims.put("nickName", response.nickname());
+        claims.put("sessionId", sessionId);
 
         String accessToken = Jwts.builder()
                 .setClaims(claims)
@@ -32,9 +36,14 @@ public class JwtTokenUtils {
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
 
-        String refreshToken = UUID.randomUUID().toString();
+        String refreshToken = Jwts.builder()
+                .setClaims(claims)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + refreshExpiredTimeMs))
+                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .compact();
 
-        return new TokenDto(accessToken, refreshToken);
+        return new TokenDto(getKey(userId, sessionId), accessToken, refreshToken);
     }
 
     public boolean isExpired(String token) {
@@ -42,8 +51,19 @@ public class JwtTokenUtils {
         return expiredDate.before(new Date());
     }
 
-    public Long resolveToken(String token) {
+    public Long resolveUserId(String token) {
         return extractClaims(token).get("userId", Long.class);
+    }
+
+    public String resolveTokenKey(String token) {
+        Claims claims = extractClaims(token);
+        Long userId = claims.get("userId", Long.class);
+        String sessionId = claims.get("sessionId", String.class);
+        return getKey(userId, sessionId);
+    }
+
+    private String getKey(Long userId, String sessionId) {
+        return String.format("%d_%s", userId, sessionId);
     }
 
     private Claims extractClaims(String token) {

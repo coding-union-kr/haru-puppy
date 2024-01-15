@@ -1,6 +1,7 @@
 package com.developaw.harupuppy.domain.user.dto.response;
 
 import com.developaw.harupuppy.domain.user.domain.User;
+import com.developaw.harupuppy.domain.user.domain.UserDetail;
 import com.developaw.harupuppy.domain.user.domain.UserRole;
 
 public record UserDetailResponse(
@@ -24,6 +25,18 @@ public record UserDetailResponse(
                 user.isAllowNotification(),
                 user.getDog().getDogId(),
                 user.getHome().getHomeId()
+        );
+    }
+    public static UserDetailResponse of(UserDetail user) {
+        return new UserDetailResponse(
+                user.getUserId(),
+                user.getEmail(),
+                null,
+                user.getNickName(),
+                user.getUserRole(),
+                user.isAllowNotification(),
+                null,
+                null
         );
     }
 }

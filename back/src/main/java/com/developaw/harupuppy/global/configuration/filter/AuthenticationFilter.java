@@ -49,10 +49,10 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 
         final String token = header.split(" ")[1].trim();
         if (jwtTokenUtils.isExpired(token)) {
-            throw new CustomException(ErrorCode.INVALID_TOKEN);
+            throw new CustomException(ErrorCode.EXPIRED_TOKEN);
         }
 
-        Long userId = jwtTokenUtils.resolveToken(token);
+        Long userId = jwtTokenUtils.resolveUserId(token);
         UserDetail user = userService.loadByUserId(userId);
 
         UsernamePasswordAuthenticationToken authenticationToken =
