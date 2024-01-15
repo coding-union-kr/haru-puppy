@@ -29,6 +29,15 @@ public class AuthenticationFilter extends OncePerRequestFilter {
     private final JwtTokenUtils jwtTokenUtils;
     private final AntPathMatcher pathMatcher = new AntPathMatcher();
 
+    private static final List<String> PERMIT_URLS =
+            List.of("/", "/h2", "/auth/login/*", "/api/users/register", "/api/users/invitation/*");
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        return PERMIT_URLS.stream()
+                .anyMatch(pattern -> pathMatcher.match(pattern, request.getServletPath()));
+    }
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
