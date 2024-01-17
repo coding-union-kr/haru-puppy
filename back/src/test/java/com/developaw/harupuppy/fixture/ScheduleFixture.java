@@ -8,6 +8,7 @@ import com.developaw.harupuppy.domain.schedule.domain.UserSchedule;
 import com.developaw.harupuppy.domain.schedule.dto.request.ScheduleCreateRequest;
 import com.developaw.harupuppy.domain.schedule.dto.request.ScheduleUpdateRequest;
 import com.developaw.harupuppy.domain.user.domain.User;
+import com.developaw.harupuppy.domain.user.domain.UserDetail;
 import com.developaw.harupuppy.domain.user.domain.UserRole;
 import com.developaw.harupuppy.domain.user.dto.UserScheduleDto;
 import java.time.LocalDateTime;
@@ -22,9 +23,9 @@ public class ScheduleFixture {
     }
 
     public static List<Schedule> getSchedulesWithMonth(){
-        return List.of(ScheduleCreateRequest.fromDto(ScheduleFixture.getCreateDto("2024-01-02"), "homeId", "repeatId"),
-                ScheduleCreateRequest.fromDto(ScheduleFixture.getCreateDto("2024-01-11"), "homeId", "repeatId"),
-                ScheduleCreateRequest.fromDto(ScheduleFixture.getCreateDto("2024-01-21"), "homeId", "repeatId")
+        return List.of(ScheduleCreateRequest.fromDto(ScheduleFixture.getCreateDto("2024-01-02"), "homeId", "repeatId", 1L),
+                ScheduleCreateRequest.fromDto(ScheduleFixture.getCreateDto("2024-01-11"), "homeId", "repeatId", 1L),
+                ScheduleCreateRequest.fromDto(ScheduleFixture.getCreateDto("2024-01-21"), "homeId", "repeatId", 1L)
          );
     }
 
@@ -131,5 +132,18 @@ public class ScheduleFixture {
                         .userRole(UserRole.MOM)
                         .build()
         );
+    }
+
+    public static UserDetail getUserDto(){
+        return UserDetail.builder()
+                .userId(1L)
+                .email("test@test.com")
+                .nickname("일반유저")
+                .userRole(UserRole.UNNIE)
+                .isDeleted(false)
+                .allowNotification(true)
+                .dogId(2L)
+                .homeId("homeIdString")
+                .build();
     }
 }

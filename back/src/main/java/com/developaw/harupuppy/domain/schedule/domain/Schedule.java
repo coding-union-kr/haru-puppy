@@ -48,6 +48,8 @@ public class Schedule extends DateEntity {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UserSchedule> mates = new ArrayList<>();
 
+    private Long writer;
+
     private String repeatId;
 
     @Enumerated(EnumType.STRING)
@@ -70,6 +72,7 @@ public class Schedule extends DateEntity {
             LocalDateTime scheduleDateTime,
             String homeId,
             List<UserSchedule> mates,
+            Long writer,
             String repeatId,
             RepeatType repeatType,
             AlertType alertType,
@@ -77,6 +80,7 @@ public class Schedule extends DateEntity {
         this.scheduleType = scheduleType;
         this.scheduleDateTime = scheduleDateTime;
         this.homeId = homeId;
+        this.writer = writer;
         this.mates = mates;
         this.repeatId = repeatId;
         this.repeatType = repeatType;
@@ -90,6 +94,7 @@ public class Schedule extends DateEntity {
                 .scheduleDateTime(repeatDateTime)
                 .homeId(schedule.homeId)
                 .mates(schedule.mates)
+                .writer(schedule.writer)
                 .repeatId(repeatId)
                 .repeatType(schedule.repeatType)
                 .alertType(schedule.alertType)

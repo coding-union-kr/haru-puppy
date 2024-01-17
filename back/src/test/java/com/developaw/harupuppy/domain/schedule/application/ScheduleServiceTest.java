@@ -17,6 +17,7 @@ import com.developaw.harupuppy.domain.schedule.dto.request.ScheduleCreateRequest
 import com.developaw.harupuppy.domain.schedule.dto.request.ScheduleUpdateRequest;
 import com.developaw.harupuppy.domain.schedule.dto.response.ScheduleResponse;
 import com.developaw.harupuppy.domain.user.domain.User;
+import com.developaw.harupuppy.domain.user.domain.UserDetail;
 import com.developaw.harupuppy.domain.user.repository.UserRepository;
 import com.developaw.harupuppy.fixture.ScheduleFixture;
 import com.developaw.harupuppy.global.common.exception.CustomException;
@@ -46,6 +47,7 @@ class ScheduleServiceTest {
     static ScheduleCreateRequest createDto, repeatedDto, invalidDto;
     static ScheduleUpdateRequest updateDto;
     static List<User> mates;
+    static UserDetail userDto;
     @InjectMocks
     private ScheduleService scheduleService;
     @Mock
@@ -62,19 +64,20 @@ class ScheduleServiceTest {
         invalidDto = ScheduleFixture.getCreateDtoWithInvalidDateType();
         updateDto = ScheduleFixture.getUpdateDto();
         mates = ScheduleFixture.getMates();
+        userDto = ScheduleFixture.getUserDto();
     }
 
     @Test
     @DisplayName("스케줄 정보를 받아 단일 스케줄을 생성한다")
     void create() {
-        Schedule schedule = ScheduleCreateRequest.fromDto(createDto, null);
+        Schedule schedule = ScheduleCreateRequest.fromDto(createDto, "homeId", 1L);
         List<UserSchedule> userSchedules = ScheduleFixture.getUserSchedules(mates, schedule);
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(mates.get(0)));
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(mates.get(1)));
         when(scheduleRepository.save(any())).thenReturn(schedule);
         when(userScheduleRepository.saveAll(any())).thenReturn(userSchedules);
 
-        ScheduleResponse response = scheduleService.create(createDto);
+        ScheduleResponse response = scheduleService.create(createDto, userDto);
         assertThat(response.scheduleDateTime()).isEqualTo(schedule.getScheduleDateTime());
         assertThat(response.mates().get(0).getUserSchedulePK().getUser().getUserId())
                 .isEqualTo(userSchedules.get(0).getUserSchedulePK().getUser().getUserId());
@@ -86,7 +89,7 @@ class ScheduleServiceTest {
     void createRepeatedSchedule(ScheduleCreateRequest repeatedDto, int expectedSchedulesCnt,
                                 int expectedUserSchedulesCnt) {
         String repeatId = "repeatId";
-        Schedule schedule = ScheduleCreateRequest.fromDto(repeatedDto, repeatId);
+        Schedule schedule = ScheduleCreateRequest.fromDto(repeatedDto, repeatId, 1L);
         LocalDateTime startDate = schedule.getScheduleDateTime();
         LocalDateTime endDate = startDate.plusYears(1).withMonth(12).withDayOfMonth(31);
 
@@ -121,7 +124,7 @@ class ScheduleServiceTest {
     void createWithInvalidDateType() {
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(mates.get(0)));
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(mates.get(1)));
-        assertThatThrownBy(() -> scheduleService.create(invalidDto))
+        assertThatThrownBy(() -> scheduleService.create(invalidDto, userDto))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("스케줄 날짜와 시간이 유효하지 않습니다");
 
@@ -130,7 +133,7 @@ class ScheduleServiceTest {
     @Test
     @DisplayName("메이트 정보가 존재하지 않아 새로운 스케줄을 저장할 수 없다")
     void createWithNotFoundUser() {
-        assertThatThrownBy(() -> scheduleService.create(createDto))
+        assertThatThrownBy(() -> scheduleService.create(createDto, userDto))
                 .isInstanceOf(CustomException.class)
                 .hasMessage("가입된 유저가 아닙니다");
     }
@@ -140,12 +143,12 @@ class ScheduleServiceTest {
     void updateSchedule() {
         Long scheduleId = 1L;
         boolean all = false;
-        Schedule schedule = ScheduleCreateRequest.fromDto(repeatedDto, "repeatId");
+        Schedule schedule = ScheduleCreateRequest.fromDto(repeatedDto, "repeatId", 1L);
 
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(mates.get(0)));
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(mates.get(1)));
         when(scheduleRepository.findById(scheduleId)).thenReturn(Optional.of(schedule));
-        ScheduleResponse response = scheduleService.update(scheduleId, updateDto, all);
+        ScheduleResponse response = scheduleService.update(scheduleId, updateDto, all, userDto);
 
         assertThat(response.memo()).isEqualTo(updateDto.memo());
         assertThat(response.repeatType()).isEqualTo(updateDto.repeatType());
@@ -154,7 +157,7 @@ class ScheduleServiceTest {
     @Test
     @DisplayName("요청된 내용으로 해당 스케줄과 반복된 스케줄들의 내용을 전부 수정한다")
     void updateRepeatSchedule() {
-        Schedule rawSchedule = ScheduleCreateRequest.fromDto(ScheduleFixture.getMonthlyRepeatedDto(), "homeId");
+        Schedule rawSchedule = ScheduleCreateRequest.fromDto(ScheduleFixture.getMonthlyRepeatedDto(), "homeId", 1L);
         ReflectionTestUtils.setField(rawSchedule, "id", 1L);
         List<Schedule> repeatSchedules = ScheduleFixture.getRepeatSchedules(rawSchedule);
         boolean all = true;
@@ -164,7 +167,7 @@ class ScheduleServiceTest {
         when(scheduleRepository.findById(anyLong())).thenReturn(Optional.of(rawSchedule));
         when(scheduleRepository.findAllByRepeatIdAndScheduleDateTimeAfter(anyString(),
                 any())).thenReturn(Optional.of(repeatSchedules));
-        ScheduleResponse response = scheduleService.update(1L, updateDto, all);
+        ScheduleResponse response = scheduleService.update(1L, updateDto, all, userDto);
 
         assertThat(response.alertType()).isEqualTo(rawSchedule.getAlertType());
     }
@@ -172,19 +175,19 @@ class ScheduleServiceTest {
     @Test
     @DisplayName("요청한 스케줄 아이디로 스케줄을 삭제한다")
     void deleteSchedule() {
-        Schedule schedule = ScheduleCreateRequest.fromDto(createDto, "homeId");
+        Schedule schedule = ScheduleCreateRequest.fromDto(createDto, "homeId", 1L);
         ReflectionTestUtils.setField(schedule, "id", 1L);
         boolean all = false;
 
         when(scheduleRepository.findById(anyLong())).thenReturn(Optional.of(schedule));
 
-        assertThatNoException().isThrownBy(() -> scheduleService.delete(1L, all));
+        assertThatNoException().isThrownBy(() -> scheduleService.delete(1L, all, userDto));
     }
 
     @Test
     @DisplayName("요청한 스케줄 아이디로 반복되는 스케줄까지 전부 삭제한다")
     void deleteRepeatedSchedule() {
-        Schedule schedule = ScheduleCreateRequest.fromDto(repeatedDto, "homeId", "repeatId");
+        Schedule schedule = ScheduleCreateRequest.fromDto(repeatedDto, "homeId", "repeatId", 1L);
         List<Schedule> repeatSchedules = ScheduleFixture.getRepeatSchedules(schedule);
         ReflectionTestUtils.setField(schedule, "repeatId", "repeatId");
         ReflectionTestUtils.setField(schedule, "id", 1L);
@@ -193,13 +196,13 @@ class ScheduleServiceTest {
         when(scheduleRepository.findById(anyLong())).thenReturn(Optional.of(schedule));
         when(scheduleRepository.findAllByRepeatIdAndScheduleDateTimeAfter(
                 anyString(), any())).thenReturn(Optional.of(repeatSchedules));
-        assertThatNoException().isThrownBy(() -> scheduleService.delete(1L, all));
+        assertThatNoException().isThrownBy(() -> scheduleService.delete(1L, all, userDto));
     }
 
     @Test
     @DisplayName("스케줄 아이디에 해당하는 스케줄을 찾아 반환한다")
     void get() {
-        Schedule schedule = ScheduleCreateRequest.fromDto(createDto, "homeId");
+        Schedule schedule = ScheduleCreateRequest.fromDto(createDto, "homeId", 1L);
         ReflectionTestUtils.setField(schedule, "id", 1L);
         when(scheduleRepository.findById(anyLong())).thenReturn(Optional.of(schedule));
 
