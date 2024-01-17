@@ -9,6 +9,7 @@ import com.developaw.harupuppy.domain.schedule.dto.request.ScheduleCreateRequest
 import com.developaw.harupuppy.domain.schedule.dto.request.ScheduleUpdateRequest;
 import com.developaw.harupuppy.domain.schedule.dto.response.ScheduleResponse;
 import com.developaw.harupuppy.domain.user.domain.User;
+import com.developaw.harupuppy.domain.user.domain.UserDetail;
 import com.developaw.harupuppy.domain.user.dto.UserScheduleDto;
 import com.developaw.harupuppy.domain.user.repository.UserRepository;
 import com.developaw.harupuppy.global.common.exception.CustomException;
@@ -35,11 +36,12 @@ public class ScheduleService {
     private final UserRepository userRepository;
 
     @Transactional
-    public ScheduleResponse create(ScheduleCreateRequest dto) {
-        String homeId = "";// 매개변수로 넘어온 userDto에서 homeId 꺼내기
+    public ScheduleResponse create(ScheduleCreateRequest dto, UserDetail userDto) {
+        String homeId = userDto.getHomeId();
+        log.info(homeId);
         List<User> mates = validateMates(dto.mates());
 
-        Schedule schedule = ScheduleCreateRequest.fromDto(dto, homeId);
+        Schedule schedule = ScheduleCreateRequest.fromDto(dto, homeId, userDto.getUserId());
         scheduleRepository.save(schedule);
 
         List<UserSchedule> userSchedules = UserSchedule.of(mates, schedule);
@@ -77,11 +79,14 @@ public class ScheduleService {
     }
 
     @Transactional
-    public ScheduleResponse update(Long scheduleId, ScheduleUpdateRequest dto, boolean all) {
+    public ScheduleResponse update(Long scheduleId, ScheduleUpdateRequest dto, boolean all, UserDetail userDto) {
         Schedule schedule = scheduleRepository.findById(scheduleId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_SCHEDULE));
         List<UserSchedule> newMates = UserSchedule.of(validateMates(dto.mates()), schedule);
+        chkScheduleWriter(newMates, userDto.getUserId());
+
         schedule.update(dto, newMates);
+
         if (dto.repeatId() != null && all) {
             String repeatId = Objects.requireNonNull(dto.repeatId());
             List<Schedule> repeatedSchedules = scheduleRepository.findAllByRepeatIdAndScheduleDateTimeAfter(repeatId,
@@ -89,13 +94,17 @@ public class ScheduleService {
                     .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_SCHEDULE));
             repeatedSchedules.forEach(repeatSchedule -> repeatSchedule.update(dto, newMates));
         }
+
         return ScheduleResponse.of(schedule);
     }
 
     @Transactional
-    public void delete(Long scheduleId, boolean all) {
+    public void delete(Long scheduleId, boolean all, UserDetail userDto) {
         Schedule schedule = scheduleRepository.findById(scheduleId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_SCHEDULE));
+
+        if(userDto.getUserId() != schedule.getWriter())
+            throw new CustomException(ErrorCode.NOT_ACCESS_RESOURCE);
 
         if (schedule.getRepeatId() != null && all) {
             List<Schedule> repeatedSchedules = scheduleRepository.findAllByRepeatIdAndScheduleDateTimeAfter(
@@ -177,5 +186,13 @@ public class ScheduleService {
                     () -> new CustomException(ErrorCode.NOT_FOUND_USER));
             return user;
         }).collect(Collectors.toList());
+    }
+    private void chkScheduleWriter(List<UserSchedule> mates, Long writerId){
+        mates.stream()
+                .filter(userSchedule ->
+                        userSchedule.getUserSchedulePK().getUser().getUserId() == writerId
+                )
+                .findAny()
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_ACCESS_RESOURCE));
     }
 }
