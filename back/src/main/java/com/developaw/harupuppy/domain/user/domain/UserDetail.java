@@ -15,30 +15,37 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class UserDetail implements UserDetails {
     private Long userId;
     private String email;
-    private String nickName;
+    private String nickname;
     private UserRole userRole;
     private boolean isDeleted;
     private boolean allowNotification;
+    private String homeId;
+    private Long dogId;
+
 
     @Builder
-    public UserDetail(Long userId, String email, String nickName, UserRole userRole, boolean isDeleted,
-                      boolean allowNotification) {
+    public UserDetail(Long userId, String email, String nickname, UserRole userRole, boolean isDeleted,
+                      boolean allowNotification, String homeId, Long dogId) {
         this.userId = userId;
         this.email = email;
-        this.nickName = nickName;
+        this.nickname = nickname;
         this.userRole = userRole;
         this.isDeleted = isDeleted;
         this.allowNotification = allowNotification;
+        this.homeId = homeId;
+        this.dogId = dogId;
     }
 
     public static UserDetail of(User user){
         return UserDetail.builder()
                 .userId(user.getUserId())
                 .email(user.getEmail())
-                .nickName(user.getNickname())
+                .nickname(user.getNickname())
                 .userRole(user.getUserRole())
                 .isDeleted(user.isDeleted())
                 .allowNotification(user.isAllowNotification())
+                .homeId(user.getHome().getHomeId())
+                .dogId(user.getDog().getDogId())
                 .build();
     }
     @Override

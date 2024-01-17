@@ -32,7 +32,7 @@ public record UserDetailResponse(
                 user.getUserId(),
                 user.getEmail(),
                 null,
-                user.getNickName(),
+                user.getNickname(),
                 user.getUserRole(),
                 user.isAllowNotification(),
                 null,
