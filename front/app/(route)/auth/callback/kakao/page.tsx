@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import Image from 'next/image';
 import Link from "next/link";
 import { useQuery } from 'react-query';
+import Loading from '@/app/components/loading/loading';
 
 
 const Page = () => {
@@ -56,7 +57,7 @@ const Page = () => {
     return (
         <>
             {isLoading &&
-                <p>Loading...</p>
+                <Loading />
             }
         </>
     );
