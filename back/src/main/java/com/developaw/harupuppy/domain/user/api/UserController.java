@@ -8,8 +8,10 @@ import com.developaw.harupuppy.domain.user.dto.UserUpdateRequest;
 import com.developaw.harupuppy.domain.user.dto.request.HomeCreateRequest;
 import com.developaw.harupuppy.domain.user.dto.request.UserCreateRequest;
 import com.developaw.harupuppy.domain.user.dto.response.UserCreateResponse;
+import com.developaw.harupuppy.domain.user.dto.response.UserDetailResponse;
 import com.developaw.harupuppy.global.common.response.ApiResponse;
 import com.developaw.harupuppy.global.common.response.Response.Status;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -39,8 +41,8 @@ public class UserController {
     }
 
     @PutMapping("/profile")
-    public ApiResponse<UserResponse> updateProfile(@RequestBody @Valid UserUpdateRequest request) {
-        return ApiResponse.ok(Status.UPDATE, userService.updateUserInformation(request));
+    public ApiResponse<UserDetailResponse> updateProfile(@RequestBody @Valid UserUpdateRequest request, HttpServletRequest httpReq) {
+        return ApiResponse.ok(Status.UPDATE, userService.updateUserInformation(request, httpReq));
     }
 
     @PostMapping("/invitation/{homeId}")

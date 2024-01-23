@@ -19,17 +19,23 @@ import com.developaw.harupuppy.domain.user.repository.UserRepository;
 import com.developaw.harupuppy.global.common.exception.CustomException;
 import com.developaw.harupuppy.global.common.response.Response;
 import com.developaw.harupuppy.global.common.response.Response.ErrorCode;
+import com.developaw.harupuppy.global.utils.JwtTokenUtils;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
+@Slf4j
 public class UserService {
     private final UserRepository userRepository;
     private final HomeRepository homeRepository;
     private final DogRepository dogRepository;
+    private final JwtTokenUtils jwtTokenUtils;
+    private final String AUTHORIZATION_HEADER = "Authorization";
 
     @Transactional
     public UserCreateResponse create(HomeCreateRequest request) {
@@ -74,11 +80,22 @@ public class UserService {
     }
 
     @Transactional
-    public UserResponse updateUserInformation(UserUpdateRequest request) {
-        User user = userRepository.findUserByUserId(request.userId())
+    public UserDetailResponse updateUserInformation(UserUpdateRequest request, HttpServletRequest httpReq) {
+        final String header = httpReq.getHeader(AUTHORIZATION_HEADER);
+        if (header == null || !header.startsWith("Bearer ")) {
+            log.error("Authorization Header does not start with Bearer {}", httpReq.getRequestURI());
+            throw new CustomException(ErrorCode.INVALID_TOKEN);
+        }
+
+        final String token = header.split(" ")[1].trim();
+        if (jwtTokenUtils.isExpired(token)) {
+            throw new CustomException(ErrorCode.INVALID_TOKEN);
+        }
+        Long userId = jwtTokenUtils.resolveUserId(token);
+        User user = userRepository.findUserByUserId(userId)
                 .orElseThrow(() -> new CustomException(Response.ErrorCode.NOT_FOUND_USER));
         user.update(request);
-        return UserResponse.of(user);
+        return UserDetailResponse.of(user);
     }
 }
 

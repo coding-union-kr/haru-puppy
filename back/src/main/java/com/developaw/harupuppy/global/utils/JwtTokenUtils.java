@@ -3,6 +3,7 @@ package com.developaw.harupuppy.global.utils;
 import com.developaw.harupuppy.domain.user.dto.TokenDto;
 import com.developaw.harupuppy.domain.user.dto.response.UserDetailResponse;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwsHeader;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import java.util.Date;
@@ -71,5 +72,12 @@ public class JwtTokenUtils {
                 .setSigningKey(secretKey)
                 .parseClaimsJws(token)
                 .getBody();
+    }
+
+    private JwsHeader extractHeaders(String token) {
+        return Jwts.parser()
+                .setSigningKey(secretKey)
+                .parseClaimsJws(token)
+                .getHeader();
     }
 }
