@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useQuery } from 'react-query';
+
 import { usePersistentRecoilState } from '@/app/_hooks/usePersistentRecoilState';
 import { userState } from '@/app/_states/userState';
 
@@ -50,6 +51,7 @@ const Page = () => {
 
   if (error) {
     return (
+
       <Wrapper>
         <Image width={300} height={300} src='/svgs/dog_profile.svg' alt='dog_profile' />
         <StyledLink href='/auth/login'>로그인 페이지로 돌아가기</StyledLink>
