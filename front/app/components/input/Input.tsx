@@ -1,14 +1,15 @@
-import React, { useState } from "react";
-import styled from "styled-components";
+import React, { useState } from 'react';
+import styled from 'styled-components';
 
 export enum InputType {
   NickName = 'NickName',
   DogName = 'DogName',
-  Weight = 'Weight'
+  Weight = 'Weight',
 }
 interface IInputProps {
   inputType: InputType;
   onInputValue: (value: string | number) => void;
+  value?: string | number;
 }
 interface InputConfig {
   type: string;
@@ -28,7 +29,7 @@ const inputConfig: Record<InputType, InputConfig> = {
     placeholder: '닉네임을 입력하세요.',
     errMsg: '닉네임은 최소 2자 이상이어야 합니다.',
     minLength: 2,
-    maxLength: 15
+    maxLength: 15,
   },
   DogName: {
     type: 'text',
@@ -37,41 +38,37 @@ const inputConfig: Record<InputType, InputConfig> = {
     placeholder: '강아지 이름을 입력하세요.',
     errMsg: '강아지 이름은 최소 2자 이상이어야 합니다.',
     minLength: 2,
-    maxLength: 15
+    maxLength: 15,
   },
   Weight: {
     type: 'number',
     inputId: 'weight',
     label: '체중',
     placeholder: '강아지 체중을 입력하세요.',
-    errMsg: '올바른 체중을 입력해주세요.'
-  }
+    errMsg: '올바른 체중을 입력해주세요.',
+  },
 };
 
-const Input = ({ inputType, onInputValue }: IInputProps) => {
-  const [inputValue, setInputValue] = useState<string | number>("");
+const Input = ({ inputType, onInputValue, value }: IInputProps) => {
   const [showErr, setShowErr] = useState<boolean>(false);
 
   const { type, inputId, label, placeholder, errMsg, minLength, maxLength } = inputConfig[inputType];
 
   const isValueEmpty = (value: string) => {
-    if (type === 'text' && typeof value === 'string' && value.length < 2)
-      return true;
-    if (type === 'number' && value === '')
-      return true;
-    if (type === 'password' && value.length < 8)
-      return true;
+    if (type === 'text' && typeof value === 'string' && value.length < 2) return true;
+    if (type === 'number' && value === '') return true;
+    if (type === 'password' && value.length < 8) return true;
 
     return false;
-  }
+  };
 
   const onInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     let value = event.target.value;
 
     const isEmpty = isValueEmpty(value);
-    event.target.placeholder = isEmpty ? placeholder : "";
+    event.target.placeholder = isEmpty ? placeholder : '';
 
-    setInputValue(value);
+    onInputValue(value);
     setShowErr(isEmpty);
   };
 
@@ -82,67 +79,68 @@ const Input = ({ inputType, onInputValue }: IInputProps) => {
     setShowErr(isEmpty);
 
     if (inputType === InputType.Weight && value) {
-        const numValue = parseFloat(value);
-        if (!isNaN(numValue)) {
-          const positiveNum = Math.abs(numValue);
-          const roundedValue = positiveNum.toFixed(1);
-          setInputValue(roundedValue); 
-          onInputValue(parseFloat(roundedValue)); 
-        }
+      const numValue = parseFloat(value);
+      if (!isNaN(numValue)) {
+        const positiveNum = Math.abs(numValue);
+        const roundedValue = positiveNum.toFixed(1);
+        onInputValue(parseFloat(roundedValue));
+      }
     } else {
-        onInputValue(value); 
+      onInputValue(value);
     }
   };
 
   return (
     <InputWrap>
-      <label htmlFor={inputId}>{label}<span>*</span></label>
-      <input type={type} id={inputId} name={inputId} placeholder={placeholder} minLength={minLength} maxLength={maxLength}  value={inputValue} onChange={onInputChange} onBlur={onBlurHandler} />
+      <label htmlFor={inputId}>
+        {label}
+        <span>*</span>
+      </label>
+      <input type={type} id={inputId} name={inputId} placeholder={placeholder} minLength={minLength} maxLength={maxLength} value={value || ''} onChange={onInputChange} onBlur={onBlurHandler} />
       {showErr && <span>{errMsg}</span>}
     </InputWrap>
-  )
+  );
 };
 
 const InputWrap = styled.div<{ showErr?: boolean }>`
- width: 340px;
- height: 74px; 
- display: flex;
- flex-direction: column;
- margin: 0 auto;
+  width: 340px;
+  height: 74px;
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
 
-
- & label {
+  & label {
     font-size: 14;
     font-weight: 400;
     margin-bottom: 14px;
-   & span {
-    margin-left: 8px;
-    color: ${({ theme }) => theme.colors.alert};
-   }
- }
+    & span {
+      margin-left: 8px;
+      color: ${({ theme }) => theme.colors.alert};
+    }
+  }
 
- & input {
+  & input {
     position: relative;
     width: 340px;
     padding: 15px 0;
-    border: 1px solid ${({ showErr, theme }) => showErr ? theme.colors.alert : theme.colors.black50};  
-    border-radius: 10px;             
-    color:#000000;
+    border: 1px solid ${({ showErr, theme }) => (showErr ? theme.colors.alert : theme.colors.black50)};
+    border-radius: 10px;
+    color: #000000;
     text-align: center;
     font-weight: 400;
     font-size: 14px;
-    &:focus { 
-    border-color: ${({ theme }) => theme.colors.black80};
-   }
- } 
+    &:focus {
+      border-color: ${({ theme }) => theme.colors.black80};
+    }
+  }
 
- & > span {
+  & > span {
     margin-top: 8px;
     margin-left: 2px;
     font-weight: 400;
     font-size: 14px;
     color: ${({ theme }) => theme.colors.alert};
- }
-`
+  }
+`;
 
 export default Input;
