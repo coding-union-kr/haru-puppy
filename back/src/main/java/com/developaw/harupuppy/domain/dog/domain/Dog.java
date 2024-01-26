@@ -1,5 +1,6 @@
 package com.developaw.harupuppy.domain.dog.domain;
 
+import com.developaw.harupuppy.domain.dog.dto.DogUpdateRequest;
 import com.developaw.harupuppy.domain.user.domain.Home;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -57,5 +58,13 @@ public class Dog {
         this.birthday = birthday;
         this.weight = weight;
         this.home = home;
+    }
+
+    public void update (DogUpdateRequest request) {
+        this.name = request.name();
+        this.weight = request.weight();
+        this.gender = request.gender();
+        this.birthday = LocalDate.parse(request.birthday());
+        this.imgUrl = request.imgUrl();
     }
 }

@@ -9,6 +9,7 @@ public class Response {
     @RequiredArgsConstructor
     public enum ErrorCode {
         NOT_FOUND_USER(HttpStatus.NOT_FOUND, "가입된 유저가 아닙니다"),
+        NOT_FOUND_DOG(HttpStatus.NOT_FOUND, "등록된 강아지가 아닙니다"),
 
         INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다"),
         EXPIRED_TOKEN(HttpStatus.UNAUTHORIZED, "요청 토큰이 만료되었습니다"),
