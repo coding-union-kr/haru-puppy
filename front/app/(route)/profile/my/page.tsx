@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { usePersistentRecoilState } from '@/app/_hooks/usePersistentRecoilState';
+import { useRecoilState } from 'recoil';
 import { userState } from '@/app/_states/userState';
 import axios from 'axios';
 import { useMutation } from 'react-query';
@@ -29,7 +29,7 @@ const MyProfilePage = () => {
     userRole: '',
   });
 
-  const [userData, setUserData] = usePersistentRecoilState<any>('userState', userState);
+  const [userData, setUserData] = useRecoilState<any>(userState);
 
   useEffect(() => {
     if (userData) {
@@ -42,7 +42,7 @@ const MyProfilePage = () => {
     }
   }, [userData]);
 
-  console.log('recoil로 업데이트하고 로컬스토리지에서 갖고와서 set한 formData:', formData);
+  console.log('recoil-persist로 갖고온 데이터 setFormData하면:', formData);
   const handleSignupForm = (name: string, value: any) => {
     const newFormData = {
       ...formData,
