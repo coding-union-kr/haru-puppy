@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useMutation } from 'react-query';
-import { usePersistentRecoilState } from '@/app/_hooks/usePersistentRecoilState';
+import { useRecoilState } from 'recoil';
 import { userState } from '@/app/_states/userState';
 import { useRouter } from 'next/navigation';
 import DateSelect, { DateSelectLabel } from '@/app/components/profile/DateSelect';
@@ -91,7 +91,7 @@ const DogRegisterPage = () => {
   //필수 입력란 체크 boolean
   const areAllFieldsFilled = requiredField.name && requiredField.gender && requiredField.weight;
 
-  const [user, setUser] = usePersistentRecoilState('userState', userState);
+  const [, setUser] = useRecoilState(userState);
   const postApi = (data: IRequestData) => {
     return axios.post('http://localhost:8080/api/users/register', data);
   };
@@ -100,9 +100,7 @@ const DogRegisterPage = () => {
     onSuccess: (res) => {
       const resData = res.data.data;
       const accessToken = resData.token.accessToken;
-      const homeId = resData.homeResponse.homeId;
       localStorage.setItem(LOCAL_STORAGE_KEYS.ACCESS_TOKEN, accessToken);
-      localStorage.setItem(LOCAL_STORAGE_KEYS.HOME_ID, homeId);
       console.log(accessToken);
       if (setUser) {
         setUser(resData.userResponse);
