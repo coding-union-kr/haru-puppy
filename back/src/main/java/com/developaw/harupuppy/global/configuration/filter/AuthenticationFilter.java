@@ -33,7 +33,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
             List.of("/", "/h2", "/auth/login/*", "/api/users/register", "/api/users/invitation/*");
 
     @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+    protected boolean shouldNotFilter(HttpServletRequest request) {
         return PERMIT_URLS.stream()
                 .anyMatch(pattern -> pathMatcher.match(pattern, request.getServletPath()));
     }
@@ -56,7 +56,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         UserDetail user = userService.loadByUserId(userId);
 
         UsernamePasswordAuthenticationToken authenticationToken =
-                new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+                new UsernamePasswordAuthenticationToken(user, token, user.getAuthorities());
 
         authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);

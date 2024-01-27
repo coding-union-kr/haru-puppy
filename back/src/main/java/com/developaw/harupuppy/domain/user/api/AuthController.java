@@ -1,13 +1,17 @@
 package com.developaw.harupuppy.domain.user.api;
 
 import com.developaw.harupuppy.domain.user.application.UserFacadeService;
+import com.developaw.harupuppy.domain.user.domain.UserDetail;
 import com.developaw.harupuppy.domain.user.dto.TokenDto;
 import com.developaw.harupuppy.domain.user.dto.response.LoginResponse;
 import com.developaw.harupuppy.global.common.response.ApiResponse;
 import com.developaw.harupuppy.global.common.response.Response.Status;
-import jakarta.servlet.http.HttpServletRequest;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,15 +37,17 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public ApiResponse<Void> logout(HttpServletRequest request){
-        String accessToken = request.getHeader("Authorization");
+    public ApiResponse<Void> logout() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String accessToken = Objects.requireNonNull(authentication.getCredentials()).toString();
         userFacadeService.logout(accessToken);
         return ApiResponse.ok(Status.CREATE);
     }
 
-    @PostMapping("/reissue")
-    public ApiResponse<TokenDto> reissue(HttpServletRequest request) {
-        String refreshToken = request.getHeader("Authorization");
-        return ApiResponse.ok(Status.CREATE, userFacadeService.reissue(refreshToken));
+    @PostMapping("/refresh")
+    public ApiResponse<TokenDto> refreshToken(@AuthenticationPrincipal UserDetail userDto) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String refreshToken = Objects.requireNonNull(authentication.getCredentials()).toString();
+        return ApiResponse.ok(Status.CREATE, userFacadeService.refreshToken(refreshToken, userDto));
     }
 }

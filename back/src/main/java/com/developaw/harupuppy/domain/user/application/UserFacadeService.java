@@ -63,44 +63,27 @@ public class UserFacadeService {
     }
 
     @Transactional
-    public void withdraw(UserDetail requestUser){
+    public void withdraw(UserDetail requestUser) {
         String email = userService.withdraw(requestUser.getUserId());
         redisService.deleteValue(email);
     }
 
     @Transactional
-    public TokenDto reissue(String refreshToken){
-        final String validToken = validateToken(refreshToken);
-        Long userId = jwtTokenUtils.resolveUserId(validToken);
+    public TokenDto refreshToken(String validToken, UserDetail userDto) {
         String key = jwtTokenUtils.resolveTokenKey(validToken);
 
-        if(!redisService.getValues(key).map(value -> value.equals(validToken)).orElse(false)) {
-            throw new CustomException(ErrorCode.INVALID_TOKEN);
-        }
+        redisService.getValues(key).filter(value -> value.equals(validToken))
+                .orElseThrow(() -> new CustomException(ErrorCode.INVALID_TOKEN));
 
-        UserDetail userDetail = userService.loadByUserId(userId);
-        TokenDto newToken = createTokenAndSave(UserDetailResponse.of(userDetail));
+        TokenDto newToken = createTokenAndSave(UserDetailResponse.of(userDto));
         redisService.deleteValue(key);
         return newToken;
     }
 
     @Transactional
-    public void logout(String accessToken){
-        final String validToken = validateToken(accessToken);
-        String key = jwtTokenUtils.resolveTokenKey(validToken);
+    public void logout(String accessToken) {
+        String key = jwtTokenUtils.resolveTokenKey(accessToken);
         redisService.deleteValue(key);
     }
 
-    private String validateToken(String refreshToken){
-        if(!refreshToken.startsWith("Bearer ")){
-            throw new CustomException(ErrorCode.INVALID_TOKEN);
-        }
-
-        refreshToken = refreshToken.split(" ")[1];
-        if(jwtTokenUtils.isExpired(refreshToken)) {
-            throw new CustomException(ErrorCode.EXPIRED_TOKEN);
-        }
-
-        return refreshToken;
-    }
 }
