@@ -19,7 +19,7 @@ instance.interceptors.request.use(
         return config;
     },
     (error) => {
-        console.log(error);
+        console.log('api 요청 중 에러가 발생했습니다', error);
         return Promise.reject(error);
     }
 );
