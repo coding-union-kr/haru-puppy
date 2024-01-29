@@ -47,9 +47,21 @@ instance.interceptors.response.use(
                     Authorization: `Bearer ${accessToken}`,
                 };
 
+                localStorage.setItem('access-token', accessToken)
                 // 새로운 토큰으로 요청 재시도
                 const response = await axios.request(error.config);
+                console.log('401 error response', response)
+
+                // 새로운 액세스 토큰을 받아서 로컬 스토리지에 저장
+                const newAccessToken = response.headers['access-token'];
+                const newRefreshToken = response.headers['refresh-token']
+                if (newAccessToken) {
+                    localStorage.setItem('access-token', newAccessToken);
+                    localStorage.setItem('refresh-token', newRefreshToken);
+
+                }
                 return response;
+
             } catch (refreshError) {
                 // 리프레시 토큰이 유효하지 않은 경우
                 console.error('토큰 리프레시 실패:', refreshError);
