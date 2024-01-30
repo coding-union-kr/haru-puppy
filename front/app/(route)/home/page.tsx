@@ -70,10 +70,9 @@ const fetchHomeData = async () => {
         const response = await instance.put('/api/home/');
         return response.data;
     } catch (error) {
-        throw new Error('Failed to fetch home data');
+        throw new Error('Home api 페칭 에러');
     }
 };
-
 
 
 const Page = () => {
