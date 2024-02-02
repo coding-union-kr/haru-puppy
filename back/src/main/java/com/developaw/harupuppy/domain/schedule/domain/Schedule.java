@@ -1,6 +1,7 @@
 package com.developaw.harupuppy.domain.schedule.domain;
 
 import com.developaw.harupuppy.domain.schedule.dto.request.ScheduleUpdateRequest;
+import com.developaw.harupuppy.domain.user.dto.response.UserDetailResponse;
 import com.developaw.harupuppy.global.common.DateEntity;
 import com.developaw.harupuppy.global.utils.DateUtils;
 import jakarta.persistence.CascadeType;
@@ -45,7 +46,7 @@ public class Schedule extends DateEntity {
     @NotNull
     private String homeId;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "schedule", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<UserSchedule> mates = new ArrayList<>();
 
     private Long writer;
@@ -93,7 +94,7 @@ public class Schedule extends DateEntity {
                 .scheduleType(schedule.scheduleType)
                 .scheduleDateTime(repeatDateTime)
                 .homeId(schedule.homeId)
-                .mates(schedule.mates)
+                .mates(new ArrayList<>())
                 .writer(schedule.writer)
                 .repeatId(repeatId)
                 .repeatType(schedule.repeatType)
@@ -109,11 +110,15 @@ public class Schedule extends DateEntity {
                 }).collect(Collectors.toList());
     }
 
-    public void update(ScheduleUpdateRequest dto, List<UserSchedule> mates) {
+    public void update(ScheduleUpdateRequest dto) {// homeId, writer, repeatId는 변경 불가
         this.scheduleType = dto.scheduleType();
         this.scheduleDateTime = DateUtils.parseDateTime(dto.scheduleDate(), dto.scheduleTime());
-        this.mates = mates;
         this.repeatType = dto.repeatType();
+        this.alertType = dto.alertType();
+        this.memo = dto.memo();
+    }
+
+    public void updateRepeatedSchedule(ScheduleUpdateRequest dto) {
         this.alertType = dto.alertType();
         this.memo = dto.memo();
     }
@@ -126,16 +131,19 @@ public class Schedule extends DateEntity {
         isActive = false;
     }
 
-    public void setScheduleDateTime(LocalDateTime dateTime) {
-        this.scheduleDateTime = dateTime;
-    }
-
     public void setRepeatId(String repeatId) {
         this.repeatId = repeatId;
     }
 
-    public void addMate(UserSchedule mate) {
-        mates.add(mate);
-        mate.getUserSchedulePK().setSchedule(this);
+    public List<UserDetailResponse> getUserDetails() {
+        return this.mates.stream()
+                .map(userSchedule -> UserDetailResponse.of(userSchedule.getUser()))
+                .collect(Collectors.toList());
+    }
+
+    public List<Long> getMateIds() {
+        return this.mates.stream()
+                .map(userSchedule -> userSchedule.getUser().getUserId())
+                .collect(Collectors.toList());
     }
 }

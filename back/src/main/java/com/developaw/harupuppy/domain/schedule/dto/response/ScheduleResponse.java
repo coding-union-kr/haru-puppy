@@ -4,7 +4,7 @@ import com.developaw.harupuppy.domain.schedule.domain.AlertType;
 import com.developaw.harupuppy.domain.schedule.domain.RepeatType;
 import com.developaw.harupuppy.domain.schedule.domain.Schedule;
 import com.developaw.harupuppy.domain.schedule.domain.ScheduleType;
-import com.developaw.harupuppy.domain.schedule.domain.UserSchedule;
+import com.developaw.harupuppy.domain.user.dto.response.UserDetailResponse;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -13,8 +13,8 @@ public record ScheduleResponse(
         ScheduleType scheduleType,
         LocalDateTime scheduleDateTime,
         String homeId,
-        Long writeId,
-        List<UserSchedule> mates,
+        Long writerId,
+        List<UserDetailResponse> mates,
         String repeatId,
         RepeatType repeatType,
         AlertType alertType,
@@ -29,7 +29,7 @@ public record ScheduleResponse(
                 schedule.getScheduleDateTime(),
                 schedule.getHomeId(),
                 schedule.getWriter(),
-                schedule.getMates(),
+                schedule.getUserDetails(),
                 schedule.getRepeatId(),
                 schedule.getRepeatType(),
                 schedule.getAlertType(),
