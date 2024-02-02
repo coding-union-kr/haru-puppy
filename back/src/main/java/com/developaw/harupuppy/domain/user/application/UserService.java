@@ -33,17 +33,19 @@ public class UserService {
 
     @Transactional
     public UserCreateResponse create(HomeCreateRequest request) {
-        Dog dog = DogCreateRequest.fromDto(request.dogRequest());
-        DogDetailResponse dogDetail = DogDetailResponse.of(dogRepository.save(dog));
+        Dog requestedDog = DogCreateRequest.fromDto(request.dogRequest());
+        Dog dog = dogRepository.save(requestedDog);
 
-        Home home = Home.builder()
+        Home requestedHome = Home.builder()
                 .dog(dog)
                 .homeName(request.homeName())
                 .build();
-        HomeDetailResponse homeDetail = HomeDetailResponse.of(homeRepository.save(home));
+        Home home = homeRepository.save(requestedHome);
 
         User user = UserCreateRequest.fromDto(request.userRequest(), home, dog);
         UserDetailResponse userDetail = UserDetailResponse.of(userRepository.save(user));
+        DogDetailResponse dogDetail = DogDetailResponse.of(dog);
+        HomeDetailResponse homeDetail = HomeDetailResponse.of(home);
 
         return UserCreateResponse.of(userDetail, homeDetail, dogDetail, null);
     }

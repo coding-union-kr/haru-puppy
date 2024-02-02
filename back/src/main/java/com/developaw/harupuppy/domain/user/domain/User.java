@@ -3,7 +3,6 @@ package com.developaw.harupuppy.domain.user.domain;
 import com.developaw.harupuppy.domain.dog.domain.Dog;
 import com.developaw.harupuppy.domain.user.dto.UserUpdateRequest;
 import com.developaw.harupuppy.global.utils.KoreanNickname;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -55,11 +54,11 @@ public class User {
     @Column(name = "allow_notification", columnDefinition = "TINYINT(1)")
     private boolean allowNotification;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dog_id")
     private Dog dog;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "home_id")
     private Home home;
 
@@ -82,13 +81,5 @@ public class User {
 
     public void setHome(Home home) {
         this.home = home;
-    }
-
-    public void setDog(Dog dog) {
-        this.dog = dog;
-    }
-
-    public void delete() {
-        this.isDeleted = true;
     }
 }
