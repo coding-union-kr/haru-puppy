@@ -1,6 +1,6 @@
 'use client'
 
-import { getYear, getMonth, getDate, subDays, addDays, format } from 'date-fns';
+import { getYear, getMonth } from 'date-fns';
 import { useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -13,6 +13,8 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import WeekCalendar from './WeekCalendar';
 import { ScheduleItem } from '@/app/_types/schedule/Schedule';
+import axios from 'axios';
+import instance from "@/app/_utils/apis/interceptors";
 
 export interface ScheduleResponse {
   schedule: ScheduleItem[];
@@ -50,12 +52,11 @@ const Calendar = () => {
 
   useEffect(() => {
     const fetchScheduleData = async () => {
-
       try {
-        const response = await fetch(`/api/schedule/month/${year}/${month}`);
-        const data: ScheduleResponse = await response.json();
+        const response = await instance.get(`/api/schedule/month/${year}/${month}`);
+        const data: ScheduleResponse = response.data;
         setScheduleData(data);
-        const dateObjects = data.schedule.map((item) => new Date(item.scheduleDate || item.reservedDate || ''));
+        const dateObjects = data.schedule.map((item: ScheduleItem) => new Date(item.scheduleDate || item.reservedDate || ''));
         setMarkedDates(dateObjects);
       } catch (error) {
         console.error('Month 스케줊 페칭 에러', error);

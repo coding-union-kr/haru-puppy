@@ -7,7 +7,11 @@ import MateList from '@/app/(route)/home/components/MateList'
 import ReportCard from '@/app/(route)/home/components/ReportCard'
 import WalkRank from '@/app/(route)/home/components/WalkRank'
 import BottomNavigation from '@/app/components/navigation/BottomNavigation'
-
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
+import axios from "axios";
+import { useQuery } from "react-query";
+import instance from "@/app/_utils/apis/interceptors";
 
 export const dummyMatesData = [
     {
@@ -60,7 +64,29 @@ export const dummyRanking = [
     },
 ];
 
+
+const fetchHomeData = async () => {
+    try {
+        const response = await instance.put('/api/home/');
+        return response.data;
+    } catch (error) {
+        throw new Error('Home api 페칭 에러');
+    }
+};
+
+
 const Page = () => {
+    const router = useRouter();
+    const { data, isLoading, isError } = useQuery('homeData', fetchHomeData);
+
+    useEffect(() => {
+        const accessToken = localStorage.getItem('access_token');
+        if (!accessToken) {
+            router.push('/auth/login');
+        }
+    }, []);
+
+
     return (
         <main>
             <ContainerLayout>
