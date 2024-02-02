@@ -40,12 +40,12 @@ public class ScheduleRepositoryTest {
         List<User> mates = ScheduleFixture.getMates();
         userRepository.saveAll(mates);
 
-        Schedule savedSchedule = scheduleRepository.save(ScheduleCreateRequest.fromDto(createDto, "homeId"));
+        Schedule savedSchedule = scheduleRepository.save(ScheduleCreateRequest.fromDto(createDto, "homeId", 1L));
 
         List<UserSchedule> userSchedules = ScheduleFixture.getUserSchedules(mates, savedSchedule);
         userScheduleRepository.saveAll(userSchedules);
 
-        UserSchedule foundedUserSchedule = userScheduleRepository.findById(userSchedules.get(0).getUserSchedulePK())
+        UserSchedule foundedUserSchedule = userScheduleRepository.findById(userSchedules.get(0).getId())
                 .orElse(null);
 
         Assertions.assertEquals(savedSchedule.getScheduleType(), ScheduleType.POO);

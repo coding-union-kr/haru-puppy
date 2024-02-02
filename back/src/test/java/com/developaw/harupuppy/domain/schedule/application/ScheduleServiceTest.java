@@ -16,10 +16,14 @@ import com.developaw.harupuppy.domain.schedule.domain.UserSchedule;
 import com.developaw.harupuppy.domain.schedule.dto.request.ScheduleCreateRequest;
 import com.developaw.harupuppy.domain.schedule.dto.request.ScheduleUpdateRequest;
 import com.developaw.harupuppy.domain.schedule.dto.response.ScheduleResponse;
+import com.developaw.harupuppy.domain.user.domain.Home;
 import com.developaw.harupuppy.domain.user.domain.User;
 import com.developaw.harupuppy.domain.user.domain.UserDetail;
+import com.developaw.harupuppy.domain.user.dto.request.HomeCreateRequest;
+import com.developaw.harupuppy.domain.user.repository.HomeRepository;
 import com.developaw.harupuppy.domain.user.repository.UserRepository;
 import com.developaw.harupuppy.fixture.ScheduleFixture;
+import com.developaw.harupuppy.fixture.UserFixture;
 import com.developaw.harupuppy.global.common.exception.CustomException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -48,6 +52,8 @@ class ScheduleServiceTest {
     static ScheduleUpdateRequest updateDto;
     static List<User> mates;
     static UserDetail userDto;
+    static HomeCreateRequest homeDto;
+    static
     @InjectMocks
     private ScheduleService scheduleService;
     @Mock
@@ -56,6 +62,8 @@ class ScheduleServiceTest {
     private UserScheduleRepository userScheduleRepository;
     @Mock
     private UserRepository userRepository;
+    @Mock
+    private HomeRepository homeRepository;
 
     @BeforeEach
     void init() {
@@ -65,13 +73,16 @@ class ScheduleServiceTest {
         updateDto = ScheduleFixture.getUpdateDto();
         mates = ScheduleFixture.getMates();
         userDto = ScheduleFixture.getUserDto();
+        homeDto = UserFixture.getHomeRequest();
     }
 
     @Test
     @DisplayName("스케줄 정보를 받아 단일 스케줄을 생성한다")
     void create() {
+        Home home = HomeCreateRequest.fromDto(homeDto);
         Schedule schedule = ScheduleCreateRequest.fromDto(createDto, "homeId", 1L);
         List<UserSchedule> userSchedules = ScheduleFixture.getUserSchedules(mates, schedule);
+        when(homeRepository.findByHomeId(anyString())).thenReturn(Optional.of(home));
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(mates.get(0)));
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(mates.get(1)));
         when(scheduleRepository.save(any())).thenReturn(schedule);
@@ -79,8 +90,8 @@ class ScheduleServiceTest {
 
         ScheduleResponse response = scheduleService.create(createDto, userDto);
         assertThat(response.scheduleDateTime()).isEqualTo(schedule.getScheduleDateTime());
-        assertThat(response.mates().get(0).getUserSchedulePK().getUser().getUserId())
-                .isEqualTo(userSchedules.get(0).getUserSchedulePK().getUser().getUserId());
+        assertThat(response.mates().get(0).userId())
+                .isEqualTo(userSchedules.get(0).getUser().getUserId());
     }
 
     @ParameterizedTest
