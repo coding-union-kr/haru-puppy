@@ -9,10 +9,10 @@ import { useMutation, useQueryClient } from 'react-query'
 import axios from 'axios'
 import ContainerLayout from '@/app/components/layout/layout'
 import TopNavigation from '@/app/components/navigation/TopNavigation'
-import { LOCAL_STORAGE_KEYS } from '@/app/constants/auth'
 import { useRouter } from 'next/navigation'
 import Modal from '@/app/components/modal/modal'
 import BottomNavigation from '@/app/components/navigation/BottomNavigation'
+import { LOCAL_STORAGE_KEYS } from '@/app/constants/api'
 
 
 const UserDummy = {
