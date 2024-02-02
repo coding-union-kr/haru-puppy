@@ -38,17 +38,27 @@ public class ScheduleController {
     }
 
     @PutMapping("/{scheduleId}")
-    public ApiResponse<ScheduleResponse> update(@NotNull(message = "스케줄 아이디는 필수입니다") @PathVariable Long scheduleId,
+    public ApiResponse<ScheduleResponse> update(@NotNull(message = "스케줄 아이디는 필수입니다")
+                                                    @PathVariable("scheduleId") Long scheduleId,
                                                 @NotNull @RequestBody @Valid ScheduleUpdateRequest scheduleDto,
                                                 @NotNull(message = "반복 스케줄 수정여부는 필수입니다")
-                                                @RequestParam(defaultValue = "false") Boolean all,
+                                                    @RequestParam(defaultValue = "false", name = "all") Boolean all,
                                                 @AuthenticationPrincipal UserDetail requestedUser) {
         return ApiResponse.ok(Status.UPDATE, scheduleService.update(scheduleId, scheduleDto, all, requestedUser));
     }
 
+    @PostMapping("/{scheduleId}/replace")
+    public ApiResponse<ScheduleResponse> replace(@NotNull(message = "스케줄 아이디는 필수입니다")
+                                                     @PathVariable("scheduleId") Long scheduleId,
+                                                @NotNull @RequestBody @Valid ScheduleUpdateRequest scheduleDto,
+                                                @AuthenticationPrincipal UserDetail requestedUser) {
+        return ApiResponse.ok(Status.UPDATE, scheduleService.replace(scheduleId, scheduleDto, requestedUser));
+    }
+
+
     @DeleteMapping("/{scheduleId}")
-    public ApiResponse<Void> delete(@NotNull(message = "스케줄 아이디는 필수입니다") @PathVariable Long scheduleId,
-                                    @NotNull @RequestParam(defaultValue = "false") Boolean all,
+    public ApiResponse<Void> delete(@NotNull(message = "스케줄 아이디는 필수입니다") @PathVariable("scheduleId") Long scheduleId,
+                                    @NotNull @RequestParam(defaultValue = "false", name = "all") Boolean all,
                                     @AuthenticationPrincipal UserDetail requestedUser) {
         scheduleService.delete(scheduleId, all, requestedUser);
         return ApiResponse.ok(Status.DELETE);
@@ -56,14 +66,16 @@ public class ScheduleController {
 
     @PutMapping("/{scheduleId}/status")
     public ApiResponse<ScheduleResponse> updateStatus(@NotNull(message = "스케줄 상태는 필수입니다")
-                                                      @RequestParam Boolean active,
+                                                      @RequestParam("active") Boolean active,
                                                       @NotNull(message = "스케줄 아이디는 필수입니다")
-                                                      @PathVariable Long scheduleId) {
-        return ApiResponse.ok(Status.UPDATE, scheduleService.updateStatus(scheduleId, active));
+                                                        @PathVariable("scheduleId") Long scheduleId,
+                                                      @AuthenticationPrincipal UserDetail requestedUser) {
+        return ApiResponse.ok(Status.UPDATE, scheduleService.updateStatus(scheduleId, requestedUser, active));
     }
 
     @GetMapping("/{scheduleId}")
-    public ApiResponse<ScheduleResponse> get(@NotNull(message = "스케줄 아이디는 필수입니다") @PathVariable Long scheduleId) {
+    public ApiResponse<ScheduleResponse> get(@NotNull(message = "스케줄 아이디는 필수입니다")
+                                             @PathVariable("scheduleId") Long scheduleId) {
         return ApiResponse.ok(Status.RETRIEVE, scheduleService.get(scheduleId));
     }
 
@@ -71,7 +83,7 @@ public class ScheduleController {
     public ApiResponse<List<ScheduleResponse>> getSchedules(
             @NotNull(message = "조회 연도는 필수입니다") @RequestParam("year") Integer year,
             @NotNull(message = "조회 월은 필수입니다") @RequestParam("month") Integer month,
-            @NotBlank(message = "홈 아이디는 필수입니다") @PathVariable String homeId) {
+            @NotBlank(message = "홈 아이디는 필수입니다") @PathVariable("homeId") String homeId) {
         return ApiResponse.ok(Status.RETRIEVE, scheduleService.getSchedules(homeId, year, month));
     }
 }

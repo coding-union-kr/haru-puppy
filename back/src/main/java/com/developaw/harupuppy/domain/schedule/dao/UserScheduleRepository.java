@@ -1,8 +1,11 @@
 package com.developaw.harupuppy.domain.schedule.dao;
 
 import com.developaw.harupuppy.domain.schedule.domain.UserSchedule;
-import com.developaw.harupuppy.domain.schedule.domain.UserSchedulePK;
+import java.util.List;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UserScheduleRepository extends JpaRepository<UserSchedule, UserSchedulePK> {
+public interface UserScheduleRepository extends JpaRepository<UserSchedule, Long> {
+    Optional<List<UserSchedule>> findAllByScheduleId(Long scheduleId);
+    void deleteByScheduleIdIn(List<Long> scheduleIds);
 }

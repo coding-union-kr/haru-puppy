@@ -11,6 +11,7 @@ import com.developaw.harupuppy.domain.schedule.dto.response.ScheduleResponse;
 import com.developaw.harupuppy.domain.user.domain.User;
 import com.developaw.harupuppy.domain.user.domain.UserDetail;
 import com.developaw.harupuppy.domain.user.dto.UserScheduleDto;
+import com.developaw.harupuppy.domain.user.repository.HomeRepository;
 import com.developaw.harupuppy.domain.user.repository.UserRepository;
 import com.developaw.harupuppy.global.common.exception.CustomException;
 import com.developaw.harupuppy.global.common.response.Response.ErrorCode;
@@ -18,7 +19,6 @@ import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -34,24 +34,23 @@ public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
     private final UserScheduleRepository userScheduleRepository;
     private final UserRepository userRepository;
+    private final HomeRepository homeRepository;
 
     @Transactional
     public ScheduleResponse create(ScheduleCreateRequest dto, UserDetail userDto) {
         String homeId = userDto.getHomeId();
-        log.info(homeId);
-        List<User> mates = validateMates(dto.mates());
+        homeRepository.findByHomeId(homeId).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_HOME));
 
+        List<User> mates = validateMates(dto.mates());
         Schedule schedule = ScheduleCreateRequest.fromDto(dto, homeId, userDto.getUserId());
         scheduleRepository.save(schedule);
 
         List<UserSchedule> userSchedules = UserSchedule.of(mates, schedule);
-        userSchedules.forEach(schedule::addMate);
-        userScheduleRepository.saveAll(userSchedules);
+        schedule.getMates().addAll(userSchedules);
 
         if (dto.repeatType() != null && !RepeatType.NONE.equals(dto.repeatType())) {
             createRepeatSchedule(schedule, mates);
         }
-
         return ScheduleResponse.of(schedule);
     }
 
@@ -62,40 +61,94 @@ public class ScheduleService {
 
         String repeatId = UUID.randomUUID().toString();
         schedule.setRepeatId(repeatId);// 등록 일자의 스케줄에도 repeat id 부여
-        log.info("{}, {}", schedule.getRepeatId(), schedule.getRepeatType());
 
         List<LocalDateTime> dateTimesUntilNextYear = getDateTimesUntilNextYear(schedule.getRepeatType(), startDate,
                 endDate, new ArrayList<>());
-        log.info("datetime size : {}", dateTimesUntilNextYear.size());
 
-        List<Schedule> schedules = Schedule.of(dateTimesUntilNextYear, schedule, repeatId);
-        scheduleRepository.saveAll(schedules);
-        log.info("schedule size : {}", schedules.size());
+        List<Schedule> repeatSchedules = Schedule.of(dateTimesUntilNextYear, schedule, repeatId);
 
-        List<UserSchedule> userSchedules = UserSchedule.of(mates, schedules);
-        userSchedules.forEach(schedule::addMate);
-        userScheduleRepository.saveAll(userSchedules);
-        log.info("userSchedules size : {}", userSchedules.size());
+        repeatSchedules.forEach(repeatSchedule -> {
+            scheduleRepository.save(repeatSchedule);
+            List<UserSchedule> repeatedUserSchedules = mates.stream()
+                    .map(user -> new UserSchedule(user, repeatSchedule))
+                    .collect(Collectors.toList());
+            repeatSchedule.getMates().addAll(repeatedUserSchedules);
+        });
     }
 
     @Transactional
     public ScheduleResponse update(Long scheduleId, ScheduleUpdateRequest dto, boolean all, UserDetail userDto) {
         Schedule schedule = scheduleRepository.findById(scheduleId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_SCHEDULE));
-        List<UserSchedule> newMates = UserSchedule.of(validateMates(dto.mates()), schedule);
-        chkScheduleWriter(newMates, userDto.getUserId());
+        chkScheduleWriter(schedule.getMates(), userDto.getUserId());
 
-        schedule.update(dto, newMates);
+        List<User> newMates = validateMates(dto.mates());
+        String repeatId = schedule.getRepeatId();
 
-        if (dto.repeatId() != null && all) {
-            String repeatId = Objects.requireNonNull(dto.repeatId());
-            List<Schedule> repeatedSchedules = scheduleRepository.findAllByRepeatIdAndScheduleDateTimeAfter(repeatId,
-                            schedule.getScheduleDateTime())
-                    .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_SCHEDULE));
-            repeatedSchedules.forEach(repeatSchedule -> repeatSchedule.update(dto, newMates));
+        if (repeatId == null) {// 단일 스케줄의 변경 건
+            schedule.update(dto);
+            updateUserSchedules(schedule, newMates);
+            if (!dto.repeatType().equals(RepeatType.NONE)) {// 변경으로 반복 주기가 생기는 경우
+                createRepeatSchedule(schedule, newMates);
+            }
+        } else {// repeatId를 변경하지 않는 반복스케줄 변경 요청인 경우
+            schedule.updateRepeatedSchedule(dto);// alertType, memo 변경
+            updateUserSchedules(schedule, newMates);// mates 변경
+            if (all) {
+                List<Schedule> repeatedSchedules = scheduleRepository.findAllByRepeatIdAndScheduleDateTimeAfter(
+                        repeatId,
+                        schedule.getScheduleDateTime()).get();
+                repeatedSchedules.forEach(repeatSchedule -> {
+                            repeatSchedule.updateRepeatedSchedule(dto);
+                            updateUserSchedules(repeatSchedule, newMates);
+                        }
+                );
+            }
+        }
+        return ScheduleResponse.of(schedule);
+    }
+
+    @Transactional // 반복스케줄의 변경으로 이전주기에 해당하는 반복스케줄 전부 삭제 + 요청 건으로 새로운 반복 스케줄 등록
+    public ScheduleResponse replace(Long scheduleId, ScheduleUpdateRequest dto, UserDetail userDto) {
+        Schedule schedule = scheduleRepository.findById(scheduleId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_SCHEDULE));
+
+        String repeatId = schedule.getRepeatId();
+        List<User> newMates = validateMates(dto.mates());
+
+        chkScheduleWriter(schedule.getMates(), userDto.getUserId());
+
+        List<Schedule> repeatedSchedules = scheduleRepository.findAllByRepeatIdAndScheduleDateTimeGreaterThanEqual(
+                repeatId, schedule.getScheduleDateTime()).get();
+        List<Long> scheduleIds = repeatedSchedules.stream()
+                .map(perSchedules -> perSchedules.getId())
+                .collect(Collectors.toList());
+
+        scheduleRepository.deleteAll(repeatedSchedules);
+        userScheduleRepository.deleteByScheduleIdIn(scheduleIds);
+
+        Schedule newRepeatedSchedule = ScheduleUpdateRequest.fromDto(dto, schedule.getHomeId(), userDto.getUserId());
+        scheduleRepository.save(newRepeatedSchedule);
+        List<UserSchedule> userSchedules = UserSchedule.of(newMates, newRepeatedSchedule);
+        newRepeatedSchedule.getMates().addAll(userSchedules);
+
+        if (dto.repeatType() != null && !RepeatType.NONE.equals(dto.repeatType())) {
+            createRepeatSchedule(newRepeatedSchedule, newMates);
         }
 
-        return ScheduleResponse.of(schedule);
+        return ScheduleResponse.of(newRepeatedSchedule);
+    }
+
+    @Transactional
+    public void updateUserSchedules(Schedule schedule, List<User> newMates) {
+        if (!isSameMates(schedule, newMates)) {// mate 구성이 달라진 경우
+            List<UserSchedule> userSchedules = userScheduleRepository.findAllByScheduleId(schedule.getId())
+                    .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_SCHEDULE));
+            userScheduleRepository.deleteAll(userSchedules);
+            List<UserSchedule> newUserSchedules = UserSchedule.of(newMates, schedule);
+            schedule.getMates().clear();
+            schedule.getMates().addAll(newUserSchedules);// TODO :: userSchedule 생성 되었는지 확인
+        }
     }
 
     @Transactional
@@ -103,23 +156,31 @@ public class ScheduleService {
         Schedule schedule = scheduleRepository.findById(scheduleId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_SCHEDULE));
 
-        if(userDto.getUserId() != schedule.getWriter())
+        if (userDto.getUserId() != schedule.getWriter()) {
             throw new CustomException(ErrorCode.NOT_ACCESS_RESOURCE);
+        }
 
-        if (schedule.getRepeatId() != null && all) {
-            List<Schedule> repeatedSchedules = scheduleRepository.findAllByRepeatIdAndScheduleDateTimeAfter(
+        if (schedule.getRepeatId() == null) {
+            scheduleRepository.delete(schedule);
+        }else if(all){
+            List<Schedule> repeatedSchedules = scheduleRepository.findAllByRepeatIdAndScheduleDateTimeGreaterThanEqual(
                             schedule.getRepeatId(), schedule.getScheduleDateTime())
                     .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_SCHEDULE));
             scheduleRepository.deleteAll(repeatedSchedules);
-        } else {
+        } else{
             scheduleRepository.delete(schedule);
         }
     }
 
     @Transactional
-    public ScheduleResponse updateStatus(Long scheduleId, boolean status) {
+    public ScheduleResponse updateStatus(Long scheduleId, UserDetail userDto, boolean status) {
         Schedule schedule = scheduleRepository.findById(scheduleId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_SCHEDULE));
+
+        if (userDto.getUserId() != schedule.getWriter()) {
+            throw new CustomException(ErrorCode.NOT_ACCESS_RESOURCE);
+        }
+
         if (status) {
             schedule.done();
         } else {
@@ -187,12 +248,18 @@ public class ScheduleService {
             return user;
         }).collect(Collectors.toList());
     }
-    private void chkScheduleWriter(List<UserSchedule> mates, Long writerId){
+
+    private void chkScheduleWriter(List<UserSchedule> mates, Long writerId) {
         mates.stream()
                 .filter(userSchedule ->
-                        userSchedule.getUserSchedulePK().getUser().getUserId() == writerId
+                        userSchedule.getUser().getUserId() == writerId
                 )
                 .findAny()
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_ACCESS_RESOURCE));
+    }
+
+    private boolean isSameMates(Schedule schedule, List<User> newMates) {
+        List<Long> dtoMates = newMates.stream().map(User -> User.getUserId()).collect(Collectors.toList());
+        return schedule.getMateIds().containsAll(dtoMates);
     }
 }
