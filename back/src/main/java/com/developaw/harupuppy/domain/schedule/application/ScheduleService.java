@@ -80,7 +80,7 @@ public class ScheduleService {
     public ScheduleResponse update(Long scheduleId, ScheduleUpdateRequest dto, boolean all, UserDetail userDto) {
         Schedule schedule = scheduleRepository.findById(scheduleId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_SCHEDULE));
-        chkScheduleWriter(schedule.getMates(), userDto.getUserId());
+        chkScheduleWriter(schedule.getWriter(), userDto.getUserId());
 
         List<User> newMates = validateMates(dto.mates());
         String repeatId = schedule.getRepeatId();
@@ -116,7 +116,7 @@ public class ScheduleService {
         String repeatId = schedule.getRepeatId();
         List<User> newMates = validateMates(dto.mates());
 
-        chkScheduleWriter(schedule.getMates(), userDto.getUserId());
+        chkScheduleWriter(schedule.getWriter(), userDto.getUserId());
 
         List<Schedule> repeatedSchedules = scheduleRepository.findAllByRepeatIdAndScheduleDateTimeGreaterThanEqual(
                 repeatId, schedule.getScheduleDateTime()).get();
@@ -155,19 +155,16 @@ public class ScheduleService {
     public void delete(Long scheduleId, boolean all, UserDetail userDto) {
         Schedule schedule = scheduleRepository.findById(scheduleId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_SCHEDULE));
-
-        if (userDto.getUserId() != schedule.getWriter()) {
-            throw new CustomException(ErrorCode.NOT_ACCESS_RESOURCE);
-        }
+        chkScheduleWriter(schedule.getWriter(), userDto.getUserId());
 
         if (schedule.getRepeatId() == null) {
             scheduleRepository.delete(schedule);
-        }else if(all){
+        } else if (all) {
             List<Schedule> repeatedSchedules = scheduleRepository.findAllByRepeatIdAndScheduleDateTimeGreaterThanEqual(
                             schedule.getRepeatId(), schedule.getScheduleDateTime())
                     .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_SCHEDULE));
             scheduleRepository.deleteAll(repeatedSchedules);
-        } else{
+        } else {
             scheduleRepository.delete(schedule);
         }
     }
@@ -176,10 +173,7 @@ public class ScheduleService {
     public ScheduleResponse updateStatus(Long scheduleId, UserDetail userDto, boolean status) {
         Schedule schedule = scheduleRepository.findById(scheduleId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_SCHEDULE));
-
-        if (userDto.getUserId() != schedule.getWriter()) {
-            throw new CustomException(ErrorCode.NOT_ACCESS_RESOURCE);
-        }
+        chkScheduleWriter(schedule.getWriter(), userDto.getUserId());
 
         if (status) {
             schedule.done();
@@ -249,7 +243,13 @@ public class ScheduleService {
         }).collect(Collectors.toList());
     }
 
-    private void chkScheduleWriter(List<UserSchedule> mates, Long writerId) {
+    private void chkScheduleWriter(Long requestedUserId, Long writerId) {
+        if (requestedUserId != writerId) {
+            throw new CustomException(ErrorCode.NOT_ACCESS_RESOURCE);
+        }
+    }
+
+    private void chkScheduleMates(List<UserSchedule> mates, Long writerId) {
         mates.stream()
                 .filter(userSchedule ->
                         userSchedule.getUser().getUserId() == writerId
