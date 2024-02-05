@@ -22,7 +22,7 @@ const LoginPage = () => {
         homeId: homeId,
       }));
     }
-  }, [setUserData]);
+  }, [setUserData, params]);
 
   const onLoginClick = () => {
     router.push(KAKAO_AUTH_URL);
