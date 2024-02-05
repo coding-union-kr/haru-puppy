@@ -11,9 +11,10 @@ import { useEffect } from 'react';
 
 const LoginPage = () => {
   const [, setUserData] = useRecoilState(userState);
+  const router = useRouter();
+  const params = useSearchParams();
 
   useEffect(() => {
-    const params = useSearchParams();
     const homeId = params?.get('homeId') || null;
     if (homeId) {
       setUserData((prevUserData) => ({
@@ -21,9 +22,8 @@ const LoginPage = () => {
         homeId: homeId,
       }));
     }
-  }, [setUserData]);
+  }, [setUserData, params]);
 
-  const router = useRouter();
   const onLoginClick = () => {
     router.push(KAKAO_AUTH_URL);
   };
