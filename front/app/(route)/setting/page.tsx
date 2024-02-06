@@ -13,6 +13,7 @@ import { useRouter } from 'next/navigation'
 import Modal from '@/app/components/modal/modal'
 import BottomNavigation from '@/app/components/navigation/BottomNavigation'
 import { LOCAL_STORAGE_KEYS } from '@/app/constants/api'
+import instance from '@/app/_utils/apis/interceptors'
 
 
 const UserDummy = {
@@ -99,12 +100,7 @@ const page = () => {
     //회원탈퇴
     const { mutate: terminateMutation } = useMutation(
         async ({ userId, accessToken }: { userId: string; accessToken: string | null }) => {
-            const response = await axios.delete(`/api/users/${userId}`, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${accessToken}`,
-                },
-            });
+            const response = await instance.post(`/api/users/withdraw`);
 
             return response.data;
         },
@@ -147,7 +143,7 @@ const page = () => {
                             onClose={toggleLogoutModal}
                         />
                     )}
-                    <NavMenu title='회원 탈퇴' onClick={toggleTerminateModal} />
+                    <NavMenu title='회원 탈퇴' onClick={handleTerminate} />
                     {isTerminateModal && (
                         <Modal
                             children="정말 탈퇴 하시겠습니까?"
@@ -179,4 +175,5 @@ const Wrapper = styled.div`
    margin-top: 50px;
 `
 export default page
+
 
